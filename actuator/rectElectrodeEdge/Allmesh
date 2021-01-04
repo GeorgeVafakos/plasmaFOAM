@@ -14,16 +14,12 @@ blockMesh
 for index in {1..3}
 do
     topoSet -dict system/topoSetDictRegion$index   
-    refineMesh -dict system/refineMeshDictRegion$index -overwrite 
+    refineMesh -dict system/refineMeshDictRegion -overwrite 
 done
 
 # Run topoSet and Split regions
 topoSet
 splitMeshRegions -cellZones -overwrite
-
-# # Copy fvSchemes and fvSolution into Zone folders
-find ./system/* -type d 2>/dev/null -exec cp -v ./system/fvSchemes {} \;
-find ./system/* -type d 2>/dev/null -exec cp -v ./system/fvSolution {} \;
 
 # Make the region1 (the air) into the polyMesh
 rm -vr ./constant/polyMesh
@@ -34,8 +30,7 @@ sed -i 's|constant/region1/polyMesh|constant/polyMesh|g' ./constant/polyMesh/bou
 sed -i 's/region1/region0/g' ./constant/polyMesh/boundary
 sed -i 's/region1/region0/g' ./constant/dielectric/polyMesh/boundary
 
-
-# Replace 0 directory with 0.org
+# Replace 0 directory contents with 0.org
 rm -v -r 0
 mv -v 0.org 0
 

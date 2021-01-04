@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    actuatorFoamElectrostatic
+    actuatorElectrostaticFoam
 
 Description
     Solver for electrostatics in a DBD actuator.

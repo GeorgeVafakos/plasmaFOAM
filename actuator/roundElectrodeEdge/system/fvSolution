@@ -11,48 +11,21 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "system";
-    object      controlDict;
+    object      fvSolution;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     actuatorElectrostaticFoam;
+solvers
+{
+    volt
+    {
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-08;
+        relTol          0.001;
+    }
 
-startFrom       latestTime;
-
-startTime       0;
-
-stopAt          endTime;
-
-endTime         5.0;
-
-deltaT          1.0e-7;
-
-writeControl    runTime;
-
-writeInterval   0.000001;
-
-purgeWrite      0;
-
-writeFormat     ascii;
-
-writePrecision  6;
-
-writeCompression off;
-
-timeFormat      general;
-
-timePrecision   6;
-
-runTimeModifiable true;
-
-
-// Controls to implement time step according to Co number
-
-adjustTimeStep  yes;
-
-maxCo           0.8;
-
-maxDeltaT       1.0;
+}
 
 
 // ************************************************************************* //
