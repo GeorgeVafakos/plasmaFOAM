@@ -28,11 +28,6 @@ dimensionedScalar erD
     physicalProperties.lookup("erD")
 );
 
-dimensionedScalar k
-(
-    physicalProperties.lookup("k")
-);
-
 // Convergence variables
 scalar iterCount=0.0;
 int convVolt=1;
