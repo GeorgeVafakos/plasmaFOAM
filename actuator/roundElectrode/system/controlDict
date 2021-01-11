@@ -15,7 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     actuatorElectrostatic2RegionsFoam;
+application     actuatorElectrostatic3RegionsFoam;
 
 startFrom       startTime;
 
