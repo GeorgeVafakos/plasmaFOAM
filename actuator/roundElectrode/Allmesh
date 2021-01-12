@@ -11,7 +11,7 @@ mv 0 0.org
 blockMesh
 
 # Refine mesh
-for index in {2..1}
+for index in {1..1}
 do
     topoSet -dict system/topoSetDictRegion$index
     refineMesh -dict system/refineMeshDictRegion -overwrite 
@@ -23,7 +23,6 @@ snappyHexMesh -dict system/snappyHexMeshDict -overwrite
 
 # Run topoSet and Split regions
 topoSet
-createBaffles -overwrite
 splitMeshRegions -cellZones -overwrite
 
 # Make the region1 (the air) into the polyMesh
