@@ -27,13 +27,13 @@ gradSchemes
 
 divSchemes
 {
-    default         none;
+    default         Gauss MUSCL;
     div(rhoqFlux,rhoq) Gauss MUSCL;
 }
 
 laplacianSchemes
 {
-    default         Gauss linear orthogonal;
+    default         Gauss linear corrected;
 }
 
 interpolationSchemes
