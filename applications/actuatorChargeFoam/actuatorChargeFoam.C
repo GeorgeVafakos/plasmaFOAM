@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 
     Info<< "\nStarting iteration loop\n" << endl;
 
-    while (runTime.loop() && (convVoltA>0 || convVoltD>0 || convVoltI>0 || convVoltR>0 ))
+    while (runTime.loop())
     {
         Info<< "Iteration = " << runTime.timeName() << nl << endl;
 
@@ -66,47 +66,42 @@ int main(int argc, char *argv[])
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
         // Air
-        Foam::solverPerformance solvPerfVoltA = solve 
+        solve 
         (
             fvm::laplacian(voltA) 
         );
-        convVoltA = solvPerfVoltA.nIterations();
 
         // Dielectric
-        Foam::solverPerformance solvPerfVoltD = solve
+        solve
         (
             fvm::laplacian(voltD)
         );
-        convVoltD = solvPerfVoltD.nIterations();
 
         // Insulator
-        Foam::solverPerformance solvPerfVoltI = solve
+        solve
         (
             fvm::laplacian(voltI)
         );
-        convVoltI = solvPerfVoltI.nIterations();
 
         // Field from rhoq
-        Foam::solverPerformance solvPerfVoltR = solve 
+        solve 
         (
             fvm::laplacian(voltR) + rhoq/e0
         );
-        convVoltR = solvPerfVoltR.nIterations();
 
 
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
         // Charge Transport
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-        // // Update rhoFlux
-        // rhoqFlux = -k*mesh.magSf()*fvc::snGrad(voltA);
+        // Update rhoFlux
+        rhoqFlux = -k*mesh.magSf()*fvc::snGrad(voltA);
 
-        // // Solve the charge transport equation
-        // Foam::solverPerformance solvPerfRhoq = solve
-        // (
-        //     fvm::ddt(rhoq) + fvm::div(rhoqFlux, rhoq)
-        // );
-        // convRhoq = solvPerfRhoq.nIterations();
+        // Solve the charge transport equation
+        solve
+        (
+            fvm::ddt(rhoq) + fvm::div(rhoqFlux, rhoq)
+        );
 
 
         // Calculate the electric field
@@ -114,7 +109,7 @@ int main(int argc, char *argv[])
         ED = -fvc::grad(voltD);
         EI = -fvc::grad(voltI);
         ER = -fvc::grad(voltR);
-        // Fc = rhoq*EA;
+        Fc = rhoq*EA;
 
         runTime.write();
 

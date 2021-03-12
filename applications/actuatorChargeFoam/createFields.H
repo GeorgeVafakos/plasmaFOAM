@@ -30,11 +30,6 @@ dimensionedScalar k
 
 // Convergence variables
 scalar iterCount=0.0;
-int convVoltA=1;
-int convVoltD=1;
-int convVoltI=1;
-int convVoltR=1;
-// int convRhoq=1;
 
 Info<< "Reading field voltA\n" << endl;
 volScalarField voltA
@@ -78,19 +73,19 @@ volScalarField rhoq
     mesh
 );
 
-// Info<< "Calculating field rhoqFlux\n" << endl;
-// surfaceScalarField rhoqFlux
-// (
-//     IOobject
-//     (
-//         "rhoqFlux",
-//         runTime.timeName(),
-//         mesh,
-//         IOobject::NO_READ,
-//         IOobject::NO_WRITE
-//     ),
-//     -k*mesh.magSf()*fvc::snGrad(voltA)
-// );
+Info<< "Calculating field rhoqFlux\n" << endl;
+surfaceScalarField rhoqFlux
+(
+    IOobject
+    (
+        "rhoqFlux",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::NO_WRITE
+    ),
+    -k*mesh.magSf()*fvc::snGrad(voltA)
+);
 
 Info<< "Calculating field EA\n" << endl;
 volVectorField EA
@@ -106,19 +101,19 @@ volVectorField EA
     -fvc::grad(voltA)
 );
 
-// Info<< "Calculating field Fc\n" << endl;
-// volVectorField Fc
-// (
-//     IOobject
-//     (
-//         "Fc",
-//         runTime.timeName(),
-//         mesh,
-//         IOobject::NO_READ,
-//         IOobject::AUTO_WRITE
-//     ),
-//     rhoq*EA
-// );
+Info<< "Calculating field Fc\n" << endl;
+volVectorField Fc
+(
+    IOobject
+    (
+        "Fc",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    rhoq*EA
+);
 
 Info<< "Reading field voltR\n" << endl;
 volScalarField voltR

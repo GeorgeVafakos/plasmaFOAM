@@ -1,0 +1,89 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  6
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      topoSetDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+actions
+(
+    // Dielectric Zone
+    {
+        name    dielSet;
+        type    cellSet;
+        action  new;
+        source  boxToCell;
+        sourceInfo
+        {
+            box (-10.0 -0.000425 -1.0) (10.0 0.0 1.0);
+        }
+    }
+    {
+        name    dielectric;
+        type    cellZoneSet;
+        action  new;
+        source  setToCellZone;
+        sourceInfo
+        {
+            set dielSet;
+        }
+    }
+
+    // Insulator Zone
+    {
+        name    insSet;
+        type    cellSet;
+        action  new;
+        source  boxToCell;
+        sourceInfo
+        {
+            box (-10.0 -10.0 -1.0) (10.0 -0.000425 1.0);
+        }
+    }
+    {
+        name    insulator;
+        type    cellZoneSet;
+        action  new;
+        source  setToCellZone;
+        sourceInfo
+        {
+            set insSet;
+        }
+    }
+
+    // // Streamer head
+    // {
+    //     name    streamerHeadSet;
+    //     type    faceSet;
+    //     action  new;
+    //     source  cylinderToFace;
+    //     sourceInfo
+    //     {
+    //         p1 (0.00025 0.00025 -1.0);
+    //         p2 (0.00025 0.00025  1.0);
+    //         radius 0.00020;
+    //     }
+    // }
+    // {
+    //     name    streamerHeadZone;
+    //     type    faceZoneSet;
+    //     action  new;
+    //     source  setToFaceZone;
+    //     sourceInfo { faceSet streamerHeadSet; }
+    // }
+
+);
+
+
+
+// ************************************************************************* //
