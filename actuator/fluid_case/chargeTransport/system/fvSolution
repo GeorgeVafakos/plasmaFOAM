@@ -49,13 +49,13 @@ solvers
         relTol          0.05;
     }
 
-    // rhoq
-    // {
-    //     solver          smoothSolver;
-    //     smoother        symGaussSeidel;
-    //     tolerance       1e-8;
-    //     relTol          0.05;
-    // }
+    rhoq
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-8;
+        relTol          0.05;
+    }
 }
 
 
