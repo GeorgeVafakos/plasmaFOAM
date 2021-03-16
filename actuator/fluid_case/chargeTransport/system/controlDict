@@ -15,7 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     actuatorStreamerFoam;
+application     actuatorChargeFoam;
 
 startFrom       startTime;
 
@@ -23,13 +23,13 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         5.0;
+endTime         1.0e-3;
 
 deltaT          1.0e-7;
 
-writeControl    timeStep;
+writeControl    runTime;
 
-writeInterval   5000;
+writeInterval   1.0e-4;
 
 purgeWrite      0;
 
@@ -48,11 +48,17 @@ runTimeModifiable true;
 
 // Controls to implement time step according to Co number
 
-adjustTimeStep  no;
+adjustTimeStep  yes;
 
 maxCo           0.8;
 
 maxDeltaT       1.0;
+
+
+// functions
+// {
+//     #includeFunc probes
+// }
 
 
 // ************************************************************************* //

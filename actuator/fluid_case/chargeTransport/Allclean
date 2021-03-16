@@ -8,11 +8,14 @@ cd ${0%/*} || exit 1    # Run from this directory
 rm -f ./constant/cellToRegion
 
 # Delete all subdirectories into the system and constant directories
-rm -f ./constant/triSurface/*.eMesh
-mv ./constant/triSurface ./triSurface
 find ./system/*   -type d 2>/dev/null -exec rm -v -r {} \;
 find ./constant/* -type d 2>/dev/null -exec rm -v -r {} \;
-mv ./triSurface ./constant/triSurface 
+
+# Reset fields
+rm -f ./0/voltR
+mv ./0/voltR.org ./0/voltR
+rm -f ./0/rhoq
+mv ./0/rhoq.org ./0/rhoq
 
 # Delete all time steps
 cleanCase

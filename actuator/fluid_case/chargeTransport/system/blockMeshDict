@@ -28,16 +28,16 @@ t_GRe 0.0005;                   // Thickness of grounded electrode
 
 // Grid managment in x-direction
 cellsxNonUniRHS 40;            // Cells in RHS non-uniform part of the domain in the x-axis
-LnonUniPercRHS 0.995;            // Percentage of domain in the RHS containing non-uniform cells
+LnonUniPercRHS 0.992;            // Percentage of domain in the RHS containing non-uniform cells
 cellsxNonUniLHS 40;            // Cells in LHS non-uniform part of the domain in the x-axis
-LnonUniPercLHS 0.995;            // Percentage of domain in the LHS containing non-uniform cells
+LnonUniPercLHS 0.992;            // Percentage of domain in the LHS containing non-uniform cells
 expRatiox 1000.0;                // Expansion ratio of the left side of the domain in the x-axis
 
 // Grid managment in y-direction
 cellsyNonUniAir 40;            // Cells in Air non-uniform part of the domain in the y-axis
-HnonUniPercAir 0.995;            // Percentage of domain in the Air containing non-uniform cells
+HnonUniPercAir 0.992;            // Percentage of domain in the Air containing non-uniform cells
 cellsyNonUniIns 40;            // Cells in Insulator non-uniform part of the domain in the y-axis
-HnonUniPercIns 0.995;            // Percentage of domain in the Insulator containing non-uniform cells
+HnonUniPercIns 0.992;            // Percentage of domain in the Insulator containing non-uniform cells
 expRatioy 1000.0;                // Expansion ratio of the left side of the domain in the y-axis
 
 // Grid managment in z-direction

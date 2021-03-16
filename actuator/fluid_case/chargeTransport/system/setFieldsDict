@@ -24,10 +24,10 @@ regions
 (
     boxToCell
     {
-        box (0.0 0.0 -1.0) (18e-3 20e-6 1.0);
+        box (0.0 0.0 -1.0) (0.01 0.0005 1.0);
         fieldValues
         (
-            volScalarFieldValue rhoq 1.0
+            volScalarFieldValue rhoq 0.01
         );
     }
 );

@@ -21,6 +21,10 @@ done
 topoSet
 splitMeshRegions -cellZones -overwrite
 
+# Print cell stats
+rm -f log.checkMesh
+runApplication checkMesh
+
 # Make the region1 (the air) into the polyMesh
 rm -vr ./constant/polyMesh
 mv -v ./constant/region1/polyMesh ./constant/polyMesh

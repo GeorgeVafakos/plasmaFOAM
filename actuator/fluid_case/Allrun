@@ -1,0 +1,9 @@
+#!/bin/bash
+
+cd /streamer/
+./Allmesh
+./runParallel
+
+cd ../chargeTransport
+./Allmesh
+./runParallel

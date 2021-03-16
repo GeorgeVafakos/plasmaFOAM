@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Version:  6
+    \\  /    A nd           | Version:  7
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
 FoamFile
@@ -10,24 +10,20 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      topoSetDict;
+    object      mapFieldsDict;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-actions
+// List of pairs of source/target patches for mapping
+patchMap
 (
-    {
-        name    refineCells;
-        type    cellSet;
-        action  new;
-        source  boxToCell;
-        sourceInfo
-        {
-            box (-0.025 -0.008 -1.0) (0.025 0.006 1.0);
-        }
-    }
+);
 
+// List of target patches cutting the source domain (these need to be
+// handled specially e.g. interpolated from internal values)
+cuttingPatches
+(
 );
 
 // ************************************************************************* //
