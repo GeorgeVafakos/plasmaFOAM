@@ -41,7 +41,6 @@ int main(int argc, char *argv[])
     #include "createMesh.H"
     #include "createMeshD.H"
     #include "createMeshI.H"
-    // #include "createTimeControls.H"
     #include "createFields.H"
     #include "createFieldsSolid.H"
 
@@ -88,12 +87,15 @@ int main(int argc, char *argv[])
         );
         convVoltR = solvPerfVoltR.nIterations();
 
+        // Calculate total electric potential in air
+        voltAirTot = voltA + voltR;
 
         // Calculate the electric field
         EA = -fvc::grad(voltA);
         ED = -fvc::grad(voltD);
         EI = -fvc::grad(voltI);
         ER = -fvc::grad(voltR);
+        EAirTot = EA + ER;
 
         runTime.write();
 
