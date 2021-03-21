@@ -35,6 +35,7 @@ int convVoltD=1;
 int convVoltI=1;
 int convVoltR=1;
 
+
 Info<< "Reading field voltA\n" << endl;
 volScalarField voltA
 (
@@ -49,6 +50,35 @@ volScalarField voltA
     mesh
 );
 
+Info<< "Reading field voltR\n" << endl;
+volScalarField voltR
+(
+    IOobject
+    (
+        "voltR",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
+
+Info<< "Reading field voltAirTot\n" << endl;
+volScalarField voltAirTot
+(
+    IOobject
+    (
+        "voltAirTot",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh,
+    0.0
+);
+
 volScalarField epsilonA
 (
     IOobject
@@ -57,7 +87,7 @@ volScalarField epsilonA
         runTime.timeName(),
         mesh,
         IOobject::NO_READ,
-        IOobject::AUTO_WRITE
+        IOobject::NO_WRITE
     ),
     mesh,
     dimensionedScalar("temp",dimless,scalar(1))
@@ -92,19 +122,7 @@ volVectorField EA
     -fvc::grad(voltA)
 );
 
-Info<< "Reading field voltR\n" << endl;
-volScalarField voltR
-(
-    IOobject
-    (
-        "voltR",
-        runTime.timeName(),
-        mesh,
-        IOobject::MUST_READ,
-        IOobject::AUTO_WRITE
-    ),
-    mesh
-);
+
 
 Info<< "Calculating field ER\n" << endl;
 volVectorField ER
@@ -118,4 +136,18 @@ volVectorField ER
         IOobject::AUTO_WRITE
     ),
     -fvc::grad(voltR)
+);
+
+Info<< "Calculating field EAirTot\n" << endl;
+volVectorField EAirTot
+(
+    IOobject
+    (
+        "EAirTot",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    -fvc::grad(voltAirTot)
 );
