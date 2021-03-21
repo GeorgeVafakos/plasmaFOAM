@@ -102,7 +102,6 @@ cellsyDiel #calc "int(1.0*$t_Diel/$Dyn + 0.5)";
 HUniPercIns #calc "$HUniIns/($H_Ins-$t_Diel)";
 HnonUniPercIns #calc "1.0-$HUniPercAir";
 HnonUniIns #calc "$H_Ins-$HUniIns-$t_Diel";
-
 cellsyUniIns #calc "int($HUniIns/$Dyn + 0.5)";
 cellsyTotalIns #calc "$cellsyNonUniIns + $cellsyUniIns";
 cellsyNonUniPercIns #calc "1.0*$cellsyNonUniIns/$cellsyTotalIns";
