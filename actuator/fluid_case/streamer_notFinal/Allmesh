@@ -17,13 +17,13 @@ do
     refineMesh -dict system/refineMeshDictRegion -overwrite 
 done
 
-# Run topoSet and Split regions
-topoSet
-splitMeshRegions -cellZones -overwrite
-
 # Print cell stats
 rm -f log.checkMesh
 runApplication checkMesh
+
+# Run topoSet and Split regions
+topoSet
+splitMeshRegions -cellZones -overwrite
 
 # Make the region1 (the air) into the polyMesh
 rm -vr ./constant/polyMesh
@@ -37,9 +37,9 @@ sed -i 's/region1/region0/g' ./constant/dielectric/polyMesh/boundary
 # Replace 0 directory contents with 0.org
 rm -v -r 0
 mv -v 0.org 0
-cp ./0/rhoq.org ./0/rhoq
+# cp ./0/rhoq.org ./0/rhoq
 echo
-setFields
+# setFields
 
 # Output message
 echo
