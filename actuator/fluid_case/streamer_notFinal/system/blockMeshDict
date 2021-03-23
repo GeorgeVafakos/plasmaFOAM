@@ -17,34 +17,32 @@ FoamFile
 convertToMeters 1.0;
 
 // Geometric parameters
-L 4.0;                              // Domain length in x-axis
-H_Air 2.0;                          // Air height
-H_Ins 0.5;                          // Total Dielectric height
-t_Diel 0.000425;                    // Dielectric between electrodes thickness
-L_HVe 0.005;                         // Length of high-voltage electrode
-t_HVe 0.000040;                       // Thickness of high-voltage electrode
-L_GRe 0.015;                         // Length of grounded electrode
-t_GRe 0.000040;                       // Thickness of grounded electrode
+L 4.0;                          // Domain length in x-axis
+H_Air 2.0;                      // Air height
+H_Ins 2.0;                      // Total Dielectric height
+t_Diel 0.002;                   // Dielectric between electrodes thickness
+L_HVe 0.01;                     // Length of high-voltage electrode
+t_HVe 0.0005;                   // Thickness of high-voltage electrode
+L_GRe 0.01;                     // Length of grounded electrode
+t_GRe 0.0005;                   // Thickness of grounded electrode
 
 // Grid managment in x-direction
-cellsxNonUniRHS 40;                 // Cells in RHS non-uniform part of the domain in the x-axis
+cellsxNonUniRHS 40;            // Cells in RHS non-uniform part of the domain in the x-axis
 LUniRHS 0.025;                      // Length of the domain in the RHS containing non-uniform cells
-cellsxNonUniLHS 40;                 // Cells in LHS non-uniform part of the domain in the x-axis
-LUniLHS 0.015;                      // Length of the domain in the LHS containing non-uniform cells
-expRatiox 2500.0;                   // Expansion ratio of the left side of the domain in the x-axis
+cellsxNonUniLHS 40;            // Cells in LHS non-uniform part of the domain in the x-axis
+LUniLHS 0.025;                      // Length of the domain in the LHS containing non-uniform cells
+expRatiox 2000.0;                // Expansion ratio of the left side of the domain in the x-axis
 
 // Grid managment in y-direction
-cellsyNonUniAir 60;                 // Cells in Air non-uniform part of the domain in the y-axis
-HUniAir 0.01;                      // Length of the domain in the Air containing non-uniform cells
-cellsyNonUniIns 20;                 // Cells in Insulator non-uniform part of the domain in the y-axis
-HUniIns 0.01;                      // Length of the domain in the Insulator containing non-uniform cells
-expRatioy 2500.0;                   // Expansion ratio of the left side of the domain in the y-axis
+cellsyNonUniAir 40;            // Cells in Air non-uniform part of the domain in the y-axis
+HUniAir 0.02;                      // Length of the domain in the Air containing non-uniform cells
+cellsyNonUniIns 40;            // Cells in Insulator non-uniform part of the domain in the y-axis
+HUniIns 0.02;                      // Length of the domain in the Insulator containing non-uniform cells
+expRatioy 2000.0;                // Expansion ratio of the left side of the domain in the y-axis
 
 // Grid managment in z-direction
-z_start 0.00;                       // Start in z-axis
-z_end 0.05;                         // End in z-axis
-
-
+z_start 0.00;
+z_end 0.05;                   // Depth in z-axis
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -54,7 +52,7 @@ z_end 0.05;                         // End in z-axis
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 
-// x-axis
+/// x-axis
 LUniPercRHS #calc "$LUniRHS/(0.5*$L-$L_GRe)";
 LnonUniPercRHS #calc "1.0 - $LUniPercRHS";
 LnonUniRHS #calc "0.5*$L-$L_GRe-$LUniRHS";
@@ -67,8 +65,6 @@ Dxn (#codeStream {
         os << $LnonUniRHS/suma << endl;
     #};
 } ); 
-
-////////
 cellsxUniRHS #calc "int($LUniRHS/$Dxn + 0.5)";
 cellsxTotalRHS #calc "$cellsxNonUniRHS + $cellsxUniRHS";
 cellsxNonUniPercRHS #calc "1.0*$cellsxNonUniRHS/$cellsxTotalRHS";
@@ -77,20 +73,19 @@ cellsxUniPercRHS #calc "1.0*$cellsxUniRHS/$cellsxTotalRHS";
 cellsxHVe #calc "int(1.0*$L_HVe/$Dxn + 0.5)";
 cellsxGRe #calc "int(1.0*$L_GRe/$Dxn + 0.5)";
 
-LUniPercLHS #calc "$LUniLHS/$L";
-LnonUniPercLHS #calc "0.5 - $LUniPercLHS";
-LnonUniLHS #calc "0.5*$L-$LUniLHS";
+LUniPercLHS #calc "$LUniLHS/(0.5*$L-$L_HVe)";
+LnonUniPercLHS #calc "1.0 - $LUniPercLHS";
+LnonUniLHS #calc "0.5*$L-$L_HVe-$LUniLHS";
 cellsxUniLHS  #calc "int($LUniLHS/$Dxn + 0.5)";
 cellsxTotalLHS #calc "$cellsxNonUniLHS + $cellsxUniLHS";
 cellsxNonUniPercLHS #calc "1.0*$cellsxNonUniLHS/$cellsxTotalLHS";
 cellsxUniPercLHS #calc "1.0*$cellsxUniLHS/$cellsxTotalLHS";
-
 expRatioxLHS #calc "1.0/$expRatiox";
 
 // y-axis
-HUniPercAir #calc "$HUniAir/$H_Air";
-HnonUniAir #calc "$H_Air-$HUniAir";
-HnonUniPercAir #calc "$HnonUniAir/$H_Air";
+HUniPercAir #calc "$HUniAir/($H_Air-$t_HVe)";
+HnonUniAir #calc "$H_Air-$t_HVe-$HUniAir";
+HnonUniPercAir #calc "1.0 - $HUniPercAir";
 Dyn (#codeStream {
     code #{
         scalar suma = 0;
@@ -109,15 +104,15 @@ cellsyHVe #calc "int(1.0*$t_HVe/$Dyn + 0.5)";
 cellsyDiel #calc "int(1.0*$t_Diel/$Dyn + 0.5)";
 cellsyGRe #calc "int(1.0*$t_GRe/$Dyn + 0.5)";
 
-HUniPercIns #calc "$HUniIns/($H_Ins-$t_Diel)";
+HUniPercIns #calc "$HUniIns/($H_Ins-$t_GRe)";
+HnonUniIns #calc "$H_Ins-$HUniIns-$t_GRe";
 HnonUniPercIns #calc "1.0-$HUniPercAir";
-HnonUniIns #calc "$H_Ins-$HUniIns-$t_Diel";
 cellsyUniIns  #calc "int($HUniIns/$Dyn + 0.5)";
 cellsyTotalIns #calc "$cellsyNonUniIns + $cellsyUniIns";
 cellsyNonUniPercIns #calc "1.0*$cellsyNonUniIns/$cellsyTotalIns";
 cellsyUniPercIns #calc "1.0*$cellsyUniIns/$cellsyTotalIns";
-
 expRatioyIns #calc "1.0/$expRatioy";
+
 
 // Calculated parameters for vertices
 X0 #calc "-0.5*$L";
