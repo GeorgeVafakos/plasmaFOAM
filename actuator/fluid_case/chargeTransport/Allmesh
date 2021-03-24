@@ -39,7 +39,7 @@ rm -v -r 0
 mv -v 0.org 0
 
 # Run mapFields
-mapFields ../streamer -sourceTime latestTime
+# mapFields ../streamer -sourceTime latestTime
 
 # Output message
 echo

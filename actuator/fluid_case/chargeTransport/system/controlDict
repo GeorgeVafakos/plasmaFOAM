@@ -48,7 +48,7 @@ runTimeModifiable true;
 
 // Controls to implement time step according to Co number
 
-adjustTimeStep  yes;
+adjustTimeStep  no;
 
 maxCo           0.8;
 
