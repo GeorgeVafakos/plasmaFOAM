@@ -11,14 +11,13 @@ mv 0 0.org
 blockMesh
 
 # Refine mesh
-for index in {3..1}
+for index in {2..1}
 do
     topoSet -dict system/topoSetDictRegion$index
     refineMesh -dict system/refineMeshDictRegion -overwrite 
 done
 
 # Run topoSet and Split regions
-topoSet
 splitMeshRegions -cellZones -overwrite
 
 # Print cell stats
@@ -39,7 +38,7 @@ rm -v -r 0
 mv -v 0.org 0
 
 # Run mapFields
-# mapFields ../streamer -sourceTime latestTime
+mapFields ../streamer -consistent -sourceTime latestTime
 
 # Output message
 echo

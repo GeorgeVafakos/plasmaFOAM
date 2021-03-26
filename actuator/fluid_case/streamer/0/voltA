@@ -18,6 +18,8 @@ dimensions      [1 2 -3 0 0 -1 0];
 
 internalField   uniform 0;
 
+voltage         uniform 10000;
+
 boundaryField
 {
 
@@ -39,7 +41,7 @@ boundaryField
     highVoltage
     {
         type            fixedValue;
-        value           uniform 10000;
+        value           $voltage;
     }
 
     region0_to_dielectric

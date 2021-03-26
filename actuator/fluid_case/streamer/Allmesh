@@ -36,9 +36,9 @@ sed -i 's/region1/region0/g' ./constant/dielectric/polyMesh/boundary
 # Replace 0 directory contents with 0.org
 rm -v -r 0
 mv -v 0.org 0
-# # cp ./0/rhoq.org ./0/rhoq
-# echo
-# # setFields
+cp ./0/rhoq.org ./0/rhoq
+echo
+setFields
 
 # Output message
 echo
