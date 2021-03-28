@@ -38,7 +38,8 @@ boundaryField
 
     highVoltage
     {
-        type            zeroGradient;
+        type            fixedValue;
+        value           uniform 0;
     }
 
     region0_to_dielectric

@@ -1,0 +1,30 @@
+#!/bin/bash
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Convert the 0 directory into 0.org
+mv 0 0.org
+
+# Run blockMesh
+blockMesh
+
+# Print cell stats
+rm -f log.checkMesh
+runApplication checkMesh
+
+# Run topoSet and Split regions
+splitMeshRegions -cellZones -overwrite
+
+# Replace 0 directory contents with 0.org
+rm -v -r 0
+mv -v 0.org 0
+
+# Output message
+echo
+echo Case created
+
+
+
+#------------------------------------------------------------------------------

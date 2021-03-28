@@ -1,0 +1,42 @@
+#!/bin/bash
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Convert the 0 directory into 0.org
+mv 0 0.org
+
+# Run blockMesh
+blockMesh
+
+# Refine mesh
+for index in {3..1}
+do
+    topoSet -dict system/topoSetDictRegion$index   
+    refineMesh -dict system/refineMeshDictRegion -overwrite 
+done
+
+# Run topoSet and Split regions
+splitMeshRegions -cellZones -overwrite
+
+# Make the region1 (the air) into the polyMesh
+rm -vr ./constant/polyMesh
+mv -v ./constant/region1/polyMesh ./constant/polyMesh
+rm -vr ./constant/region1
+rm -vr ./system/region1
+sed -i 's|constant/region1/polyMesh|constant/polyMesh|g' ./constant/polyMesh/boundary
+sed -i 's/region1/region0/g' ./constant/polyMesh/boundary
+sed -i 's/region1/region0/g' ./constant/dielectric/polyMesh/boundary
+
+# Replace 0 directory contents with 0.org
+rm -v -r 0
+mv -v 0.org 0
+
+# Output message
+echo
+echo Case created
+
+
+
+#------------------------------------------------------------------------------
