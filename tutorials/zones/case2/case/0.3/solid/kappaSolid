@@ -10,37 +10,40 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    location    "0/air";
-    object      cellToRegion;
+    location    "0.3/solid";
+    object      kappaSolid;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [0 0 0 0 0 0 0];
 
-internalField   uniform 0;
+internalField   uniform 10;
 
 boundaryField
 {
     topWall
     {
-        type            zeroGradient;
+        type            calculated;
+        value           uniform 10;
     }
-    leftWall
+    rightWall
     {
-        type            zeroGradient;
+        type            calculated;
+        value           uniform 10;
     }
     bottomWall
     {
-        type            zeroGradient;
+        type            calculated;
+        value           uniform 10;
     }
     frontAndBack
     {
         type            empty;
     }
-    air_to_solid
+    solid_to_air
     {
         type            calculated;
-        value           uniform 0;
+        value           uniform 10;
     }
 }
 

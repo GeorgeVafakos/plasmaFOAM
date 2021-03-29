@@ -27,21 +27,18 @@ vertices
     (1 1 0.1)
     (0 1 0.1)
     
-    (1 0 0)
     (2 0 0)
     (2 1 0)
-    (1 1 0)
-    (1 0 0.1)
     (2 0 0.1)
     (2 1 0.1)
-    (1 1 0.1)
+
 );
 
 blocks
 (
     hex (0 1 2  3  4  5  6  7) air (20 20 1) simpleGrading (1 1 1)
     
-    hex (8 9 10 11 12 13 14 15) solid (20 20 1) simpleGrading (1 1 1)
+    hex (1 8 9 2 5 10 11 6) solid (20 20 1) simpleGrading (1 1 1)
 );
 
 edges
@@ -56,7 +53,7 @@ boundary
         faces
         (
             (3 7 6 2)
-            (11 15 14 10)
+            (2 6 11 9)
         );
     }
     leftWall
@@ -65,7 +62,6 @@ boundary
         faces
         (
             (0 4 7 3)
-            (8 12 15 11)
         );
     }
     rightWall
@@ -73,8 +69,7 @@ boundary
         type wall;
         faces
         (
-            (2 6 5 1)
-            (10 14 13 9)
+            (9 11 10 8)
         );
     }
     bottomWall
@@ -83,7 +78,7 @@ boundary
         faces
         (
             (1 5 4 0)
-            (9 13 12 8)
+            (8 10 5 1)
         );
     }
     frontAndBack
@@ -92,9 +87,9 @@ boundary
         faces
         (
             (0 3 2 1)
+            (1 2 9 8)
             (4 5 6 7)
-            (8 11 10 9)
-            (12 13 14 15)
+            (5 10 11 6)
         );
     }
 );

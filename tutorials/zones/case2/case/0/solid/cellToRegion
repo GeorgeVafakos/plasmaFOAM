@@ -25,10 +25,6 @@ boundaryField
     {
         type            zeroGradient;
     }
-    leftWall
-    {
-        type            zeroGradient;
-    }
     rightWall
     {
         type            zeroGradient;
@@ -40,6 +36,11 @@ boundaryField
     frontAndBack
     {
         type            empty;
+    }
+    solid_to_air
+    {
+        type            calculated;
+        value           uniform 0;
     }
 }
 

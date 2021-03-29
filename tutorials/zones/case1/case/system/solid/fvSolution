@@ -9,40 +9,12 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volScalarField;
-    location    "0/air";
-    object      cellToRegion;
+    class       dictionary;
+    location    "system/solid";
+    object      fvSolution;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 0 0 0 0];
-
-internalField   uniform 0;
-
-boundaryField
-{
-    topWall
-    {
-        type            zeroGradient;
-    }
-    leftWall
-    {
-        type            zeroGradient;
-    }
-    bottomWall
-    {
-        type            zeroGradient;
-    }
-    frontAndBack
-    {
-        type            empty;
-    }
-    air_to_solid
-    {
-        type            calculated;
-        value           uniform 0;
-    }
-}
 
 
 // ************************************************************************* //

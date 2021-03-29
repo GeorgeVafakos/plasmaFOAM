@@ -9,38 +9,28 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volScalarField;
-    location    "0/air";
-    object      cellToRegion;
+    class       dictionary;
+    location    "system";
+    object      fvSolution;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 0 0 0 0];
-
-internalField   uniform 0;
-
-boundaryField
+solvers
 {
-    topWall
+    Tair
     {
-        type            zeroGradient;
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-06;
+        relTol          0.05;
     }
-    leftWall
+    
+    Tsolid
     {
-        type            zeroGradient;
-    }
-    bottomWall
-    {
-        type            zeroGradient;
-    }
-    frontAndBack
-    {
-        type            empty;
-    }
-    air_to_solid
-    {
-        type            calculated;
-        value           uniform 0;
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-06;
+        relTol          0.05;
     }
 }
 
