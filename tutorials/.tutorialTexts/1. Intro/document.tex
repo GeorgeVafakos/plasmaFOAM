@@ -1,5 +1,5 @@
 \documentclass{article}
-\usepackage[a4paper, width=170mm, top=20mm, bottom=40mm]{geometry}
+\usepackage[a4paper, width=170mm, top=20mm, bottom=20mm]{geometry}
 \usepackage{hyperref}
 \usepackage{amsmath}
 \usepackage{nopageno}
@@ -8,6 +8,8 @@
 \newcommand\tab[1][0.5cm]{\hspace*{#1}}
 \usepackage[framemethod=default]{mdframed}
 \newmdenv[linecolor=white,backgroundcolor=blue!5]{myframe}
+\usepackage{graphicx}
+\usepackage{subcaption}
 
 % Set greek language
 %\usepackage[english,greek]{babel}
@@ -57,7 +59,7 @@
 	
 	{\tt \tab \$ cp -r \$FOAM\_TUTORIALS/incompressible/icoFoam/cavity/cavity \$FOAM\_RUN}
 	
-	\vspace{0.5cm}
+	\vspace{0.2cm}
 	To solve the cavity tutorial, run the following commands:
 
 	{\tt %
@@ -73,15 +75,33 @@
  
  	\item Modify the cavity case, from the previous step, in order to simulate the 2D laminar incompressible flow between parallel plates. It must be reminded that the maximum exit velocity must be equal to the $3/2$ of the inlet velocity.
  	
- 	As for the boundary conditions, the velocity at the walls must be zero ({\tt noSlip}), {\tt uniform} (Dirichlet BC) at the inlet and {\tt zeroGradient} (Neumann BC) at the outlet of the pipe. The pressure must be {\tt zeroGradient} everywhere at the walls and inlet, except the pipe's outlet, where must be zero, as the fluid exits the pipe into the atmosphere (relative pressure).
+ 	As for the boundary conditions, the velocity at the walls must be zero ({\tt noSlip}), {\tt uniform} (Dirichlet BC) at the inlet and {\tt zeroGradient} (Neumann BC) at the outlet of the pipe. The pressure must be {\tt zeroGradient} everywhere at the walls and inlet, except the pipe's outlet, where must be zero, as the fluid exits the pipe into the atmosphere (relative pressure). 
  	
+ 	The inlet and outlet boundaries type must be defined as 'patch' in the {\tt blockMeshDict} file, while all walls could be defined as either 'patch' or 'wall'. Modify the mesh in the blockMeshDict so that it is denser towards the walls, and towards the pipe’s inlet.
+ 	
+
+	\begin{figure}[h]
+		\begin{subfigure}{\textwidth}
+			\centering
+			\includegraphics[width=0.8\textwidth,trim={0cm 12cm 0 12cm},clip]{2D_mesh.png}
+			\caption{Mesh}
+		\end{subfigure}
+ 		\begin{subfigure}{\textwidth}
+ 			\centering
+ 			\includegraphics[width=0.8\textwidth,trim={0cm 12cm 0 12cm},clip]{2D_velocity.png}
+ 			\caption{Velocity}
+ 		\end{subfigure}	
+ 	\end{figure}
+ 	
+	\newpage
  	\item Extend the previous case, into a 3D square pipe.
  	
- 	
- 	%	\item Διαμορφώστε κατάλληλα το \en{cavity case} που μόλις δημιουργήσατε, έτσι ώστε να προσομοιώσετε την 2\en{D} ροή ανάμεσα σε παράλληλες πλάκες. Υπενθυμίζεται πως το προφίλ εξόδου πρέπει να είναι παραβολικής μορφής και η μέγιστη ταχύτητα εξόδου ίση με τα $3/2$ της ομοιόμορφης ταχύτητας εισόδου.
- 	%	
- 	%	Οι συνοριακές συνθήκες για την ταχύτητα πρέπει να είναι \en{\tt noSlip} στα τοιχώματα (\en{walls}), \en{\tt uniform} στην είσοδο (\en{inlet}), ενώ \en{\tt zeroGradient} στην έξοδο (\en{outlet}) του αγωγού. Αντίστοιχα, η πίεση πρέπει να είναι παντού \en{\tt zeroGradient}, εκτός από την έξοδο του αγωγού όπου είναι μηδενική (το ρευστό θεωρείται πως εξέρχεται στην ατμόσφαιρα άρα η σχετική πίεση του αγωγού σε εκείνο το σημείο είναι μηδέν). 
- 	%	
+	\begin{figure}[h]
+		\centering
+ 		\includegraphics[width=0.8\textwidth]{3D_mesh2.png}
+ 		\includegraphics[width=0.8\textwidth]{3D_velocity.png}
+	\end{figure}
+
 	
 \end{enumerate}
 	

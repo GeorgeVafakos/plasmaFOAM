@@ -1,0 +1,268 @@
+\documentclass{article}
+\usepackage[a4paper, width=170mm, top=20mm, bottom=20mm]{geometry}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{nopageno}
+\usepackage{xcolor}
+\usepackage{adjustbox}
+\newcommand\tab[1][0.5cm]{\hspace*{#1}}
+\usepackage{mdframed}
+\newmdenv[linecolor=white,backgroundcolor=blue!5]{myframe}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{lipsum}
+
+
+% Set greek language
+%\usepackage[english,greek]{babel}
+\usepackage[utf8]{inputenc}
+%\newcommand{\en}[1]{\foreignlanguage{english}{#1}}
+%\usepackage{kerkis} 
+%\usepackage{abc}
+
+% Hyperref
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=black,
+	filecolor=black,      
+	urlcolor=blue,
+}
+
+% Tables
+\usepackage{tabu}
+\usepackage{tabularx}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+\begin{document}
+	
+
+\noindent
+\begin{huge}
+\hspace{-3.0mm}\textbf{OpenFOAM Tutorials}
+\end{huge}
+
+\setcounter{section}{1}
+\section{Add temperature to solvers}
+	
+\begin{enumerate}
+	\item Add  the heat transport equation to the {\tt icoFoam} solver, in order to calculate how the flow can affect the heat transfer between two heated walls. The heat transport equation is
+	
+	$$
+	\dfrac{\partial T}{\partial t} + (\bm{\nabla}\cdot \bm{V}) T = \alpha \nabla^2 T
+	$$
+
+	where $\alpha$ is the themal diffusivity.
+	
+	Copy the {\tt icoFoam} solver to your OpenFOAM project directory, inside a folder named {\tt applications}, where you can store all your modified OpenFOAM solvers. If you haven't already created such directory, either do it manually, or follow the commands
+	
+	{\tt
+		
+	\tab	\$ mkdir -p \$WM\_PROJECT\_USER\_DIR/applications \\
+	\tab 	\$ cp -r \$FOAM\_SOLVERS/incompressible/icoFoam \$WM\_PROJECT\_USER\_DIR/applications/myIcoFoam
+	\tab \$ cd \$WM\_PROJECT\_USER\_DIR/applications/solvers/myIcoFoam
+	}
+	
+	\vspace{0.2cm}
+	
+	Rename the {\tt icoFoam.C} file to {\tt myIcoFoam.C}. Now go into the Make subdirectory and open the 'files' file with a text editor. Change it to read: 
+
+
+	\begin{myframe}
+	{\tt %
+	 myIcoFoam.C \\%
+	 \\%	
+	 EXE = \$(FOAM\_USER\_APPBIN)/myIcoFoam}
+ 	\end{myframe}
+
+
+	You can delete old binaries, if they exist, using the command
+	
+	{\tt \tab \$ wclean}
+	
+	To compile the new solver, run the command
+	
+	{\tt \tab \$ wmake}
+	
+	If everything worked correctly, your new solver binary should be present in the {\tt FOAM\_USER\_APPBIN} directory. Check this with:
+	
+	{\tt \tab \$ ls \$FOAM\_USER\_APPBIN }
+	
+	\vspace{0.2cm}
+	
+	This will show the steps to add another field variable to a solver. Open the {\tt myIcoFoam.C} with a text editor. Following the flow of the {\tt myIcoFoam} program, one notices that the header file {\tt createFields.H} is called prior to the solution loop. This file was copied with the solver and has the specific information pertaining to what variables will be solved. Inside the {\tt createFields.H} file, the first items loaded is the kinematic viscosity from the {\tt transportProperties} dictionary file. We will add a new transport property related to the thermal diffusivity which will be denoted as {\tt alpha}. Make the following edits: 
+	
+
+	\begin{myframe}
+	{\tt %
+ 
+		Info<< "Reading transportProperties\textbackslash n" << endl;
+		\\
+		
+		IOdictionary transportProperties \\
+		(\\
+		\tab IOobject \\
+		\tab ( \\
+		\tab \tab "transportProperties",\\
+		\tab \tab runTime.constant(), \\
+		\tab \tab mesh,\\
+		\tab \tab IOobject::MUST\_READ,\\
+		\tab \tab IOobject::NO\_WRITE\\
+		\tab )\\
+		 );
+		\\
+		
+		dimensionedScalar nu \\
+		( \\
+		\tab transportProperties.lookup("nu") \\
+		);\\
+		//Add here... \\
+		dimensionedScalar alpha \\
+		(\\
+		\tab transportProperties.lookup("alpha")\\
+		);\\
+		//Done for now... \\
+
+	}
+	\end{myframe}
+
+	Later on, we will need to edit the {\tt transportProperties} dictionary file to reflect this change. Moreover, in the same file, add a {\tt volScalarField}, similar to the pressure field, that represents the temperature.
+	
+	\begin{myframe}
+	{\tt %
+		
+		Info<< "Reading field T\textbackslash n" <<endl; \\
+		\\
+		volScalarField T\\
+		(\\
+		\tab IOobject \\
+		\tab ( \\
+		\tab \tab "T",\\
+		\tab \tab runTime.timeName(),\\
+		\tab \tab mesh,\\
+		\tab \tab IOobject::MUST\_READ,\\
+		\tab \tab IOobject::AUTO\_WRITE\\
+		\tab ),\\
+		\tab mesh \\
+		);\\
+			
+	}
+	\end{myframe}
+	
+	Save these changes. You've completed adding a new scalar field variable 'T' and a new constant 'alpha'.
+	
+	The next step is to add a new equation describing the transport of the temperature. Return to editing the {\tt myIcoFoam.C} file. Because the temperature transport depends on the velocity field, we will add the equation after the momentum equation is solved (after the PISO loop), but before the time step is written. Edit your file so it looks like this: 
+	
+\end{enumerate}
+
+%	\item Δημιουργείστε έναν καινούριο \en{solver} με τον όνομα \en{\tt laplaceFoam} που να λύνει την εξίσωση \en{Laplace} σε μια ορθογωνική πλάκα, με συνοριακές και αρχικές συνθήκες όπως φαίνονται στην παρακάτω εικόνα. 
+%	
+%	Χρησιμοποιείστε $T_w=10~K,~L=2~m$ και $H=1~m$.
+%	
+%	\begin{center}
+%		\includegraphics[scale = 0.45]{laplace.jpg}
+%	\end{center}
+%	
+%	Για την δημιουργία του καινούριου \en{solver}, αντιγράψτε έναν ήδη υπάρχον από τον φάκελο \en{\tt \$FOAM\_SOLVERS} σε έναν νέο φάκελο με όνομα \en{\tt applications} στο \en{local directory} (π.χ. \en{\tt \$HOME/OpenFoam/<USER>-8/}, όπου \en{\tt <USER>} το όνομα του χρήστη). Για ευκολία, να χρησιμοποιηθεί ο \en{solver} \en{\tt electrostaticFoam} που βρίσκεται στην κατηγορία λυτών \en{electromagnetics}.
+%	
+%	Μετονομάστε τον φάκελο που περιέχει τον καινούριο λύτη από \en{\tt electrostaticFoam} σε \en{\tt laplaceFoam}, το αρχείο \en{\tt electrostaticFoam.c} σε \en{\tt laplaceFoam.c} και τροποποιείστε τα περιεχόμενά του αρχείου \en{\tt ./Make/files} έτσι ώστε να γράφει:
+%	
+%%	\hspace{0.4cm}
+%%	\begin{minipage}{0.6\textwidth}
+%%	\begin{myframe}
+%%	\en{\tt %
+%%	 {\small 1} ~laplaceFoam.C \\%
+%%	 {\small 2} ~\\%	
+%%	 {\small 3} ~EXE = \$(FOAM\_USER\_APPBIN)/laplaceFoam}
+%% 	\end{myframe}
+%%	\end{minipage}
+%
+%	\hspace{0.4cm}
+%	\begin{minipage}{0.92\textwidth}
+%	\begin{myframe}
+%		\en{\tt %
+%			laplaceFoam.C \\%
+%			\\%	
+%			EXE = \$(FOAM\_USER\_APPBIN)/laplaceFoam}
+%	\end{myframe}
+%	\end{minipage}
+%
+%	Τροποιείστε κατάλληλα τα περιεχόμενα των αρχείων \en{\tt laplaceFoam.c} και \en{\tt createFields.h} έτσι ώστε να λύνεται η μόνο εξίσωση \en{Laplace} για το \en{\tt scalarField} με όνομα \en{\tt T}. 
+%	
+%	Για να κάνετε \en{compile} τον λύτη, τρέξτε στον φάκελο την εντολή
+%	
+%	\en{\tt \tab \$ wmake}
+%	
+%	Σε περίπτωση που χρειαστεί να διαγράψετε το \en{executable} αρχείο που υπάρχει ήδη, χρησιμοποιείστε την εντολή
+%	
+%	\en{\tt \tab \$ wclean}
+%	
+%	Τέλος τρέξτε το \en{case} και ελέγξτε τα αποτελέσματά σας.
+%	
+%	\item Σε αυτό το βήμα θα μοντελοποιηθεί η μετάδοση θερμότητας σε δυο εφαπτομενικά  χωρία, το ένα θα είναι μία στερεή πλάκα, όπου θα λυθεί η εξίσωση \en{Laplace} και το άλλο ο αέρας, όπου θα λυθεί η εξίσωση \en{Poisson}. Στο παρακάτω σχήμα φαίνονται ακριβώς τα χαρακτηριστικά, οι εξισώσεις και οι συνοριακές συνθήκες που θα χρησιμοποιηθούν. Μπορεί να χρησιμοποιηθεί ο λύτης \en{\tt laplaceFoam} που ήδη έχετε κατασκευάσει στο προηγούμενο βήμα, και να τροποποιηθεί για το συγκεκριμένο πρόβλημα.
+%	
+%	\begin{center}
+%		\includegraphics[scale = 0.5]{regions.jpg}
+%	\end{center}
+%	
+%	Για να επιτευχθεί αυτό, θα πρέπει να δημιουργηθεί ένα \en{block} στο μέγεθος και των δύο χωρίων από το \en{\tt blockMeshDict}, και μετά χρησιμοποιώντας το εργαλείο \en{\tt topoSet} του \en{OpenFOAM} να χωριστούν σε δύο \en{regions}. Το ένα \en{region} να ονομαστεί \en{solid} και το άλλο \en{air}. Στην διεπιφάνεια των δύο \en{regions} θα πρέπει να οριστούν κατάλληλες οριακές συνθήκες για την σωστή λύση των εξισώσεων. Πιο συγκεκριμένα, θα πρέπει η τιμή της θερμοκρασίας και η παράγωγός της στο \en{interface} των δύο περιοχών να είναι ίσες
+%	
+%	$$ T_{air} = T_{solid} $$
+%	
+%	$$ k_{air} \dfrac{\partial T}{\partial n} \Bigg|_{air} = k_{solid} \dfrac{\partial T}{\partial n} \Bigg|_{solid} $$
+%	
+%	όπου $k$ είναι ο συντελεστής θερμικής αγωγιμότητας του κάθε χωρίου.
+%	
+%	Η οριακή συνθήκη που χρησιμοποιείται είναι η:
+%	
+%	\tab \en{\tt compressible::turbulentTemperatureCoupledBaffleMixed}
+%
+%	και μπορεί να βρεθεί ο τρόπος χρήσης της, όπως και ο τρόπος δημιουργίας \en{regions} με το \en{\tt topoSet} (αρχείο \en{\tt topoSetDict}), από τα \en{tutorial cases} του λύτη \en{\tt chtMultiRegionFoam}, που βρίσκεται στην κατηγορία \en{heat transfer}. 
+%	
+%	Επιπλέον, θα πρέπει να δημιουργηθούν στον \en{solver} δύο διαφορετικά πλέγματα, όπου στο ένα (\en{meshA}) θα λυθεί η εξίσωση \en{Poisson} για τον αέρα και στο άλλο (\en{meshS}) θα λυθεί η εξίσωση \en{Laplace} στο στερεό. Αυτό συνεπάγεται, πως θα υπάρχουν δύο διαφορετικές μεταβλητές (\en{\tt scalarFields}) στο αρχείο \en{\tt createFields.h}, μία για την θερμοκρασία στον αέρα \en{\tt Tair} και μία για την θερμοκρασία στο στερεό \en{\tt Tsolid}. Αντίστοιχα, όπως αναφέρθηκε προηγουμένως, θα πρέπει να υπάρχουν δύο διαφορετικές εξισώσεις στο αρχείο \en{\tt laplaceFoam.c}, η \en{Poisson} για την \en{\tt Tair} στο \en{meshA}, και η \en{Laplace} για την \en{\tt Tsolid} στο \en{meshS}.
+%	
+%	Θα πρέπει να υπάρχουν, αντίστοιχα και στο \en{case} δύο διαφορετικά αρχεία για τις συνοριακές συνθήκες και να τοποθετηθούν στους φακέλους που θα δημιουργηθούν μετά την χρήση του \en{\tt topoSet}, στις διαδρομές \en{\tt ./0/air} και \en{\tt ./0/solid} . Σε κάθε αρχείο συνοριακής συνθήκης θα πρέπει να προστεθεί και η συνθήκη για την διεπιφάνεια. Ο ακριβής τίτλος του συνόρου των διεπιφανειών (μία για κάθε \en{region}) δημιουργείται αυτόματα από την εντολή \en{\tt topoSet} και μπορεί να βρεθεί στις διαδρομές \en{\tt ./constant/air} και \en{\tt ./constant/solid}. Τέλος, πρέπει να σημειωθεί, πως για την σωστή λειτουργία της συνοριακής συνθήκης \en{\tt BaffleMixed} θα πρέπει να δημιουργηθούν δυο \en{scalar} μεταβλητές π.χ. \en{kappaA} και \en{kappaS} οι οποίες θα έχουν την τιμή των σταθερών $k_{air}$ και $k_{solid}$ σε ολόκληρο το \en{region} που αντιστοιχεί σε κάθε μεταβλητή.
+%	
+%	Παράδειγμα της συνοριακής συνθήκης για την μεταβλητή \en{\tt Tair} φαίνεται παρακάτω.
+%	
+%	\hspace{0.4cm}
+%	\begin{minipage}{0.92\textwidth}
+%	\begin{myframe}
+%	\en{\tt %
+%    air\_to\_solid\\%
+%		\{\\%
+%		\tab	type  ~~~~~~~~~~          compressible::turbulentTemperatureCoupledBaffleMixed;\\%
+%		\tab	value  ~~~~~~~~~         \$internalField;\\%
+%		\tab	Tnbr   ~~~~~~~~~~         Tsolid;\\%
+%		\tab	kappaMethod ~~~    lookup;\\%
+%		\tab	kappa    ~~~~~~~~~       kappaA;\\%
+%		\}\\%
+%	}
+%	\end{myframe}
+%	\end{minipage}
+%	
+%	
+%	
+%	
+%	
+%	
+%	
+%
+%	
+%	
+%\end{enumerate}
+
+
+
+
+
+
+
+
+
+
+\end{document}
