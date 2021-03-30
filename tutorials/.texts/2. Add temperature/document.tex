@@ -185,12 +185,135 @@
 	These lines add a new equation for the temperature and make use of the face flux variable, phi, which is already used in the momentum equation solution.
 	
 	Save your changes and run wmake to compile the solver: 
-	
+		
 	{\tt \tab \$ wmake}
 	
 	
 	
-	\item The next step in this process is to test the new solver. This will first be accomplished by modifying the existing cavity tutorial.
+	\item The next step in this process is to test the new solver. This will first be accomplished by modifying the existing cavity tutorial. Copy a cavity case from the tutorials folder into your OpenFOAM directory. Open the {\tt transportProperties} dictionary in your favorite editor and add the following line under the definition of nu: 
+	
+	\begin{myframe}
+	{\tt %
+	alpha \tab \tab \tab alpha [0 2 -1 0 0 0 0] 0.002;
+	}
+	\end{myframe}
+	
+	
+	In the {\tt ./0/} folder, create a file for the initial and boundary conditions of temperature:
+	
+	\begin{myframe}
+	{\tt %
+
+	FoamFile\\
+	\{\\
+		\tab version\tab ~~~ 2.0;\\
+		\tab format\tab ~~~~ ascii;\\
+		\tab class\tab ~~~~~ volScalarField; \\
+		\tab object\tab ~~~~ T; \\
+	\} \\
+	//**********************************// \\
+	\\
+	dimensions\tab\tab ~~~~~ [0 0 0 1 0 0 0];\\
+	\\
+	internalField\tab\tab ~~  uniform 300;\\
+	\\
+	boundaryField\\
+	\{\\
+	\tab movingWall\\
+	\tab \{\\
+		\tab \tab type \tab \tab   \tab ~~  fixedValue;\\
+		\tab \tab value \tab \tab   \tab ~  uniform 350;\\
+	\tab \}\\
+	\\
+	\tab fixedWalls\\
+	\tab \{\\
+		\tab \tab type    \tab \tab \tab  ~~ fixedValue;\\
+		\tab \tab value  \tab \tab \tab  ~  uniform 300;\\
+	\tab\}\\
+	\\
+	\tab frontAndBack\\
+	\tab \{\\
+		\tab \tab type   \tab \tab \tab   ~~  empty;\\
+	\tab \}\\
+	\}\\
+	
+	}
+\end{myframe}
+	
+	
+	The next thing tha must be done is to choose discretization scemes and solution algorithms for the extra energy equation. By adding a new equation to solve, we need to tell OpenFOAM what discretization schemes to apply to the equations. This is done in the {\tt fvSchemes} dictionary. Open the 'fvSchemes' dictionary. Now, there are two main items added in the thermal transport equation above: a divergence term and a laplacian. Under each of these sections in the dictionary, we need to add terms which match what was added in the solver source code. Edit your file so it includes the following: 
+	
+	\begin{myframe}
+	{\tt %
+	divSchemes\\
+	\{\\
+	\tab default~~~~~~~~~~~~~~~~none;\\
+	\tab div(phi,U)~~~~~~~~~~~~~Gauss linear; \\
+	\tab div(phi,T)~~~~~~~~~~~~~Gauss upwind; \\
+	\}\\
+	\\
+	laplacianSchemes\\
+	\{\\
+	\tab default~~~~~~~~~~~~~~~~none;\\
+	\tab laplacian(nu,U)~~~~~~~~Gauss linear corrected;\\
+	\tab laplacian((1|A(U)),p)~~Gauss linear corrected;\\
+	\tab laplacian(alpha,T)~~~~~Gauss linear corrected;\\
+	\}\\
+		
+	}
+	\end{myframe}
+
+	Alternatively, a scheme can be added to the 'default' field instead of adding specific ones below. Next, open the {\tt fvSolution} dictionary. It should look like this: 
+	
+	\begin{myframe}
+	{\tt %
+	solvers\\
+	\{\\
+    \tab  p\\
+	\tab \{\\
+	\tab \tab solver~~~~~~~~~~~~PCG;\\
+	\tab \tab preconditioner~~~~DIC;\\
+	\tab \tab tolerance~~~~~~~~~1e-06;\\
+	\tab \tab relTol~~~~~~~~~~~~0.05;\\
+	\tab \}\\
+	\\
+	\tab pFinal\\
+	\tab \{\\
+	\tab \tab\$p;\\
+	\tab \tab relTol~~~~~~~~~~~~0;\\
+	\tab \}\\
+	\\
+	\tab U\\
+	\tab \{\\
+	\tab \tab solver~~~~~~~~~~~~smoothSolver;\\
+	\tab \tab smoother~~~~~~~~~~symGaussSeidel;\\
+	\tab \tab tolerance~~~~~~~~~1e-05;\\
+	\tab \tab relTol~~~~~~~~~~~~0;\\
+	\tab \}\\
+	\tab //add this...\\
+	\tab T \\
+	\tab \{\\
+	\tab \tab solver~~~~~~~~~~~~BICCG;\\
+	\tab \tab preconditioner~~~~DILU;\\
+	\tab \tab tolerance~~~~~~~~~1e-7;\\
+	\tab \tab relTol~~~~~~~~~~~~0;\\
+	\tab \};\\
+	\tab //done editing...\\
+	\}
+	}
+	\end{myframe}
+
+
+	After successfully running the case, the temperature field should look similar to the following picture
+	
+	\begin{center}
+		\includegraphics[width = 0.8\textwidth]{temp.png}
+	\end{center}
+	
+	
+	\item Simulate the thermal laminar 3D pipe flow of the previous tutorial, by adding a temperature field, similarly with the previous step. Define two opposite walls with temperatures 300 K and 350 K respectively, while the other two will be fully insulated.
+	
+	\item Create a new solver, called {\tt laplaceFoam} that solves the Laplace equation in a rectangular flat plate, with boundary and initial conditions as shown in the next figure. Use the quantities $T_w=10~K,~L=2~m$ and $H=1~m$.
 	
 \end{enumerate}
 
