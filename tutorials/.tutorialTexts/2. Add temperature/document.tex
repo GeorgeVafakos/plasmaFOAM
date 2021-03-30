@@ -157,6 +157,41 @@
 	
 	The next step is to add a new equation describing the transport of the temperature. Return to editing the {\tt myIcoFoam.C} file. Because the temperature transport depends on the velocity field, we will add the equation after the momentum equation is solved (after the PISO loop), but before the time step is written. Edit your file so it looks like this: 
 	
+
+	\begin{myframe}
+	{\tt %
+		
+		\tab\tab\tab \#include "continuityErrs.H" \\
+		\\
+		\tab\tab\tab U -= rUA*fvc::grad(p);\\
+		\tab\tab\tab U.correctBoundaryConditions();\\
+		\tab\tab \}\\
+		\\
+		\tab\tab //add these lines...\\
+		\tab\tab fvScalarMatrix TEqn\\
+		\tab\tab (\\
+		\tab\tab\tab fvm::ddt(T)\\
+		\tab\tab\tab + fvm::div(phi, T)\\
+		\tab\tab\tab - fvm::laplacian(alpha, T)\\
+		\tab\tab);\\
+		\\
+		\tab\tab TEqn.solve();\\
+		\tab\tab //done adding lines...\\
+		\\
+		\tab\tab runTime.write();\\
+	}
+	\end{myframe}
+	
+	These lines add a new equation for the temperature and make use of the face flux variable, phi, which is already used in the momentum equation solution.
+	
+	Save your changes and run wmake to compile the solver: 
+	
+	{\tt \tab \$ wmake}
+	
+	
+	
+	\item The next step in this process is to test the new solver. This will first be accomplished by modifying the existing cavity tutorial.
+	
 \end{enumerate}
 
 %	\item Δημιουργείστε έναν καινούριο \en{solver} με τον όνομα \en{\tt laplaceFoam} που να λύνει την εξίσωση \en{Laplace} σε μια ορθογωνική πλάκα, με συνοριακές και αρχικές συνθήκες όπως φαίνονται στην παρακάτω εικόνα. 
