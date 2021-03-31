@@ -7,13 +7,19 @@
 \usepackage{adjustbox}
 \newcommand\tab[1][0.5cm]{\hspace*{#1}}
 \usepackage{mdframed}
-\newmdenv[linecolor=white,backgroundcolor=blue!5]{myframe}
+\newmdenv[linecolor=white,backgroundcolor=blue!10]{myframe}
 \usepackage{graphicx}
 \usepackage{subcaption}
 \usepackage{amsmath}
 \usepackage{bm}
 \usepackage{lipsum}
-
+\usepackage[shortlabels]{enumitem}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead{}
+\fancyfoot{}
+\fancyfoot[C]{\thepage}
 
 % Set greek language
 %\usepackage[english,greek]{babel}
@@ -49,7 +55,7 @@
 \setcounter{section}{1}
 \section{Add temperature to solvers}
 	
-\begin{enumerate}
+\begin{enumerate}[2.1]
 	\item Add  the heat transport equation to the {\tt icoFoam} solver, in order to calculate how the flow can affect the heat transfer between two heated walls. The heat transport equation is
 	
 	$$
@@ -313,53 +319,22 @@
 	
 	\item Simulate the thermal laminar 3D pipe flow of the previous tutorial, by adding a temperature field, similarly with the previous step. Define two opposite walls with temperatures 300 K and 350 K respectively, while the other two will be fully insulated.
 	
-	\item Create a new solver, called {\tt laplaceFoam} that solves the Laplace equation in a rectangular flat plate, with boundary and initial conditions as shown in the next figure. Use the quantities $T_w=10~K,~L=2~m$ and $H=1~m$.
+	\item Create a new solver, called {\tt laplaceFoam} that solves the Laplace equation in a rectangular flat plate, with boundary and initial conditions as shown in the next figure. Use the quantities $T_w=100~K,~L=2~m$ and $H=1~m$.
+	
+	
+	\begin{center}
+		\includegraphics[width=0.8\textwidth]{laplace.png}
+	\end{center}
+
+	For the creation of the new solver, copy the existing solver {\tt electrostaticFoam} into the {\tt applications} directory, in your {\tt Home} folder, and change the name in all the appropriate files, as described in Step 2.
+
+	Modify the {\tt laplaceFoam.C} and the  {\tt createFields.H} files, in order to only solve the Laplace equation for the {\tt volScalarField} T. Delete any unnecessary commands, equations and variables inside the solver and compile the solver.
+
+	Create the case and test the validity of your results.
+
 	
 \end{enumerate}
 
-%	\item Δημιουργείστε έναν καινούριο \en{solver} με τον όνομα \en{\tt laplaceFoam} που να λύνει την εξίσωση \en{Laplace} σε μια ορθογωνική πλάκα, με συνοριακές και αρχικές συνθήκες όπως φαίνονται στην παρακάτω εικόνα. 
-%	
-%	Χρησιμοποιείστε $T_w=10~K,~L=2~m$ και $H=1~m$.
-%	
-%	\begin{center}
-%		\includegraphics[scale = 0.45]{laplace.jpg}
-%	\end{center}
-%	
-%	Για την δημιουργία του καινούριου \en{solver}, αντιγράψτε έναν ήδη υπάρχον από τον φάκελο \en{\tt \$FOAM\_SOLVERS} σε έναν νέο φάκελο με όνομα \en{\tt applications} στο \en{local directory} (π.χ. \en{\tt \$HOME/OpenFoam/<USER>-8/}, όπου \en{\tt <USER>} το όνομα του χρήστη). Για ευκολία, να χρησιμοποιηθεί ο \en{solver} \en{\tt electrostaticFoam} που βρίσκεται στην κατηγορία λυτών \en{electromagnetics}.
-%	
-%	Μετονομάστε τον φάκελο που περιέχει τον καινούριο λύτη από \en{\tt electrostaticFoam} σε \en{\tt laplaceFoam}, το αρχείο \en{\tt electrostaticFoam.c} σε \en{\tt laplaceFoam.c} και τροποποιείστε τα περιεχόμενά του αρχείου \en{\tt ./Make/files} έτσι ώστε να γράφει:
-%	
-%%	\hspace{0.4cm}
-%%	\begin{minipage}{0.6\textwidth}
-%%	\begin{myframe}
-%%	\en{\tt %
-%%	 {\small 1} ~laplaceFoam.C \\%
-%%	 {\small 2} ~\\%	
-%%	 {\small 3} ~EXE = \$(FOAM\_USER\_APPBIN)/laplaceFoam}
-%% 	\end{myframe}
-%%	\end{minipage}
-%
-%	\hspace{0.4cm}
-%	\begin{minipage}{0.92\textwidth}
-%	\begin{myframe}
-%		\en{\tt %
-%			laplaceFoam.C \\%
-%			\\%	
-%			EXE = \$(FOAM\_USER\_APPBIN)/laplaceFoam}
-%	\end{myframe}
-%	\end{minipage}
-%
-%	Τροποιείστε κατάλληλα τα περιεχόμενα των αρχείων \en{\tt laplaceFoam.c} και \en{\tt createFields.h} έτσι ώστε να λύνεται η μόνο εξίσωση \en{Laplace} για το \en{\tt scalarField} με όνομα \en{\tt T}. 
-%	
-%	Για να κάνετε \en{compile} τον λύτη, τρέξτε στον φάκελο την εντολή
-%	
-%	\en{\tt \tab \$ wmake}
-%	
-%	Σε περίπτωση που χρειαστεί να διαγράψετε το \en{executable} αρχείο που υπάρχει ήδη, χρησιμοποιείστε την εντολή
-%	
-%	\en{\tt \tab \$ wclean}
-%	
-%	Τέλος τρέξτε το \en{case} και ελέγξτε τα αποτελέσματά σας.
 %	
 %	\item Σε αυτό το βήμα θα μοντελοποιηθεί η μετάδοση θερμότητας σε δυο εφαπτομενικά  χωρία, το ένα θα είναι μία στερεή πλάκα, όπου θα λυθεί η εξίσωση \en{Laplace} και το άλλο ο αέρας, όπου θα λυθεί η εξίσωση \en{Poisson}. Στο παρακάτω σχήμα φαίνονται ακριβώς τα χαρακτηριστικά, οι εξισώσεις και οι συνοριακές συνθήκες που θα χρησιμοποιηθούν. Μπορεί να χρησιμοποιηθεί ο λύτης \en{\tt laplaceFoam} που ήδη έχετε κατασκευάσει στο προηγούμενο βήμα, και να τροποποιηθεί για το συγκεκριμένο πρόβλημα.
 %	

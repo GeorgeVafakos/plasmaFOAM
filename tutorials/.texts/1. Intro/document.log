@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.10.8)  30 MAR 2021 18:08
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.10.8)  31 MAR 2021 16:27
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -474,12 +474,34 @@ Package caption Info: hyperref package is loaded.
 \c@subfigure=\count285
 \c@subtable=\count286
 )
+(/usr/share/texlive/texmf-dist/tex/latex/enumitem/enumitem.sty
+Package: enumitem 2019/06/20 v3.9 Customized lists
+\labelindent=\skip120
+\enit@outerparindent=\dimen179
+\enit@toks=\toks23
+\enit@inbox=\box55
+\enit@count@id=\count287
+\enitdp@description=\count288
+)
+(/usr/share/texlive/texmf-dist/tex/latex/fancyhdr/fancyhdr.sty
+Package: fancyhdr 2019/01/31 v3.10 Extensive control of page headers and footer
+s
+\f@nch@headwidth=\skip121
+\f@nch@O@elh=\skip122
+\f@nch@O@erh=\skip123
+\f@nch@O@olh=\skip124
+\f@nch@O@orh=\skip125
+\f@nch@O@elf=\skip126
+\f@nch@O@erf=\skip127
+\f@nch@O@olf=\skip128
+\f@nch@O@orf=\skip129
+)
 (/usr/share/texlive/texmf-dist/tex/latex/base/inputenc.sty
 Package: inputenc 2018/08/11 v1.3c Input encoding file
-\inpenc@prehook=\toks23
-\inpenc@posthook=\toks24
+\inpenc@prehook=\toks24
+\inpenc@posthook=\toks25
 )
-Package hyperref Info: Option `colorlinks' set `true' on input line 28.
+Package hyperref Info: Option `colorlinks' set `true' on input line 35.
 
 (/usr/share/texlive/texmf-dist/tex/latex/tabu/tabu.sty
 Package: tabu 2019/01/11 v2.9 - flexible LaTeX tabulars (FC+tabu-fixed) + inter
@@ -487,65 +509,65 @@ mediate FMi
 
 (/usr/share/texlive/texmf-dist/tex/latex/tools/array.sty
 Package: array 2019/08/31 v2.4l Tabular extension package (FMi)
-\col@sep=\dimen179
-\ar@mcellbox=\box55
-\extrarowheight=\dimen180
-\NC@list=\toks25
-\extratabsurround=\skip120
-\backup@length=\skip121
-\ar@cellbox=\box56
+\col@sep=\dimen180
+\ar@mcellbox=\box56
+\extrarowheight=\dimen181
+\NC@list=\toks26
+\extratabsurround=\skip130
+\backup@length=\skip131
+\ar@cellbox=\box57
 )
-\c@taburow=\count287
-\tabu@nbcols=\count288
-\tabu@cnt=\count289
-\tabu@Xcol=\count290
-\tabu@alloc=\count291
-\tabu@nested=\count292
-\tabu@target=\dimen181
-\tabu@spreadtarget=\dimen182
-\tabu@naturalX=\dimen183
-\tabucolX=\dimen184
-\tabu@Xsum=\dimen185
-\extrarowdepth=\dimen186
-\abovetabulinesep=\dimen187
-\belowtabulinesep=\dimen188
-\tabustrutrule=\dimen189
-\tabu@thebody=\toks26
-\tabu@footnotes=\toks27
-\tabu@box=\box57
-\tabu@arstrutbox=\box58
-\tabu@hleads=\box59
-\tabu@vleads=\box60
-\tabu@cellskip=\skip122
+\c@taburow=\count289
+\tabu@nbcols=\count290
+\tabu@cnt=\count291
+\tabu@Xcol=\count292
+\tabu@alloc=\count293
+\tabu@nested=\count294
+\tabu@target=\dimen182
+\tabu@spreadtarget=\dimen183
+\tabu@naturalX=\dimen184
+\tabucolX=\dimen185
+\tabu@Xsum=\dimen186
+\extrarowdepth=\dimen187
+\abovetabulinesep=\dimen188
+\belowtabulinesep=\dimen189
+\tabustrutrule=\dimen190
+\tabu@thebody=\toks27
+\tabu@footnotes=\toks28
+\tabu@box=\box58
+\tabu@arstrutbox=\box59
+\tabu@hleads=\box60
+\tabu@vleads=\box61
+\tabu@cellskip=\skip132
 )
 (/usr/share/texlive/texmf-dist/tex/latex/tools/tabularx.sty
 Package: tabularx 2020/01/15 v2.11c `tabularx' package (DPC)
-\TX@col@width=\dimen190
-\TX@old@table=\dimen191
-\TX@old@col=\dimen192
-\TX@target=\dimen193
-\TX@delta=\dimen194
-\TX@cols=\count293
-\TX@ftn=\toks28
+\TX@col@width=\dimen191
+\TX@old@table=\dimen192
+\TX@old@col=\dimen193
+\TX@target=\dimen194
+\TX@delta=\dimen195
+\TX@cols=\count295
+\TX@ftn=\toks29
 ) (./document.aux)
 \openout1 = `document.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 37.
-LaTeX Font Info:    ... okay on input line 37.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 37.
-LaTeX Font Info:    ... okay on input line 37.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 37.
-LaTeX Font Info:    ... okay on input line 37.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 37.
-LaTeX Font Info:    ... okay on input line 37.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 37.
-LaTeX Font Info:    ... okay on input line 37.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 37.
-LaTeX Font Info:    ... okay on input line 37.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 37.
-LaTeX Font Info:    ... okay on input line 37.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 37.
-LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -581,8 +603,8 @@ LaTeX Font Info:    ... okay on input line 37.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-\AtBeginShipoutBox=\box61
-Package hyperref Info: Link coloring ON on input line 37.
+\AtBeginShipoutBox=\box62
+Package hyperref Info: Link coloring ON on input line 44.
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2019/09/16 v2.46 Cross-referencing by name of section
 
@@ -592,11 +614,11 @@ Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 (/usr/share/texlive/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
-\c@section@level=\count294
+\c@section@level=\count296
 )
-LaTeX Info: Redefining \ref on input line 37.
-LaTeX Info: Redefining \pageref on input line 37.
-LaTeX Info: Redefining \nameref on input line 37.
+LaTeX Info: Redefining \ref on input line 44.
+LaTeX Info: Redefining \pageref on input line 44.
+LaTeX Info: Redefining \nameref on input line 44.
 
 (./document.out) (./document.out)
 \@outlinefile=\write3
@@ -605,17 +627,17 @@ LaTeX Info: Redefining \nameref on input line 37.
 
 (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count295
-\scratchdimen=\dimen195
-\scratchbox=\box62
-\nofMPsegments=\count296
-\nofMParguments=\count297
-\everyMPshowfont=\toks29
-\MPscratchCnt=\count298
-\MPscratchDim=\dimen196
-\MPnumerator=\count299
-\makeMPintoPDFobject=\count300
-\everyMPtoPDFconversion=\toks30
+\scratchcounter=\count297
+\scratchdimen=\dimen196
+\scratchbox=\box63
+\nofMPsegments=\count298
+\nofMParguments=\count299
+\everyMPshowfont=\toks30
+\MPscratchCnt=\count300
+\MPscratchDim=\dimen197
+\MPnumerator=\count301
+\makeMPintoPDFobject=\count302
+\everyMPtoPDFconversion=\toks31
 ) (/usr/share/texlive/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
@@ -628,7 +650,7 @@ e
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 LaTeX Font Info:    Trying to load font information for TS1+cmtt on input line 
-60.
+68.
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/ts1cmtt.fd
 File: ts1cmtt.fd 2019/12/16 v2.5j Standard LaTeX font definitions
@@ -636,12 +658,12 @@ File: ts1cmtt.fd 2019/12/16 v2.5j Standard LaTeX font definitions
 <2D_mesh.png, id=12, 1501.61pt x 918.43124pt>
 File: 2D_mesh.png Graphic file (type png)
 <use 2D_mesh.png>
-Package pdftex.def Info: 2D_mesh.png  used on input line 86.
+Package pdftex.def Info: 2D_mesh.png  used on input line 94.
 (pdftex.def)             Requested size: 386.95894pt x 60.70273pt.
 <2D_velocity.png, id=14, 1501.61pt x 918.43124pt>
 File: 2D_velocity.png Graphic file (type png)
 <use 2D_velocity.png>
-Package pdftex.def Info: 2D_velocity.png  used on input line 91.
+Package pdftex.def Info: 2D_velocity.png  used on input line 99.
 (pdftex.def)             Requested size: 386.95894pt x 60.70273pt.
  [1
 
@@ -650,32 +672,32 @@ Package pdftex.def Info: 2D_velocity.png  used on input line 91.
 <3D_mesh2.png, id=35, 1501.61pt x 918.43124pt>
 File: 3D_mesh2.png Graphic file (type png)
 <use 3D_mesh2.png>
-Package pdftex.def Info: 3D_mesh2.png  used on input line 101.
+Package pdftex.def Info: 3D_mesh2.png  used on input line 109.
 (pdftex.def)             Requested size: 386.95894pt x 236.67035pt.
 <3D_velocity.png, id=36, 1501.61pt x 918.43124pt>
 File: 3D_velocity.png Graphic file (type png)
 <use 3D_velocity.png>
-Package pdftex.def Info: 3D_velocity.png  used on input line 102.
+Package pdftex.def Info: 3D_velocity.png  used on input line 110.
 (pdftex.def)             Requested size: 386.95894pt x 236.67035pt.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 243.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 251.
  [2 <./3D_mesh2.png (PNG copy)> <./3D_velocity.png (PNG copy)>]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 243.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 251.
 
 (./document.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 243.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 243.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 251.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 251.
 Package rerunfilecheck Info: File `document.out' has not changed.
 (rerunfilecheck)             Checksum: 926CC81BED10960D3A5E2C7A6C9781F4;40.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 243.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 251.
  ) 
 Here is how much of TeX's memory you used:
- 11129 strings out of 481239
- 178330 string characters out of 5920377
- 478812 words of memory out of 5000000
- 26196 multiletter control sequences out of 15000+600000
+ 11580 strings out of 481239
+ 185234 string characters out of 5920377
+ 488467 words of memory out of 5000000
+ 26639 multiletter control sequences out of 15000+600000
  535106 words of font info for 34 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 62i,9n,100p,1433b,631s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 62i,11n,100p,1433b,685s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-ts1.enc}</usr/share/texli
 ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/tex
 mf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dis
@@ -683,7 +705,7 @@ t/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts
 /type1/public/amsfonts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/p
 ublic/amsfonts/cm/cmtt10.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm
 0700.pfb></usr/share/texmf/fonts/type1/public/cm-super/sftt1000.pfb>
-Output written on document.pdf (2 pages, 481992 bytes).
+Output written on document.pdf (2 pages, 482020 bytes).
 PDF statistics:
  72 PDF objects out of 1000 (max. 8388607)
  54 compressed objects within 1 object stream

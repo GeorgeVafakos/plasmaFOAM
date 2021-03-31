@@ -10,6 +10,13 @@
 \newmdenv[linecolor=white,backgroundcolor=blue!5]{myframe}
 \usepackage{graphicx}
 \usepackage{subcaption}
+\usepackage[shortlabels]{enumitem}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead{}
+\fancyfoot{}
+\fancyfoot[C]{\thepage}
 
 % Set greek language
 %\usepackage[english,greek]{babel}
@@ -46,7 +53,8 @@
 %\subsection*{1.0 ~ Intro}
 \section{Intro}
 	
-\begin{enumerate}
+\begin{enumerate}[label=1.\arabic*]
+	
 	\item Install a Linux distribution in your computer configuration (preferably the latest \href{https://ubuntu.com/}{Ubuntu LTS} version), either alongside with Windows (dual boot) or using a Virtual Machine. The next step is to familiarize with the Linux terminal [\href{https://ubuntu.com/tutorials/command-line-for-beginners#6-a-bit-of-plumbing}{1}, \href{https://www.howtogeek.com/140679/beginner-geek-how-to-start-using-the-linux-terminal/}{2}] and the Linux OS in general.
 	
 	\item Successfully install the latest version of the OpenFOAM \textsuperscript{\textcopyright} open-source CFD software and the post-process tool Paraview \textsuperscript{\textcopyright} from the official website (\href{https://openfoam.org/}{https://openfoam.org/}), following the installation instructions.

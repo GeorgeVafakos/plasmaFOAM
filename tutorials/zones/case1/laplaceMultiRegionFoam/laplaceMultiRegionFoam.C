@@ -22,10 +22,10 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    actuatorElectrostatic2RegionsFoam
+    laplaceMultiRegionFoam
 
 Description
-    Solver for electrostatics in a DBD actuator.
+    Solver for the Laplace equation in two regions.
 
 \*---------------------------------------------------------------------------*/
 
