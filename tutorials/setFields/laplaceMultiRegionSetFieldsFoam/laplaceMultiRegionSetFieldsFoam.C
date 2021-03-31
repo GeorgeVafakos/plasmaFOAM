@@ -52,10 +52,10 @@ int main(int argc, char *argv[])
     {
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-        // Solve the Laplace equation in the air region
+        // Solve the Poisson equation in the air region
         solve 
         (
-            fvm::laplacian(Tair)
+            fvm::laplacian(Tair) - S
         );
 
         // Solve the Laplace equation in the solid region

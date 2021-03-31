@@ -16,6 +16,7 @@ rm -f log.*
 rm -f ./0/cellToRegion
 rm -f ./constant/cellToRegion
 find ./0/* -type d 2>/dev/null -exec rm -r {}/cellToRegion \;
+cp ./0/air/S.org ./0/air/S
 cleanCase
 
 # Output message

@@ -14,6 +14,11 @@ runApplication checkMesh
 # Run topoSet and Split regions
 splitMeshRegions -cellZones -overwrite
 
+# Run setFields
+cp ./0/air/S.org ./0/air/S
+cp ./system/setFieldsDict ./system/air/
+setFields -region air
+
 # Output message
 echo
 echo Case created

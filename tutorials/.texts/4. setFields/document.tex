@@ -56,15 +56,65 @@
 \section{setFields}
 	
 \begin{enumerate}[4.1]
-	\item Here the utility {\tt setFields} will be examined. The {\tt setFields} tool enables us to set the initial condition of a {\tt vectorField} or {\tt scalarField} to a fixed value, for a specified region of the domain. Here we will use a similar case as the {\tt ./tutorials/zones/case2/}, with the difference that in the air region, there is a circular heat source, as it can be seen in he figure below. In the air region, we will solve the Poisson equation, in order to take the heat source's effect under consideration. The parameters that will be used are $L=2~m$, $H=1~m$, $T_L=350~K$, $T_H=300~K$, $r=0.125~m$. The source term $S$ is present only in the air region. Inside the circle of radius $r$ takes the value $S=10~K/m^2$, and zero everywhere else. 
+	\item Here the utility {\tt setFields} will be examined. The {\tt setFields} tool enables us to set the initial condition of a {\tt vectorField} or {\tt scalarField} to a fixed value, for a specified region of the domain. Here we will use a similar case as the {\tt ./tutorials/zones/case2/}, with the difference that in the air region, there is a circular heat source, as it can be seen in he figure below. In the air region, we will solve the Poisson equation, in order to take the heat source's effect under consideration. The parameters that will be used are $L=2~m$, $H=1~m$, $T_L=350~K$, $T_H=300~K$, $r=0.125~m$. The source term $S$ is present only in the air region. Inside the circle of radius $r$, the source term takes the value $S=10~K/m^2$, and zero everywhere else. 
 	
-	This is done using the {\tt setFieldsDict}, as it can be seen from the example. From the 
+	This is done using the {\tt setFieldsDict}, as it can be seen from the example. As the field $S$ belongs in the air region, the {\tt setFieldsDict} must be copied into the {\tt ./system/air/} directory.
 	
 	
 	\begin{center}
 		\includegraphics[width=0.9\textwidth]{source.png}
 	\end{center}
 
+
+	\item In the solver, the $S$ {\tt volScalarField} must be defined in the {\tt createFields.H}. 
+	
+	\begin{myframe}
+	{\tt 
+	Info<< "Calculating field S\textbackslash n" << endl;\\
+	volScalarField S\\
+	(\\
+	\tab IOobject\\
+	\tab (\\
+	\tab \tab "S",\\
+	\tab \tab runTime.timeName(),\\
+	\tab \tab meshA,\\
+	\tab \tab IOobject::MUST\_READ,\\
+	\tab \tab IOobject::AUTO\_WRITE\\
+	\tab ),\\
+	\tab meshA\\
+	);\\
+	}
+	\end{myframe}
+	
+	The Laplace equation for the air region must me modified into the Poisson equation as follows:
+	
+	\begin{myframe}
+	{\tt 
+        solve \\
+		(\\
+		\tab fvm::laplacian(Tair) - S\\
+		);
+	}
+	\end{myframe}
+
+	\newpage
+
+	\item Run the case and evaluate the results.
+	
+	\begin{figure}[h]
+		\centering
+		\begin{subfigure}{\textwidth}
+			\centering
+			\includegraphics[width=0.9\textwidth]{S.png}
+			\caption{Heat source}
+		\end{subfigure}
+		\begin{subfigure}{\textwidth}
+			\centering
+			\includegraphics[width=0.9\textwidth]{T.png}
+			\caption{Temperature}
+		\end{subfigure}
+	\end{figure}
+	
 	
 \end{enumerate}
 

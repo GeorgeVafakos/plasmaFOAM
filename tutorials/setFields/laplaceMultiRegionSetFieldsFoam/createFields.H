@@ -64,3 +64,17 @@ volVectorField qAir
     ),
     -kAir*fvc::grad(Tair)
 );
+
+Info<< "Calculating field S\n" << endl;
+volScalarField S
+(
+    IOobject
+    (
+        "S",
+        runTime.timeName(),
+        meshA,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    meshA
+);
