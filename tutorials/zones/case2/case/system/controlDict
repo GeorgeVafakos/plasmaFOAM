@@ -15,7 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     laplaceFoam;
+application     laplaceMultiRegionFoam;
 
 startFrom       startTime;
 

@@ -22,20 +22,18 @@ boundaryField
 {
     topWall
     {
-        type            fixedValue;
-        value           uniform 0;
+        type            zeroGradient;
     }
 
     rightWall
     {
         type            fixedValue;
-        value           uniform 10;
+        value           uniform 300;
     }
 
     bottomWall
     {
-        type            fixedValue;
-        value           uniform 0;
+        type            zeroGradient;
     }
 
     solid_to_region0

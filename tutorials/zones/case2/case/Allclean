@@ -11,8 +11,11 @@ rm -f ./constant/cellToRegion
 find ./system/*   -type d 2>/dev/null -exec rm -v -r {} \;
 find ./constant/* -type d 2>/dev/null -exec rm -v -r {} \;
 
-# Delete all time steps
+# Delete all time steps and cellToRegions files
 rm -f log.*
+rm -f ./0/cellToRegion
+rm -f ./constant/cellToRegion
+find ./0/* -type d 2>/dev/null -exec rm -r {}/cellToRegion \;
 cleanCase
 
 # Output message
