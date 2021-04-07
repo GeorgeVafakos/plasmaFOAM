@@ -76,7 +76,7 @@ volScalarField voltAirTot
         IOobject::AUTO_WRITE
     ),
     mesh,
-    0.0
+    dimensionedScalar("temp",dimensionSet(1,2,-3,0,0,-1,0),scalar(0))
 );
 
 volScalarField epsilonA
