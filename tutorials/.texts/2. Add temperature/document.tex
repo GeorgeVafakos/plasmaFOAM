@@ -59,7 +59,7 @@
 	\item Add  the heat transport equation to the {\tt icoFoam} solver, in order to calculate how the flow can affect the heat transfer between two heated walls. The heat transport equation is
 	
 	$$
-	\dfrac{\partial T}{\partial t} + (\bm{\nabla}\cdot \bm{V}) T = \alpha \nabla^2 T
+	\dfrac{\partial T}{\partial t} + (\bm{V} \cdot \bm{\nabla}) T = \alpha \nabla^2 T
 	$$
 
 	where $\alpha$ is the themal diffusivity.
@@ -70,7 +70,7 @@
 		
 	\tab	\$ mkdir -p \$WM\_PROJECT\_USER\_DIR/applications \\
 	\tab 	\$ cp -r \$FOAM\_SOLVERS/incompressible/icoFoam \$WM\_PROJECT\_USER\_DIR/applications/myIcoFoam
-	\tab \$ cd \$WM\_PROJECT\_USER\_DIR/applications/solvers/myIcoFoam
+	\tab 	\$ cd \$WM\_PROJECT\_USER\_DIR/applications/myIcoFoam
 	}
 	
 	\vspace{0.2cm}
