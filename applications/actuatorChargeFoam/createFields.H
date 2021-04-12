@@ -45,6 +45,35 @@ volScalarField voltA
     mesh
 );
 
+Info<< "Reading field voltR\n" << endl;
+volScalarField voltR
+(
+    IOobject
+    (
+        "voltR",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
+
+Info<< "Reading field voltAirTot\n" << endl;
+volScalarField voltAirTot
+(
+    IOobject
+    (
+        "voltAirTot",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh,
+    dimensionedScalar("temp",dimensionSet(1,2,-3,0,0,-1,0),scalar(0))
+);
+
 volScalarField epsilonA
 (
     IOobject
@@ -53,7 +82,7 @@ volScalarField epsilonA
         runTime.timeName(),
         mesh,
         IOobject::NO_READ,
-        IOobject::AUTO_WRITE
+        IOobject::NO_WRITE
     ),
     mesh,
     dimensionedScalar("temp",dimless,scalar(1))
@@ -84,7 +113,7 @@ surfaceScalarField rhoqFlux
         IOobject::NO_READ,
         IOobject::NO_WRITE
     ),
-    -k*mesh.magSf()*fvc::snGrad(voltA)
+    -k*mesh.magSf()*fvc::snGrad(voltAirTot)
 );
 
 Info<< "Calculating field EA\n" << endl;
@@ -101,34 +130,6 @@ volVectorField EA
     -fvc::grad(voltA)
 );
 
-Info<< "Calculating field Fc\n" << endl;
-volVectorField Fc
-(
-    IOobject
-    (
-        "Fc",
-        runTime.timeName(),
-        mesh,
-        IOobject::NO_READ,
-        IOobject::AUTO_WRITE
-    ),
-    rhoq*EA
-);
-
-Info<< "Reading field voltR\n" << endl;
-volScalarField voltR
-(
-    IOobject
-    (
-        "voltR",
-        runTime.timeName(),
-        mesh,
-        IOobject::MUST_READ,
-        IOobject::AUTO_WRITE
-    ),
-    mesh
-);
-
 Info<< "Calculating field ER\n" << endl;
 volVectorField ER
 (
@@ -141,4 +142,32 @@ volVectorField ER
         IOobject::AUTO_WRITE
     ),
     -fvc::grad(voltR)
+);
+
+Info<< "Calculating field EAirTot\n" << endl;
+volVectorField EAirTot
+(
+    IOobject
+    (
+        "EAirTot",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    -fvc::grad(voltAirTot)
+);
+
+Info<< "Calculating field Fc\n" << endl;
+volVectorField Fc
+(
+    IOobject
+    (
+        "Fc",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    rhoq*EAirTot
 );

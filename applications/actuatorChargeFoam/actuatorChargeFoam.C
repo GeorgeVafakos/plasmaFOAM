@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     #include "createMesh.H"
     #include "createMeshD.H"
     #include "createMeshI.H"
-    // #include "createTimeControls.H"
+    #include "createTimeControls.H"
     #include "createFields.H"
     #include "createFieldsSolid.H"
 
@@ -57,8 +57,8 @@ int main(int argc, char *argv[])
         iterCount++;
 
         // Control time step according to Co num
-        // #include "CourantNo.H"
-        // #include "setDeltaT.H" 
+        #include "CourantNo.H"
+        #include "setDeltaT.H" 
 
 
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -89,13 +89,16 @@ int main(int argc, char *argv[])
             fvm::laplacian(voltR) + rhoq/e0
         );
 
+        // Calculate total electric potential in air
+        voltAirTot = voltA + voltR;
+
 
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
         // Charge Transport
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
         // Update rhoFlux
-        rhoqFlux = -k*mesh.magSf()*fvc::snGrad(voltA);
+        rhoqFlux = -k*mesh.magSf()*fvc::snGrad(voltAirTot);
 
         // Solve the charge transport equation
         solve
@@ -109,7 +112,8 @@ int main(int argc, char *argv[])
         ED = -fvc::grad(voltD);
         EI = -fvc::grad(voltI);
         ER = -fvc::grad(voltR);
-        Fc = rhoq*EA;
+        EAirTot = EA + ER;
+        Fc = rhoq*EAirTot;
 
         runTime.write();
 

@@ -51,7 +51,7 @@ volScalarField epsilonD
         runTime.timeName(),
         meshD,
         IOobject::NO_READ,
-        IOobject::AUTO_WRITE
+        IOobject::NO_WRITE
     ),
     meshD,
     erD
@@ -65,7 +65,7 @@ volScalarField epsilonI
         runTime.timeName(),
         meshI,
         IOobject::NO_READ,
-        IOobject::AUTO_WRITE
+        IOobject::NO_WRITE
     ),
     meshI,
     erI
