@@ -1,0 +1,39 @@
+#b#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+./Allmesh
+
+
+runApplication -s Air decomposePar -region Air 
+runApplication -s Dielectric decomposePar -region Dielectric
+
+for index in 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 ; 
+do
+
+cp -r processor$index/0/Air/k_Air processor$index/constant/Air/
+cp -r processor$index/0/Dielectric/k_Diel processor$index/constant/Dielectric/
+
+done
+
+mpirun -np 16 electrostatic_DBD_discharge -parallel
+
+runApplication -s Air    reconstructPar -region Air
+runApplication -s Dielectric   reconstructPar -region Dielectric
+
+rm -rf *e-*/Air/phiEl
+rm -rf *e-*/Air/rhoq
+rm -rf *e-*/Air/EA
+rm -rf *e-*/Dielectric/ED
+rm -rf *e-*/Dielectric/phiElDiel
+rm -rf 0.0001/Air/phiEl
+rm -rf 0.0001/Air/rhoq
+rm -rf 0.0001/Air/EA
+rm -rf 0.0001/Dielectric/ED
+rm -rf 0.0001/Dielectric/phiElDiel
+
+
+
+#------------------------------------------------------------------------------

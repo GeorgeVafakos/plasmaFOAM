@@ -35,10 +35,14 @@ sed -i 's/region1/region0/g' ./constant/dielectric/polyMesh/boundary
 
 # Replace 0 directory contents with 0.org
 rm -v -r 0
-mv -v 0.org 0
+cp -v 0.org 0
+# cp -r 0 .0_org
 
 # Run mapFields
 mapFields ../streamer -consistent -sourceTime latestTime
+mapFields ../streamer -sourceRegion dielectric -consistent -sourceTime latestTime -targetRegion dielectric
+mapFields ../streamer -sourceRegion insulator  -consistent -sourceTime latestTime -targetRegion insulator
+
 
 # Output message
 echo

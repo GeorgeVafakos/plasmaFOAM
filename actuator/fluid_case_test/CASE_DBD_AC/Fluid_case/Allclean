@@ -1,0 +1,47 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial clean functions
+. $WM_PROJECT_DIR/bin/tools/CleanFunctions
+
+rm -rf constant/*/polyMesh
+rm -rf constant/*/cellToRegion
+
+rm -rf 0/*/cellToRegion
+rm -rf 0/cellToRegion
+rm -rf 0/phi
+rm -rf 0/rho
+rm -rf 0/Air/EA
+rm -rf 0/Air/f_el
+rm -rf 0/Air/phiEl
+rm -rf 0/Air/rhoq
+rm -rf constant/Air/f_el_*
+
+#remove solution
+foamListTimes -rm
+
+#remove log files
+for index in   1 2 3 4 5 6 7 8 9 10 11; do
+
+  rm log.topoSet.$index
+  rm log.refineMesh.$index
+
+done
+
+rm log.splitMeshRegions
+rm log.topoSet
+rm log.blockMesh
+rm log.stamFoamDBDV2
+rm log.changeDictionary.Air
+rm log.changeDictionary.Anode
+rm log.changeDictionary.Cathode
+rm log.changeDictionary.Dielectric
+rm log.decomposePar.Air
+rm log.decomposePar.Dielectric
+rm log.reconstructPar.Air
+rm log.reconstructPar.Dielectric
+
+
+cleanCase
+
+#------------------------------------------------------------------------------

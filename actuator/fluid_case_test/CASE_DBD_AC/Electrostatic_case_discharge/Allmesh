@@ -1,0 +1,42 @@
+#b#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+./Allclean
+
+cp -r constant/Air/rhoq 0/Air/
+cp -r constant/Air/phiEl 0/Air/
+cp -r constant/Dielectric/phiElDiel 0/Dielectric/
+
+#blockMesh
+runApplication blockMesh  
+
+#mesh refinement
+for index in   1 ; do
+
+  runApplication -s $index \
+      topoSet -dict system/topoSetDict.$index 
+
+  runApplication -s $index \
+      refineMesh -dict system/refineMeshDict.$index  -overwrite 
+
+done
+
+#regions split
+runApplication topoSet -dict system/topoSetDict.Regions
+runApplication splitMeshRegions -cellZones -overwrite
+
+for i in Air Dielectric
+do
+   changeDictionary -region $i > log.changeDictionary.$i 2>&1
+done
+
+mapFields ../Electrostatic_case/ -sourceRegion Air -consistent -sourceTime 'latestTime' -targetRegion Air
+mapFields ../Electrostatic_case/ -sourceRegion Dielectric -consistent -sourceTime 'latestTime' -targetRegion Dielectric
+
+
+
+
+#------------------------------------------------------------------------------

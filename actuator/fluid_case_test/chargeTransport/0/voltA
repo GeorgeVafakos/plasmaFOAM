@@ -10,7 +10,7 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    object      volt;
+    object      voltA;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -23,20 +23,17 @@ boundaryField
 
     upperBoundary
     {
-        type            fixedValue;
-        value           uniform 0;
+        type            zeroGradient;
     }
 
     leftBoundary
     {
-        type            fixedValue;
-        value           uniform 0;
+        type            zeroGradient;
     }
 
     rightBoundary
     {
-        type            fixedValue;
-        value           uniform 0;
+        type            zeroGradient;
     }
 
     highVoltage

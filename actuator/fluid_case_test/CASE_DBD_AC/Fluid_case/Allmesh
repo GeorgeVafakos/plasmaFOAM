@@ -1,0 +1,35 @@
+#b#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+./Allclean
+
+cp -r constant/Air/f_el 0/Air/
+
+#blockMesh
+runApplication blockMesh  
+
+#mesh refinement
+#for index in  6 7 8 9 1 2 3 4 5 ; do
+
+#  runApplication -s $index \
+#      topoSet -dict system/topoSetDict.$index 
+
+#  runApplication -s $index \
+#      refineMesh -dict system/refineMeshDict.$index  -overwrite 
+
+#done
+
+#regions split
+runApplication topoSet -dict system/topoSetDict.Regions
+runApplication splitMeshRegions -cellZones -overwrite
+
+#for i in Air Cathode Anode Dielectric
+#do
+#   changeDictionary -region $i > log.changeDictionary.$i 2>&1
+#done
+
+
+#------------------------------------------------------------------------------
