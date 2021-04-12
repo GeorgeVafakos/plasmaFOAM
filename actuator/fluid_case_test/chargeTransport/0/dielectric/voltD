@@ -1,0 +1,79 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  7  
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      volt;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [1 2 -3 0 0 -1 0];
+
+internalField   uniform 0;
+
+boundaryField
+{
+    leftBoundary
+    {
+        type            fixedValue;
+        value           uniform 0;
+    }
+
+    rightBoundary
+    {
+        type            fixedValue;
+        value           uniform 0;
+    }
+
+    highVoltage
+    {
+        type            uniformFixedValue;
+        uniformValue
+        {
+            type             sine;
+            frequency        1.0e+3;
+            amplitude        10.0e+3;
+            scale            1;  // Scale factor for wave
+            level            0;  // Offset
+        }
+    }
+    
+    ground
+    {
+        type            fixedValue;
+        value           uniform 0;
+    }
+
+    dielectric_to_region0
+    {
+        type            compressible::turbulentTemperatureCoupledBaffleMixed;
+        value           $internalField;
+        Tnbr            voltA;
+        kappaMethod     lookup;
+        kappa           epsilonD;
+    }
+
+    dielectric_to_insulator
+    {
+        type            compressible::turbulentTemperatureCoupledBaffleMixed;
+        value           $internalField;
+        Tnbr            voltI;
+        kappaMethod     lookup;
+        kappa           epsilonD;
+    }
+
+    frontAndBack
+    {
+        type            empty;
+    }
+
+}
+
+// ************************************************************************* //
