@@ -21,43 +21,43 @@ FoamFile
     {
         type            wall;
         inGroups        List<word> 1(wall);
-        nFaces          477;
-        startFace       115399;
+        nFaces          1386;
+        startFace       691144;
     }
     leftBoundary
     {
         type            wall;
         inGroups        List<word> 1(wall);
-        nFaces          122;
-        startFace       115876;
+        nFaces          84;
+        startFace       692530;
     }
     rightBoundary
     {
         type            wall;
         inGroups        List<word> 1(wall);
-        nFaces          122;
-        startFace       115998;
+        nFaces          84;
+        startFace       692614;
     }
     highVoltage
     {
         type            wall;
         inGroups        List<word> 1(wall);
-        nFaces          44;
-        startFace       116120;
+        nFaces          488;
+        startFace       692698;
     }
     frontAndBack
     {
         type            empty;
         inGroups        List<word> 1(empty);
-        nFaces          116004;
-        startFace       116164;
+        nFaces          692556;
+        startFace       693186;
     }
     region0_to_dielectric
     {
         type            mappedWall;
         inGroups        List<word> 1(wall);
-        nFaces          445;
-        startFace       232168;
+        nFaces          3395;
+        startFace       1385742;
         sampleMode      nearestPatchFace;
         sampleRegion    dielectric;
         samplePatch     dielectric_to_region0;

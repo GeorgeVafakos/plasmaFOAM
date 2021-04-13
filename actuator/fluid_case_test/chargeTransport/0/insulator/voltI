@@ -22,17 +22,20 @@ boundaryField
 {
     leftBoundary
     {
-        type            zeroGradient;
+        type            fixedValue;
+        value           uniform 0;
     }
 
     rightBoundary
     {
-        type            zeroGradient;
+        type            fixedValue;
+        value           uniform 0;
     }
 
     bottomBoundary
     {
-        type            zeroGradient;
+        type            fixedValue;
+        value           uniform 0;
     }
 
     ground
