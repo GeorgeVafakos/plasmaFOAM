@@ -46,6 +46,11 @@ int main(int argc, char *argv[])
     #include "createFieldsSolid.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    
+    // Write time steps in file
+    ofstream file;
+    file.open ("deltaTvalues.csv");
+    file.close();
 
     Info<< "\nStarting iteration loop\n" << endl;
 
@@ -59,7 +64,9 @@ int main(int argc, char *argv[])
         // Control time step according to Co num
         #include "CourantNo.H"
         #include "setDeltaT.H" 
-
+        file.open ("deltaTvalues.csv", ofstream::app);
+        file << runTime.deltaTValue() << "\n";
+        file.close();
 
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
         // Poisson Equations

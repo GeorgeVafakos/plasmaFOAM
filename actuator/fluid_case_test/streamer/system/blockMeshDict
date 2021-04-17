@@ -29,16 +29,16 @@ L_Gap 0.003;                      // Gap between electrodes
 
 // Grid managment in x-direction
 cellsxNonUniRHS 40;            // Cells in RHS non-uniform part of the domain in the x-axis
-LUniRHS 0.01;                      // Length of the domain in the RHS containing non-uniform cells
+LUniRHS 0.021;                      // Length of the domain in the RHS containing non-uniform cells
 cellsxNonUniLHS 30;            // Cells in LHS non-uniform part of the domain in the x-axis
-LUniLHS 0.022;                      // Length of the domain in the LHS containing non-uniform cells
-expRatiox 2000.0;                // Expansion ratio of the left side of the domain in the x-axis
+LUniLHS 0.08;                      // Length of the domain in the LHS containing non-uniform cells
+expRatiox 1500.0;                // Expansion ratio of the left side of the domain in the x-axis
 
 // Grid managment in y-direction
 cellsyNonUniAir 60;            // Cells in Air non-uniform part of the domain in the y-axis
-HUniAir 0.0007;                     // Length of the domain in the Air containing non-uniform cells
+HUniAir 0.0005;                     // Length of the domain in the Air containing non-uniform cells
 cellsyNonUniIns 20;            // Cells in Insulator non-uniform part of the domain in the y-axis
-HUniIns 0.0012;                      // Length of the domain in the Insulator containing non-uniform cells
+HUniIns 0.001;                      // Length of the domain in the Insulator containing non-uniform cells
 expRatioy 2000.0;                // Expansion ratio of the left side of the domain in the y-axis
 
 // Grid managment in z-direction
