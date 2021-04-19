@@ -1,0 +1,57 @@
+/*---------------------------------------------------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  7
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+Build  : 7-3bcbaf946ae9
+Exec   : checkMesh
+Date   : Apr 19 2021
+Time   : 18:42:20
+Host   : "cfdlab1"
+PID    : 227757
+I/O    : uncollated
+Case   : /home/cfdlab/OpenFOAM/cfdlab-7/plasmaFOAM/actuator/fluid_case_test/streamer
+nProcs : 1
+sigFpe : Enabling floating point exception trapping (FOAM_SIGFPE).
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 10)
+allowSystemOperations : Allowing user-supplied system call operations
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+Create polyMesh for time = 0
+
+Time = 0
+
+Mesh stats
+    points:           1387320
+    internal points:  0
+    faces:            2757361
+    internal faces:   1373357
+    cells:            687900
+    faces per cell:   6.00482
+    boundary patches: 7
+    point zones:      0
+    face zones:       0
+    cell zones:       2
+
+Overall number of cells of each type:
+    hexahedra:     684582
+    prisms:        0
+    wedges:        0
+    pyramids:      0
+    tet wedges:    0
+    tetrahedra:    0
+    polyhedra:     3318
+    Breakdown of polyhedra by number of faces:
+        faces   number of cells
+            7   3318
+
+Checking topology...
+    Boundary definition OK.
+    Cell to face addressing OK.
+    Point usage OK.
+    Upper triangular ordering OK.
+    Face vertices OK.
