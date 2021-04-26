@@ -11,7 +11,7 @@ mv 0 0.org
 blockMesh
 
 # Refine mesh
-for index in {3..1}
+for index in {2..1}
 do
     topoSet -dict system/topoSetDictRegion$index
     refineMesh -dict system/refineMeshDictRegion -overwrite 
