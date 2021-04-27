@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# rm -f timeSteps
+
+find . -maxdepth 1 -type d ! '(' -name 'constant' -o -name 'system' -o -name '0.org' -o -name 'processor*' -o -name 'dynamicCode' -o -name 'probes' ')' > timeSteps
+sed -i 's/.\///g' ./timeSteps
+sed -i '1d' ./timeSteps
+sort -g -o timeSteps timeSteps
+
+
+#------------------------------------------------------------------------------
