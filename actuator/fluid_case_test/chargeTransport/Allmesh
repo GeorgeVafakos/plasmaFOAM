@@ -17,12 +17,12 @@ do
     refineMesh -dict system/refineMeshDictRegion -overwrite 
 done
 
-# Run topoSet and Split regions
-splitMeshRegions -cellZones -overwrite
-
 # Print cell stats
 rm -f log.checkMesh
 runApplication checkMesh
+
+# Run topoSet and Split regions
+splitMeshRegions -cellZones -overwrite
 
 # Make the region1 (the air) into the polyMesh
 rm -vr ./constant/polyMesh
