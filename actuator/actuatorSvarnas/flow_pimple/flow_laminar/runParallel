@@ -1,0 +1,24 @@
+#!/bin/bash
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# # Get the solver name from the controlDict file
+application=$(getApplication)
+nProcs=$(getNumberOfProcessors)
+
+# Copy decomposeParDict into Zone folders
+find ./system/* -type d 2>/dev/null -exec cp -v ./system/decomposeParDict {} \;
+
+# MapFields
+mapFields ../charge -consistent -sourceTime "latestTime"
+
+# Decompose
+decomposePar -force
+
+# Run solver
+mpirun -np $nProcs $(getApplication) -parallel
+
+
+#------------------------------------------------------------------------------

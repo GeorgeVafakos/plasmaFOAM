@@ -1,0 +1,489 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  7
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 1.0;
+
+// Geometric parameters
+L_RHS 1.0;                          // Domain RHS length in x-axis
+L_LHS 0.1;                          // Domain LHS length in x-axis
+H_Air 0.5;                      // Air height
+H_Ins 0.1;                      // Total Dielectric height
+t_Diel 0.425e-3;                   // Dielectric between electrodes thickness
+L_HVe 5.0e-3;                     // Length of high-voltage electrode
+L_GRe 16.0e-3;                     // Length of grounded electrode
+L_Gap 3.0e-3;                    // Gap between electrodes
+
+// Grid managment in x-direction
+cellsxNonUniRHS 80;            // Cells in RHS non-uniform part of the domain in the x-axis
+LUniRHS 50e-3;                      // Length of the domain in the RHS containing non-uniform cells
+cellsxNonUniLHS 20;            // Cells in LHS non-uniform part of the domain in the x-axis
+LUniLHS 30e-3;                      // Length of the domain in the LHS containing non-uniform cells
+expRatiox 150.0;                // Expansion ratio of the left side of the domain in the x-axis
+
+// Grid managment in y-direction
+cellsyNonUniAir 80;            // Cells in Air non-uniform part of the domain in the y-axis
+HUniAir 50.0e-3;                      // Length of the domain in the Air containing non-uniform cells
+cellsyNonUniIns 20;            // Cells in Insulator non-uniform part of the domain in the y-axis
+HUniIns 30.0e-3;                      // Length of the domain in the Insulator containing non-uniform cells
+expRatioy 250.0;                // Expansion ratio of the left side of the domain in the y-axis
+
+// Grid managment in z-direction
+z_start 0.00;                   // Start of z-axis
+z_end 0.05;                     // End of z-axis
+
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// The rest of the code is automated to create a DBD geometry, according to the parameters defined above.
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// x-axis
+LUniPercRHS #calc "$LUniRHS/($L_RHS-$L_GRe-$L_Gap)";
+LnonUniPercRHS #calc "1.0 - $LUniPercRHS";
+LnonUniRHS #calc "$L_RHS-$L_Gap-$L_GRe-$LUniRHS";
+Dxn (#codeStream {
+    code #{
+        scalar suma = 0;
+        int i = 0;
+        for (i=0 ; i<$cellsxNonUniRHS ; i++)
+            suma += pow($expRatiox , (i/($cellsxNonUniRHS - 1.0)) );
+        os << $LnonUniRHS/suma << endl;
+    #};
+} ); 
+cellsxUniRHS #calc "int($LUniRHS/$Dxn + 0.5)";
+cellsxTotalRHS #calc "$cellsxNonUniRHS + $cellsxUniRHS";
+cellsxNonUniPercRHS #calc "1.0*$cellsxNonUniRHS/$cellsxTotalRHS";
+cellsxUniPercRHS #calc "1.0*$cellsxUniRHS/$cellsxTotalRHS";
+
+cellsxHVe #calc "int(1.0*$L_HVe/$Dxn + 0.5)";
+cellsxGRe #calc "int(1.0*$L_GRe/$Dxn + 0.5)";
+cellsxGap #calc "int(1.0*$L_Gap/$Dxn + 0.5)";
+
+LUniPercLHS #calc "$LUniLHS/($L_LHS-$L_HVe)";
+LnonUniPercLHS #calc "1.0 - $LUniPercLHS";
+LnonUniLHS #calc "$L_LHS-$L_HVe-$LUniLHS";
+cellsxUniLHS  #calc "int($LUniLHS/$Dxn + 0.5)";
+cellsxTotalLHS #calc "$cellsxNonUniLHS + $cellsxUniLHS";
+cellsxNonUniPercLHS #calc "1.0*$cellsxNonUniLHS/$cellsxTotalLHS";
+cellsxUniPercLHS #calc "1.0*$cellsxUniLHS/$cellsxTotalLHS";
+
+expRatioxLHS #calc "1.0/$expRatiox";
+
+// y-axis
+HUniPercAir #calc "$HUniAir/$H_Air";
+HnonUniAir #calc "$H_Air-$HUniAir";
+HnonUniPercAir #calc "1.0 - $HUniPercAir";
+Dyn (#codeStream {
+    code #{
+        scalar suma = 0;
+        int i = 0;
+        for (i=0 ; i<$cellsyNonUniAir ; i++)
+            suma += pow($expRatioy , (1.0*i/($cellsyNonUniAir - 1.0)) );
+        os << $HnonUniAir/suma << endl;
+    #};
+} ); 
+cellsyUniAir #calc "int($HUniAir/$Dyn + 0.5)";
+cellsyTotalAir #calc "$cellsyNonUniAir + $cellsyUniAir";
+cellsyNonUniPercAir #calc "1.0*$cellsyNonUniAir/$cellsyTotalAir";
+cellsyUniPercAir #calc "1.0*$cellsyUniAir/$cellsyTotalAir";
+
+cellsyDiel #calc "int(1.0*$t_Diel/$Dyn + 0.5)";
+
+HUniPercIns #calc "$HUniIns/$H_Ins";
+HnonUniIns #calc "$H_Ins-$HUniIns";
+HnonUniPercIns #calc "1.0-$HUniPercAir";
+cellsyUniIns  #calc "int($HUniIns/$Dyn + 0.5)";
+cellsyTotalIns #calc "$cellsyNonUniIns + $cellsyUniIns";
+cellsyNonUniPercIns #calc "1.0*$cellsyNonUniIns/$cellsyTotalIns";
+cellsyUniPercIns #calc "1.0*$cellsyUniIns/$cellsyTotalIns";
+
+expRatioyIns #calc "1.0/$expRatioy";
+
+// Calculated parameters for vertices positions
+X0 #calc "-$L_LHS";
+Y0 0.0;
+X1 #calc "-$L_HVe";
+Y1 0.0;
+X2 0.0;
+Y2 0.0;
+X3 #calc "$L_Gap";
+Y3 0.0;
+X4 #calc "$L_Gap+$L_GRe";
+Y4 0.0;
+X5 #calc "$L_RHS";
+Y5 0.0;
+
+X6 #calc "-$L_LHS";
+Y6 #calc "$H_Air";
+X7 #calc "-$L_HVe";
+Y7 #calc "$H_Air";
+X8 0.0;
+Y8 #calc "$H_Air";
+X9 #calc "$L_Gap";
+Y9 #calc "$H_Air";
+X10 #calc "$L_Gap+$L_GRe";
+Y10 #calc "$H_Air";
+X11 #calc "$L_RHS";
+Y11 #calc "$H_Air";
+
+X24 #calc "-$L_LHS";
+Y24 #calc "-$H_Ins-$t_Diel";
+X25 #calc "-$L_HVe";
+Y25 #calc "-$H_Ins-$t_Diel";
+X26 0.0;
+Y26 #calc "-$H_Ins-$t_Diel";
+X27 #calc "$L_Gap";
+Y27 #calc "-$H_Ins-$t_Diel";
+X28 #calc "$L_Gap+$L_GRe";
+Y28 #calc "-$H_Ins-$t_Diel";
+X29 #calc "$L_RHS";
+Y29 #calc "-$H_Ins-$t_Diel";
+
+X30 #calc "-$L_LHS";
+Y30 #calc "-$t_Diel";
+X31 #calc "-$L_HVe";
+Y31 #calc "-$t_Diel";
+X32 0.0;
+Y32 #calc "-$t_Diel";
+X33 #calc "$L_Gap";
+Y33 #calc "-$t_Diel";
+X34 #calc "$L_Gap+$L_GRe";
+Y34 #calc "-$t_Diel";
+X35 #calc "$L_RHS";
+Y35 #calc "-$t_Diel";
+
+
+vertices
+(
+    // Air vertices
+    ($X0 $Y0 $z_start)                      // 0
+    ($X1 $Y1 $z_start)                      // 1
+    ($X2 $Y2 $z_start)                      // 2
+    ($X3 $Y3 $z_start)                      // 3
+    ($X4 $Y4 $z_start)                      // 4
+    ($X5 $Y5 $z_start)                      // 5
+
+    ($X6 $Y6 $z_start)                      // 6
+    ($X7 $Y7 $z_start)                      // 7
+    ($X8 $Y8 $z_start)                      // 8
+    ($X9 $Y9 $z_start)                      // 9
+    ($X10 $Y10 $z_start)                    // 10
+    ($X11 $Y11 $z_start)                    // 11
+
+    ($X0 $Y0 $z_end)                        // 12
+    ($X1 $Y1 $z_end)                        // 13
+    ($X2 $Y2 $z_end)                        // 14
+    ($X3 $Y3 $z_end)                        // 15
+    ($X4 $Y4 $z_end)                        // 16
+    ($X5 $Y5 $z_end)                        // 17
+
+    ($X6 $Y6 $z_end)                        // 18
+    ($X7 $Y7 $z_end)                        // 19
+    ($X8 $Y8 $z_end)                        // 20
+    ($X9 $Y9 $z_end)                        // 21
+    ($X10 $Y10 $z_end)                      // 22
+    ($X11 $Y11 $z_end)                      // 23
+
+    // Solid vertices
+    ($X24 $Y24 $z_start)                    // 24
+    ($X25 $Y25 $z_start)                    // 25
+    ($X26 $Y26 $z_start)                    // 26
+    ($X27 $Y27 $z_start)                    // 27
+    ($X28 $Y28 $z_start)                    // 28
+    ($X29 $Y29 $z_start)                    // 29
+
+    ($X30 $Y30 $z_start)                    // 30
+    ($X31 $Y31 $z_start)                    // 31
+    ($X32 $Y32 $z_start)                    // 32
+    ($X33 $Y33 $z_start)                    // 33
+    ($X34 $Y34 $z_start)                    // 34
+    ($X35 $Y35 $z_start)                    // 35
+
+    ($X24 $Y24 $z_end)                      // 36
+    ($X25 $Y25 $z_end)                      // 37
+    ($X26 $Y26 $z_end)                      // 38
+    ($X27 $Y27 $z_end)                      // 39
+    ($X28 $Y28 $z_end)                      // 40
+    ($X29 $Y29 $z_end)                      // 41
+
+    ($X30 $Y30 $z_end)                      // 42
+    ($X31 $Y31 $z_end)                      // 43
+    ($X32 $Y32 $z_end)                      // 44
+    ($X33 $Y33 $z_end)                      // 45
+    ($X34 $Y34 $z_end)                      // 46
+    ($X35 $Y35 $z_end)                      // 47
+);
+
+
+
+blocks
+(
+    hex (0 1 7 6 12 13 19 18) ($cellsxTotalLHS $cellsyTotalAir 1)                 // Block 0
+    simpleGrading
+    (
+        (
+            ($LnonUniPercLHS $cellsxNonUniPercLHS $expRatioxLHS)
+            ($LUniPercLHS $cellsxUniPercLHS 1)
+        )
+        (
+            ($HUniPercAir $cellsyUniPercAir 1)
+            ($HnonUniPercAir $cellsyNonUniPercAir $expRatioy)
+        )
+        1 
+    )
+
+    hex (1 2 8 7 13 14 20 19) ($cellsxHVe $cellsyTotalAir 1)                      // Block 1
+    simpleGrading 
+    (
+        1 
+        (
+            ($HUniPercAir $cellsyUniPercAir 1)
+            ($HnonUniPercAir $cellsyNonUniPercAir $expRatioy)
+        )
+        1
+    )   
+
+    hex (2 3 9 8 14 15 21 20) ($cellsxGap $cellsyTotalAir 1)                      // Block 2
+    simpleGrading 
+    (
+        1 
+        (
+            ($HUniPercAir $cellsyUniPercAir 1)
+            ($HnonUniPercAir $cellsyNonUniPercAir $expRatioy)
+        )
+        1
+    )   
+
+    hex (3 4 10 9 15 16 22 21) ($cellsxGRe $cellsyTotalAir 1)                      // Block 3
+    simpleGrading 
+    (
+        1 
+        (
+            ($HUniPercAir $cellsyUniPercAir 1)
+            ($HnonUniPercAir $cellsyNonUniPercAir $expRatioy)
+        )
+        1
+    )   
+
+    hex (4 5 11 10 16 17 23 22) ($cellsxTotalRHS $cellsyTotalAir 1)                // Block 4
+    simpleGrading
+    (
+        (
+            ($LUniPercRHS $cellsxUniPercRHS 1)
+            ($LnonUniPercRHS $cellsxNonUniPercRHS $expRatiox)
+        )
+        (
+            ($HUniPercAir $cellsyUniPercAir 1)
+            ($HnonUniPercAir $cellsyNonUniPercAir $expRatioy)
+        )
+        1 
+    )
+
+    hex (24 25 31 30 36 37 43 42) insulator ($cellsxTotalLHS $cellsyTotalIns 1)               // Block 5
+    simpleGrading
+    (
+        (
+            ($LnonUniPercLHS $cellsxNonUniPercLHS $expRatioxLHS)
+            ($LUniPercLHS $cellsxUniPercLHS 1)
+        )
+        (
+            ($HnonUniPercIns $cellsyNonUniPercIns $expRatioyIns)
+            ($HUniPercIns $cellsyUniPercIns 1)
+        )
+        1 
+    )
+
+    hex (25 26 32 31 37 38 44 43) insulator ($cellsxHVe $cellsyTotalIns 1)                    // Block 6
+    simpleGrading
+    (
+        1
+        (
+            ($HnonUniPercIns $cellsyNonUniPercIns $expRatioyIns)
+            ($HUniPercIns $cellsyUniPercIns 1)
+        )
+        1
+    )
+
+
+    hex (26 27 33 32 38 39 45 44) insulator ($cellsxGap $cellsyTotalIns 1)                    // Block 7
+    simpleGrading
+    (
+        1
+        (
+            ($HnonUniPercIns $cellsyNonUniPercIns $expRatioyIns)
+            ($HUniPercIns $cellsyUniPercIns 1)
+        )
+        1
+    )
+
+    hex (27 28 34 33 39 40 46 45) insulator ($cellsxGRe $cellsyTotalIns 1)                    // Block 8
+    simpleGrading
+    (
+        1
+        (
+            ($HnonUniPercIns $cellsyNonUniPercIns $expRatioyIns)
+            ($HUniPercIns $cellsyUniPercIns 1)
+        )
+        1
+    )
+
+    hex (28 29 35 34 40 41 47 46) insulator ($cellsxTotalRHS $cellsyTotalIns 1)               // Block 9
+    simpleGrading
+    (
+        (
+            ($LUniPercRHS $cellsxUniPercRHS 1)
+            ($LnonUniPercRHS $cellsxNonUniPercRHS $expRatiox)
+        )
+        (
+            ($HnonUniPercIns $cellsyNonUniPercIns $expRatioyIns)
+            ($HUniPercIns $cellsyUniPercIns 1)
+        )
+        1 
+    )
+
+    hex (30 31 1 0 42 43 13 12) dielectric ($cellsxTotalLHS $cellsyDiel 1)                     // Block 10
+    simpleGrading
+    (
+        (
+            ($LnonUniPercLHS $cellsxNonUniPercLHS $expRatioxLHS)
+            ($LUniPercLHS $cellsxUniPercLHS 1)
+        )
+        1 
+        1 
+    )
+
+    hex (31 32 2 1 43 44 14 13) dielectric ($cellsxHVe $cellsyDiel 1) simpleGrading (1 1 1)    // Block 11
+
+    hex (32 33 3 2 44 45 15 14) dielectric ($cellsxGap $cellsyDiel 1) simpleGrading (1 1 1)    // Block 12
+
+    hex (33 34 4 3 45 46 16 15) dielectric ($cellsxGRe $cellsyDiel 1) simpleGrading (1 1 1)    // Block 13
+
+    hex (34 35 5 4 46 47 17 16) dielectric ($cellsxTotalRHS $cellsyDiel 1)                     // Block 14
+    simpleGrading
+    (
+        (
+            ($LUniPercRHS $cellsxUniPercRHS 1)
+            ($LnonUniPercRHS $cellsxNonUniPercRHS $expRatiox)
+        )
+        1 
+        1 
+    )
+);
+
+edges
+(
+);
+
+boundary
+(
+    upperBoundary
+    {
+        type wall;
+        faces
+        (
+            (6 18 19 7) // From Block 0
+            (7 19 20 8) // From Block 1
+            (8 20 21 9) // From Block 2
+            (9 21 22 10) // From Block 3
+            (10 22 23 11) // From Block 4
+        );
+    }
+
+    leftBoundary
+    {
+        type wall;
+        faces
+        (
+            (0 12 18 6)  // from Block 0
+            (30 42 12 0) // From Block 10
+            (24 36 42 30) // From Block 5
+        );
+    }
+
+    rightBoundary
+    {
+        type wall;
+        faces
+        (
+            (11 23 17 5)  // From Block 4
+            (5 17 47 35)   // From Block 14
+            (35 47 41 29)  // From Block 9
+        );
+    }   
+
+    bottomBoundary
+    {
+        type wall;
+        faces
+        (
+            (25 37 36 24) // From Block 5
+            (26 38 37 25) // From Block 6
+            (27 39 38 26) // From Block 7
+            (28 40 39 27) // From BLock 8
+            (29 41 40 28) // From BLock 9
+        );
+    }
+
+
+    frontAndBack
+    {
+        type empty;
+        faces
+        (
+            // Front
+            (6 7 1 0)     // From Block 0
+            (7 8 2 1)     // From Block 1
+            (8 9 3 2)     // From Block 2
+            (9 10 4 3)    // From Block 3
+            (10 11 5 4)   // From Block 4
+            (0 1 31 30)   // From Block 10
+            (1 2 32 31)   // From Block 11
+            (2 3 33 32)   // From Block 12
+            (3 4 34 33)   // From Block 13
+            (4 5 35 34)   // From Block 14
+            (30 31 25 24) // From Block 5
+            (31 32 26 25) // From Block 6
+            (32 33 27 26) // From Block 7
+            (33 34 28 27) // From Block 8
+            (34 35 29 28) // From Block 9
+
+            // Back
+            (19 18 12 13) // from block 0
+            (20 19 13 14) // from block 1
+            (21 20 14 15) // From Block 2
+            (22 21 15 16) // From Block 3
+            (23 22 16 17) // from block 4
+            (13 12 42 43) // From Block 10
+            (14 13 43 44) // From Block 11
+            (15 14 44 45) // From Block 12
+            (16 15 45 46) // From Block 13
+            (17 16 46 47) // From Block 14
+            (43 42 36 37) // From Block 5
+            (44 43 37 38) // From Block 6
+            (45 44 38 39) // From Block 7
+            (46 45 39 40) // From Block 8
+            (47 46 40 41) // From Block 9
+        );
+    }
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //
