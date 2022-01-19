@@ -1,3 +1,2 @@
 # Ignore wmake files in solvers
-/applications/actuatorElectrostatic2RegionsFoam/Make/linux64GccDPInt32Opt
-/applications/actuatorElectrostatic3RegionsFoam/Make/linux64GccDPInt32Opt
+/applications/*/Make/linux64GccDPInt32Opt
