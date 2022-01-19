@@ -12,6 +12,7 @@ rm -f log.checkMesh
 runApplication checkMesh
 
 # Run topoSet and Split regions
+topoSet
 splitMeshRegions -cellZones -overwrite
 
 # Run setFields

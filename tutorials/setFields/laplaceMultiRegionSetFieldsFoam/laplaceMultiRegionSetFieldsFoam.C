@@ -52,17 +52,26 @@ int main(int argc, char *argv[])
     {
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-        // Solve the Poisson equation in the air region
-        solve 
-        (
-            fvm::laplacian(Tair) - S
-        );
+        int conver = 1;
+        int counter = 0;
+        solverPerformance::debug = 0;
 
-        // Solve the Laplace equation in the solid region
-        solve
-        (
-            fvm::laplacian(Tsolid)
-        );
+        while (conver )//&& (counter<100))
+        {
+            Foam::solverPerformance solvPerfVoltA = solve 
+            (
+                fvm::laplacian(Tair) - S
+            );
+
+
+            Foam::solverPerformance solvPerfVoltD = solve 
+            (
+                fvm::laplacian(Tsolid) 
+            );
+            
+            conver = (solvPerfVoltA.initialResidual()>1.e-12) || (solvPerfVoltD.initialResidual()>1.e-12);
+            counter++;
+        }    
         
 
         // Calculate the heat flux

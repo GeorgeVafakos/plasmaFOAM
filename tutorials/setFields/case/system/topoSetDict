@@ -17,6 +17,29 @@ FoamFile
 
 actions
 (
+    // Air Region
+    {
+        name    airSet;
+        type    cellSet;
+        action  new;
+        source  boxToCell;
+        sourceInfo
+        {
+            box (0.0 0.0 0) (1.0 1.0 0.1);
+        }
+    }
+    {
+        name    air;
+        type    cellZoneSet;
+        action  new;
+        source  setToCellZone;
+        sourceInfo
+        {
+            set airSet;
+        }
+    }
+
+
     // Solid Region
     {
         name    solidSet;

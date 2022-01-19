@@ -22,7 +22,8 @@ boundaryField
 {
     topWall
     {
-        type            zeroGradient;
+        type            fixedValue;
+        value           uniform 300;
     }
 
     rightWall
@@ -33,7 +34,8 @@ boundaryField
 
     bottomWall
     {
-        type            zeroGradient;
+        type            fixedValue;
+        value           uniform 300;
     }
 
     solid_to_air
