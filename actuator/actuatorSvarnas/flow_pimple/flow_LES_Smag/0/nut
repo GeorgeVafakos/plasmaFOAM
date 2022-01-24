@@ -38,11 +38,13 @@ boundaryField
     region0_to_dielectric
     {
         type            zeroGradient;
+        // type            nutUSpaldingWallFunction
     }
 
     highVoltage
     {
         type            zeroGradient;
+        // type            nutUSpaldingWallFunction
     }
 
     frontAndBack
