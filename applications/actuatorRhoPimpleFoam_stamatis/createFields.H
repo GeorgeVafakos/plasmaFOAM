@@ -74,19 +74,3 @@ volScalarField K("K", 0.5*magSqr(U));
 
 #include "createMRF.H"
 #include "createFvOptions.H"
-
-
-
-Info<< "Calculating field Fc\n" << endl;
-volVectorField Fc
-(
-    IOobject
-    (
-        "Fc",
-        runTime.timeName(),
-        mesh,
-        IOobject::MUST_READ,
-        IOobject::NO_WRITE
-    ),
-    mesh
-);

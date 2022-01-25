@@ -75,9 +75,6 @@ int main(int argc, char *argv[])
     {
         #include "readDyMControls.H"
 
-        #include "CourantNo.H"
-        #include "setDeltaT.H" 
-
         // Store divrhoU from the previous mesh so that it can be mapped
         // and used in correctPhi to ensure the corrected phi has the
         // same divergence
@@ -173,7 +170,6 @@ int main(int argc, char *argv[])
         rho = thermo.rho();
 
         runTime.write();
-        Info<< "Max U = " << max(U.component(0)) << endl;
 
         Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
             << "  ClockTime = " << runTime.elapsedClockTime() << " s"
