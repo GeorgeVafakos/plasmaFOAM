@@ -4,21 +4,21 @@
 //*************************************
 
 IOdictionary physicalProperties
+(
+    IOobject
     (
-        IOobject
-        (
-            "physicalProperties",
-            runTime.constant(),
-            meshAir,
-            IOobject::MUST_READ_IF_MODIFIED,
-            IOobject::NO_WRITE
-        )
-    );
+        "physicalProperties",
+        runTime.constant(),
+        meshAir,
+        IOobject::MUST_READ_IF_MODIFIED,
+        IOobject::NO_WRITE
+    )
+);
+
 wordList forcesNames
 (
 	physicalProperties.lookup("forcesNames")
 );
-
 
 PtrList <volVectorField> fCoulomb(forcesNames.size());
 

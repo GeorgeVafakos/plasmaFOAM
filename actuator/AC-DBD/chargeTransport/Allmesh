@@ -1,0 +1,29 @@
+#!/bin/bash
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+
+# Copy geometry and mesh from streamer case
+cp -R ../streamer/costant/polyMesh ../streamer/costant/dielectric ../streamer/costant/insulator constant/
+
+
+# Run mapFields
+mapFields ../streamer -consistent -sourceTime latestTime
+mapFields ../streamer -sourceRegion dielectric -consistent -sourceTime latestTime -targetRegion dielectric
+mapFields ../streamer -sourceRegion insulator  -consistent -sourceTime latestTime -targetRegion insulator
+
+
+# Rename directory
+startTime=1.218724e-05
+find ./ -maxdepth 1 -type d ! '(' -name 'constant' -o -name 'system' -o -name '0' -o -name '0.org' -o -name 'processor*' -o -name 'dynamicCode' -o -name 'probes' -o -name 'postProcessing' ')' -type d 2>/dev/null -exec mv {} $startTime \;
+
+
+# Output message
+echo
+echo Case created.
+
+
+
+#------------------------------------------------------------------------------
