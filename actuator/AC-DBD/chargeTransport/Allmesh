@@ -17,7 +17,8 @@ mapFields ../streamer -sourceRegion insulator  -consistent -sourceTime latestTim
 
 # Rename directory
 startTime=1.218724e-05
-find ./ -maxdepth 1 -type d ! '(' -name 'constant' -o -name 'system' -o -name '0' -o -name '0.org' -o -name 'processor*' -o -name 'dynamicCode' -o -name 'probes' -o -name 'postProcessing' ')' -type d 2>/dev/null -exec mv {} $startTime \;
+cp -R 0 $startTime
+# find ./ -maxdepth 1 -type d ! '(' -name 'constant' -o -name 'system' -o -name '0' -o -name '0.org' -o -name 'processor*' -o -name 'dynamicCode' -o -name 'probes' -o -name 'postProcessing' ')' -type d 2>/dev/null -exec mv {} $startTime \;
 
 
 # Output message

@@ -39,7 +39,7 @@ boundaryField
         {
             type             sine;
             frequency        1.0e+4;
-            amplitude        10.0e+3;
+            amplitude        7.0e+3;
             scale            1;  // Scale factor for wave
             level            0;  // Offset
         }

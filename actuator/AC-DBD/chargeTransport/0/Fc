@@ -23,32 +23,27 @@ boundaryField
 
     upperBoundary
     {
-        type            fixedValue;
-        value           (0 0 0);
+        type            zeroGradient;
     }
 
     leftBoundary
     {
-        type            fixedValue;
-        value           (0 0 0);
+        type            zeroGradient;
     }
 
     rightBoundary
     {
-        type            fixedValue;
-        value           (0 0 0);
+        type            zeroGradient;
     }
 
     highVoltage
     {
-        type            fixedValue;
-        value           (0 0 0);
+        type            zeroGradient;
     }
 
     region0_to_dielectric
     {
-        type            fixedValue;
-        value           (0 0 0);
+        type            zeroGradient;
     }
 
     frontAndBack
