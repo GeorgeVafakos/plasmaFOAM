@@ -11,55 +11,26 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "system";
-    object      controlDict;
+    object      setFieldsDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     actuatorElectrostaticACDBDFoam;
+defaultFieldValues
+(
+    volScalarFieldValue rhoq 0.0
+);
 
-startFrom       startTime;
-
-startTime       1.218724e-05;
-
-stopAt          endTime;
-
-endTime         1.0e-4;
-
-deltaT          1.0e-7;
-
-writeControl    adjustableRunTime;
-
-writeInterval   0.5e-5;
-
-purgeWrite      0;
-
-writeFormat     ascii;
-
-writePrecision  6;
-
-writeCompression off;
-
-timeFormat      general;
-
-timePrecision   6;
-
-runTimeModifiable true;
-
-
-// Controls to implement time step according to Co number
-
-adjustTimeStep  yes;
-
-maxCo           0.8;
-
-maxDeltaT       1.0;
-
-
-// Get residuals
-functions
-{
-    #includeFunc probes
-}
+regions
+(
+    boxToCell
+    {
+        box (0.0 0.0 -1.0) (13.0e-3 40.0e-6 1.0);
+        fieldValues
+        (
+            volScalarFieldValue rhoq 0.1
+        );
+    }
+);
 
 
 // ************************************************************************* //

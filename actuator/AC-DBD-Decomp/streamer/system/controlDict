@@ -19,17 +19,17 @@ application     actuatorElectrostaticACDBDFoam;
 
 startFrom       startTime;
 
-startTime       1.218724e-05;
+startTime       0;
 
 stopAt          endTime;
 
-endTime         1.0e-4;
+endTime         5.0;
 
 deltaT          1.0e-7;
 
 writeControl    adjustableRunTime;
 
-writeInterval   0.5e-5;
+writeInterval   5.0e-4;
 
 purgeWrite      0;
 
@@ -48,7 +48,7 @@ runTimeModifiable true;
 
 // Controls to implement time step according to Co number
 
-adjustTimeStep  yes;
+adjustTimeStep  no;
 
 maxCo           0.8;
 
@@ -56,10 +56,10 @@ maxDeltaT       1.0;
 
 
 // Get residuals
-functions
-{
-    #includeFunc probes
-}
+// functions
+// {
+//   #includeFunc residuals
+// }
 
 
 // ************************************************************************* //

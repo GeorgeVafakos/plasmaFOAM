@@ -1,0 +1,33 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+probes
+{
+// Where to load it from
+functionObjectLibs ( "libsampling.so" );
+
+type        probes;
+
+// Name of the directory for probe data
+name        probes;
+
+writeControl    timeStep;
+writeInterval   5;
+
+// Fields to be probed
+fields
+( 
+    voltA rhoq Fc
+);
+
+probeLocations
+(
+   (1.5e-3 50.0e-6 0.025)         
+);
+}
+// ************************************************************************* //
