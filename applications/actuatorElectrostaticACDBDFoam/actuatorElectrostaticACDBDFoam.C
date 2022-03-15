@@ -104,10 +104,12 @@ int main(int argc, char *argv[])
             conver = (solvPerfVoltA.initialResidual()>1.e-6) && (solvPerfVoltD.initialResidual()>1.e-6) && (solvPerfVoltI.initialResidual()>1.e-6) && (solvPerfVoltR.initialResidual()>1.e-6);
             counter++;
             
+            solverPerformance::debug = 0;
             if ( counter % 5000 == 0 )
+            {
+                Info<< "Current Loop = " << counter << endl;
                 solverPerformance::debug = 1;
-            else
-                solverPerformance::debug = 0;
+            }
         }
 
         Info<< "Region Inner Loops = " << counter << endl;

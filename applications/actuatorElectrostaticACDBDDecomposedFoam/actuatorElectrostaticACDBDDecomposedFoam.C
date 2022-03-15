@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
         counter = 0;
         solverPerformance::debug = 1;
 
-        while (conver)
+        while (conver && counter<30000)
         {
             // Air
             Foam::solverPerformance solvPerfVoltAext = solve 
@@ -95,10 +95,12 @@ int main(int argc, char *argv[])
             conver = (solvPerfVoltAext.initialResidual()>1.e-6) && (solvPerfVoltDext.initialResidual()>1.e-6) && (solvPerfVoltIext.initialResidual()>1.e-6);
             counter++;
             
+            solverPerformance::debug = 0;
             if ( counter % 5000 == 0 )
+            {
+                Info<< "Current Loop = " << counter << endl;
                 solverPerformance::debug = 1;
-            else
-                solverPerformance::debug = 0;
+            }
         }
 
         Info<< "External Field: Region Inner Loops = " << counter << endl;
@@ -115,7 +117,7 @@ int main(int argc, char *argv[])
         counter = 0;
         solverPerformance::debug = 1;
 
-        while (conver)
+        while (conver && counter<30000)
         {
             // Air
             Foam::solverPerformance solvPerfVoltArho = solve 
@@ -143,10 +145,12 @@ int main(int argc, char *argv[])
             conver = (solvPerfVoltArho.initialResidual()>1.e-6) && (solvPerfVoltDrho.initialResidual()>1.e-6) && (solvPerfVoltIrho.initialResidual()>1.e-6);
             counter++;
             
+            solverPerformance::debug = 0;
             if ( counter % 5000 == 0 )
+            {
+                Info<< "Current Loop = " << counter << endl;
                 solverPerformance::debug = 1;
-            else
-                solverPerformance::debug = 0;
+            }
         }
 
         Info<< "Induced Field: Region Inner Loops = " << counter << endl;
@@ -178,14 +182,14 @@ int main(int argc, char *argv[])
         // Calculate the electric field
         EAext = -fvc::grad(voltAext);
         EArho = -fvc::grad(voltArho);
-        EA = -fvc::grad(voltA);
+        EA    = -fvc::grad(voltA);
         EDext = -fvc::grad(voltDext);
         EDrho = -fvc::grad(voltDrho);
-        ED = -fvc::grad(voltD);
+        ED    = -fvc::grad(voltD);
         EIext = -fvc::grad(voltIext);
         EIrho = -fvc::grad(voltIrho);
-        EI = -fvc::grad(voltI);
-        Fc = rhoq*EA;
+        EI    = -fvc::grad(voltI);
+        Fc    = rhoq*EA;
 
         runTime.write();
 
