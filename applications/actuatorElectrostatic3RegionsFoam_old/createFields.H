@@ -29,12 +29,11 @@ dimensionedScalar k
 );
 
 // Convergence variables
+scalar iterCount=0.0;
 int convVoltA=1;
 int convVoltD=1;
 int convVoltI=1;
 int convRhoq=1;
-int conver=1;
-int counter=0;
 
 Info<< "Reading field voltA\n" << endl;
 volScalarField voltA

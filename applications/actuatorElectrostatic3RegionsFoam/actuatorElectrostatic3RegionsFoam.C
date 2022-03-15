@@ -51,41 +51,58 @@ int main(int argc, char *argv[])
 
     while (runTime.loop() && (convVoltA>0 || convVoltD>0 || convVoltI>0 || convRhoq>0))
     {
-        Info<< "Iteration = " << runTime.timeName() << nl << endl;
-
-        // Iteration counter
-        iterCount++;
+        Info<< "Time = " << runTime.timeName() << nl << endl;
 
         // Control time step according to Co num
         #include "CourantNo.H"
         #include "setDeltaT.H" 
 
-
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
         // Poisson Equations
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-        // Air
-        Foam::solverPerformance solvPerfVoltA = solve 
-        (
-            fvm::laplacian(voltA) + rhoq/e0
-        );
-        convVoltA = solvPerfVoltA.nIterations();
+        // Reset counters
+        conver = 1;
+        counter = 0;
+        solverPerformance::debug = 0;
 
-        // Dielectric
-        Foam::solverPerformance solvPerfVoltD = solve
-        (
-            fvm::laplacian(voltD)
-        );
-        convVoltD = solvPerfVoltD.nIterations();
+        while (conver && counter<30000)
+        {
+            // Air
+            Foam::solverPerformance solvPerfVoltA = solve 
+            (
+                fvm::laplacian(voltA) + rhoq/e0
+            );
+            convVoltA = solvPerfVoltA.nIterations();
 
-        // Insulator
-        Foam::solverPerformance solvPerfVoltI = solve
-        (
-            fvm::laplacian(voltI)
-        );
-        convVoltI = solvPerfVoltI.nIterations();
+            // Dielectric
+            Foam::solverPerformance solvPerfVoltD = solve
+            (
+                fvm::laplacian(voltD)
+            );
+            convVoltD = solvPerfVoltD.nIterations();
 
+            // Insulator
+            Foam::solverPerformance solvPerfVoltI = solve
+            (
+                fvm::laplacian(voltI)
+            );
+            convVoltI = solvPerfVoltI.nIterations();
+
+            // Region convergence
+            conver = (solvPerfVoltA.initialResidual()>1.e-6) || (solvPerfVoltD.initialResidual()>1.e-6) || (solvPerfVoltI.initialResidual()>1.e-6);
+            counter++;
+
+            solverPerformance::debug = 0;
+            if (counter % 5000 == 0)
+            {
+                Info<< "Current Loop = " << counter << endl;
+                solverPerformance::debug = 1;
+            }
+        }
+
+        Info<< "Region Inner Loops = " << counter << endl;
+        solverPerformance::debug = 1;
 
 
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
