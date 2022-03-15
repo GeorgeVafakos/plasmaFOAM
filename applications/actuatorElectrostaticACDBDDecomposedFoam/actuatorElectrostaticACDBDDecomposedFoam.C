@@ -53,11 +53,9 @@ int main(int argc, char *argv[])
     {
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-
         // Control time step according to Co num
         #include "CourantNo.H"
         #include "setDeltaT.H" 
-
 
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
         // Equations for the External Electric Field
@@ -96,7 +94,7 @@ int main(int argc, char *argv[])
             counter++;
             
             solverPerformance::debug = 0;
-            if ( counter % 5000 == 0 )
+            if (counter % 5000 == 0)
             {
                 Info<< "Current Loop = " << counter << endl;
                 solverPerformance::debug = 1;
@@ -146,7 +144,7 @@ int main(int argc, char *argv[])
             counter++;
             
             solverPerformance::debug = 0;
-            if ( counter % 5000 == 0 )
+            if (counter % 5000 == 0)
             {
                 Info<< "Current Loop = " << counter << endl;
                 solverPerformance::debug = 1;
