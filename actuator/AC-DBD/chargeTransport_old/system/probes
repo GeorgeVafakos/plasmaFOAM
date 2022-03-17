@@ -17,7 +17,7 @@ type        probes;
 name        probes;
 
 writeControl    timeStep;
-writeInterval   1;
+writeInterval   5;
 
 // Fields to be probed
 fields
@@ -27,10 +27,7 @@ fields
 
 probeLocations
 (
-   (0.0e-3 50.0e-6 0.025)
-   (1.5e-3 50.0e-6 0.025) 
-   (3.0e-3 50.0e-6 0.025) 
-   (4.5e-3 50.0e-6 0.025) 
+   (1.5e-3 50.0e-6 0.025)         
 );
 }
 // ************************************************************************* //

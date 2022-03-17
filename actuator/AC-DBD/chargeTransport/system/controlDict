@@ -7,58 +7,69 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    version     2.0;
-    format      ascii;
-    class       dictionary;
-    location    "system";
-    object      controlDict;
+    version         2;
+    format          ascii;
+    class           dictionary;
+    location        "system";
+    object          controlDict;
 }
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     actuatorElectrostaticACDBDFoam;
+application     actuatorElectrostaticChargeFoam;
 
 startFrom       startTime;
 
-startTime       1.218724e-05;
+startTime       1.21872e-05;
 
 stopAt          endTime;
 
-endTime         1.0e-4;
+endTime         0.0001;
 
-deltaT          1.0e-7;
+deltaT          1e-07;
 
 writeControl    adjustableRunTime;
 
-writeInterval   0.5e-5;
+writeInterval   1e-06;
 
 purgeWrite      0;
 
 writeFormat     ascii;
 
-writePrecision  6;
+writePrecision  14;
 
 writeCompression off;
 
 timeFormat      general;
 
-timePrecision   6;
+timePrecision   14;
 
 runTimeModifiable true;
-
-
-// Controls to implement time step according to Co number
 
 adjustTimeStep  yes;
 
 maxCo           0.8;
 
-maxDeltaT       1.0;
+maxDeltaT       1;
 
+writeCustomTime yes;
 
-// Get residuals
+numWriteTimes   15;
+
+P               0.1;
+
+Q               5.0;
+
 functions
 {
-    #includeFunc probes
+    probes
+    {
+        functionObjectLibs ( "libsampling.so" );
+        type            probes;
+        name            probes;
+        writeControl    timeStep;
+        writeInterval   1;
+        fields          ( voltA rhoq Fc );
+        probeLocations  ( ( 0 5e-05 0.025 ) ( 0.0015 5e-05 0.025 ) ( 0.003 5e-05 0.025 ) ( 0.0045 5e-05 0.025 ) );
+    }
 }
 
 

@@ -8,7 +8,6 @@ cd ${0%/*} || exit 1    # Run from this directory
 application=$(getApplication)
 
 # Copy fvSchemes and fvSolution into Zone folders
-find ../streamer/system/* -type d 2>/dev/null -exec cp -R {} ./system/ \;
 find ./system/* -type d 2>/dev/null -exec cp -v ./system/fvSchemes {} \;
 find ./system/* -type d 2>/dev/null -exec cp -v ./system/fvSolution {} \;
 
