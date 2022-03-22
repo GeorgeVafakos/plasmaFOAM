@@ -41,9 +41,9 @@ int main(int argc, char *argv[])
     #include "createMesh.H"
     #include "createMeshD.H"
     #include "createMeshI.H"
-    #include "createTimeControls.H"
     #include "createFields.H"
     #include "createFieldsSolid.H"
+    #include "createTimeControls.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

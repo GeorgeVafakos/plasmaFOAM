@@ -36,26 +36,42 @@ Description
 
 // Info<< "Test strings = " << tempo[2]<< endl;
 
-// Create normilized count of number of printed times
-for (int i = 0; i < numWriteTimes; ++i)
-    n[i] = i/(numWriteTimes-1.0);
+// // Create normilized count of number of printed times
+// for (int i = 0; i < numWriteTimes; ++i)
+//     n[i] = i/(numWriteTimes-1.0);
 
-// Create stretching function
-for (int i = 0; i < numWriteTimes; ++i)
-    s[i] = P*n[i] + (1.0-P)*(1.0-Foam::tanh(Q*(1.0-n[i]))/Foam::tanh(Q));
+// // Create stretching function
+// for (int i = 0; i < numWriteTimes; ++i)
+//     s[i] = P*n[i] + (1.0-P)*(1.0-Foam::tanh(Q*(1.0-n[i]))/Foam::tanh(Q));
 
-
+// system("foamDictionary -entry "writeInterval" -set "0.1e-5" system/controlDict");
 
 // tStr = tA + (P*n+(1-P)*(1-tanh(Q*(1-n))/tanh(Q)))*(tB-tA);
 
-// s[0] = sin(0.1);
 
-Info<< "Test s[0] = " << s[0]<< endl;
-Info<< "Test s[1] = " << s[1]<< endl;
-Info<< "Test s[2] = " << s[2]<< endl;
-Info<< "Test s[14] = " << s[14]<< endl;
-Info<< "Test s[14] = " << s[numWriteTimes-1]<< endl;
-Info<< "tanh(1) = " << Foam::tanh(0.1)<< endl;
+// Info<< "This is the current tiiiiiiiiiime +1 = " << runTime.time().value()+1 << endl;
+
+int i = 1;
+if ( runTime.time().value() >= (startTime+s[i]*(endTime-startTime)) )
+{
+    CmmndStr2 = std::to_string( (s[i]-s[i-1])*(endTime-startTime) );
+    system(CmmndStr1+CmmndStr2+CmmndStr3);
+    i++;
+}
+
+// Info<< str1+str2+str3 << endl;
+
+// CmmndStr2 = std::to_string(0.00012);
+
+// system(CmmndStr1+CmmndStr2+CmmndStr3);
+
+
+// Info<< "Test s[0] = " << s[0]<< endl;
+// Info<< "Test s[1] = " << s[1]<< endl;
+// Info<< "Test s[2] = " << s[2]<< endl;
+// Info<< "Test s[14] = " << s[14]<< endl;
+// Info<< "Test s[14] = " << s[numWriteTimes-1]<< endl;
+// Info<< "tanh(1) = " << Foam::tanh(0.1)<< endl;
 
 // system("foamDictionary -entry \"writeInterval\" -set \"0.1e-5\" system/controlDict");
 // system("ls");
