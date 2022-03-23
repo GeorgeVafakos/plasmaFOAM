@@ -56,6 +56,7 @@ int main(int argc, char *argv[])
         // Control time step according to Co num
         #include "CourantNo.H"
         #include "setDeltaT.H" 
+        #include "writeCustomTime.H"
 
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
         // Poisson Equations
@@ -74,10 +75,6 @@ int main(int argc, char *argv[])
                 fvm::laplacian(voltA) + rhoq/e0
             );
             convVoltA = solvPerfVoltA.nIterations();
-
-            #include "writeCustomTime.H"
-            // system("foamDictionary -entry "writeInterval" -set "0.1e-5" system/controlDict");
-            // system("ls");
 
             // Dielectric
             Foam::solverPerformance solvPerfVoltD = solve
@@ -130,11 +127,7 @@ int main(int argc, char *argv[])
         EI = -fvc::grad(voltI);
         Fc = rhoq*EA;
 
-
-        // if (writeCustomTime)
-        //     #include "writeCustomTime.H"
-        // else
-        //     runTime.write();
+        runTime.write();
 
         Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
             << "  ClockTime = " << runTime.elapsedClockTime() << " s"

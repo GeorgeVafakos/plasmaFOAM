@@ -41,16 +41,16 @@ scalar maxDeltaT =
 
 // Custom time write controls
 bool writeCustomTime =
-    runTime.controlDict().lookupOrDefault("writeCustomTime", false);
+    runTime.controlDict().lookupOrDefault("writeCustomTime", true);
 
 scalar startTime =
-    runTime.controlDict().lookupOrDefault<scalar>("startTime", 0.0);
+    runTime.controlDict().lookupOrDefault<scalar>("startTime", 0);
 
 scalar endTime =
     runTime.controlDict().lookupOrDefault<scalar>("endTime", 0.0001);
 
 int numWriteTimes =
-    runTime.controlDict().lookupOrDefault("numWriteTimes", 11);
+    runTime.controlDict().lookupOrDefault("numWriteTimes", 15);
 
 scalar P =
     runTime.controlDict().lookupOrDefault<scalar>("P", 0.1);
@@ -68,10 +68,6 @@ scalar s[numWriteTimes];
 for (int i = 0; i < numWriteTimes; ++i)
     s[i] = P*n[i] + (1.0-P)*(1.0-Foam::tanh(Q*(1.0-n[i]))/Foam::tanh(Q));
 
-int writeCustomTimeCounter = 1;
-
-string CmmndStr1 = "foamDictionary -entry \"writeInterval\" -set \"";
-string CmmndStr2 = std::to_string(0.00012);
-string CmmndStr3 = "\" system/controlDict";
+int writeTimeCounter = 0;
 
 // ************************************************************************* //
