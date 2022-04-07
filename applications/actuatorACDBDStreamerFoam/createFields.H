@@ -21,11 +21,6 @@ dimensionedScalar e0
     physicalProperties.lookup("e0")
 );
 
-dimensionedScalar k
-(
-    physicalProperties.lookup("k")
-);
-
 // Convergence variables
 int convVoltAext=1;
 int convVoltArho=1;
@@ -33,7 +28,6 @@ int convVoltDext=1;
 int convVoltDrho=1;
 int convVoltIext=1;
 int convVoltIrho=1;
-int convRhoq=1;
 int conver=1;
 int counter=0;
 
@@ -108,19 +102,6 @@ volScalarField rhoq
     mesh
 );
 
-Info<< "Calculating field rhoqFlux\n" << endl;
-surfaceScalarField rhoqFlux
-(
-    IOobject
-    (
-        "rhoqFlux",
-        runTime.timeName(),
-        mesh,
-        IOobject::NO_READ,
-        IOobject::NO_WRITE
-    ),
-    -k*mesh.magSf()*fvc::snGrad(voltA)
-);
 
 Info<< "Calculating field EAext\n" << endl;
 volVectorField EAext

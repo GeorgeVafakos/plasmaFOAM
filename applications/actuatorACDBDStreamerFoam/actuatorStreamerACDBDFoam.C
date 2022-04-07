@@ -22,10 +22,10 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    actuatorElectrostaticACDBDDecomposedFoam
+    actuatorStreamerACDBDFoam
 
 Description
-    Solver for electrostatics in a DBD actuator.
+    Solver for the electrostatic field for a single streamer in an AC-DBD actuator.
 
 \*---------------------------------------------------------------------------*/
 
@@ -41,7 +41,6 @@ int main(int argc, char *argv[])
     #include "createMesh.H"
     #include "createMeshD.H"
     #include "createMeshI.H"
-    #include "createTimeControls.H"
     #include "createFields.H"
     #include "createFieldsSolid.H"
 
@@ -49,13 +48,9 @@ int main(int argc, char *argv[])
 
     Info<< "\nStarting iteration loop\n" << endl;
 
-    while (runTime.loop() && (convVoltAext>0 || convVoltArho>0 || convVoltDext>0 || convVoltDrho>0 || convVoltIext>0 || convVoltIrho>0 || convRhoq>0) )
+    while (runTime.loop() && (convVoltAext>0 || convVoltArho>0 || convVoltDext>0 || convVoltDrho>0 || convVoltIext>0 || convVoltIrho>0) )
     {
-        Info<< "Time = " << runTime.timeName() << nl << endl;
-
-        // Control time step according to Co num
-        #include "CourantNo.H"
-        #include "setDeltaT.H" 
+        Info<< "Iteration = " << runTime.timeIndex() << nl << endl;
 
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
         // Equations for the External Electric Field
@@ -100,9 +95,7 @@ int main(int argc, char *argv[])
                 solverPerformance::debug = 1;
             }
         }
-
         Info<< "External Field: Region Inner Loops = " << counter << endl;
-        solverPerformance::debug = 1;
 
 
 
@@ -150,33 +143,19 @@ int main(int argc, char *argv[])
                 solverPerformance::debug = 1;
             }
         }
-
         Info<< "Induced Field: Region Inner Loops = " << counter << endl;
         solverPerformance::debug = 1;
 
 
+        // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+        // Calculate Total Fields
+        // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+        
         // Calculate total electric potential in all regions
         voltA = voltAext + voltArho;
         voltD = voltDext + voltDrho;
         voltI = voltIext + voltIrho;
-
-
-
-        // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-        // Charge Transport
-        // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-        // Update rhoFlux
-        rhoqFlux = -k*mesh.magSf()*fvc::snGrad(voltA);
-
-        // Solve the charge transport equation
-        Foam::solverPerformance solvPerfRhoq = solve
-        (
-            fvm::ddt(rhoq) + fvm::div(rhoqFlux, rhoq)
-        );
-        convRhoq = solvPerfRhoq.nIterations();
-
-
+        
         // Calculate the electric field
         EAext = -fvc::grad(voltAext);
         EArho = -fvc::grad(voltArho);

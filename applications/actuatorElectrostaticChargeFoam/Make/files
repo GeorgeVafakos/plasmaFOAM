@@ -1,3 +1,0 @@
-actuatorElectrostaticChargeFoam.C
-
-EXE = $(FOAM_USER_APPBIN)/actuatorElectrostaticChargeFoam

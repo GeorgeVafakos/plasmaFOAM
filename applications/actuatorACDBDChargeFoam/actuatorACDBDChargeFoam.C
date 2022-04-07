@@ -22,10 +22,10 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    actuatorElectrostaticChargeFoam
+    actuatorACDBDChargeFoam
 
 Description
-    Solver for electrostatics in a DBD actuator.
+    Solver for charge propagation for a single period in an AC-DBD actuator.
 
 \*---------------------------------------------------------------------------*/
 
@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 
     Info<< "\nStarting iteration loop\n" << endl;
 
-    while (runTime.loop() && (convVoltA>0 || convVoltD>0 || convVoltI>0 || convRhoq>0))
+    while (runTime.loop() && (convVoltArho>0 || convVoltDrho>0 || convVoltIrho>0 || convRhoq>0))
     {
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
@@ -58,8 +58,10 @@ int main(int argc, char *argv[])
         #include "setDeltaT.H" 
         #include "writeCustomTime.H"
 
+        Info<< "pi = " << M_PI << nl << endl;
+
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-        // Poisson Equations
+        // Equations for the Induced Electric Field
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
         // Reset counters
@@ -67,33 +69,33 @@ int main(int argc, char *argv[])
         counter = 0;
         solverPerformance::debug = 1;
 
-        while (conver && counter<1)
+        while (conver && counter<30000)
         {
             // Air
-            Foam::solverPerformance solvPerfVoltA = solve 
+            Foam::solverPerformance solvPerfVoltArho = solve 
             (
-                fvm::laplacian(voltA) + rhoq/e0
+                fvm::laplacian(voltArho) + rhoq/e0
             );
-            convVoltA = solvPerfVoltA.nIterations();
+            convVoltArho = solvPerfVoltArho.nIterations();
 
             // Dielectric
-            Foam::solverPerformance solvPerfVoltD = solve
+            Foam::solverPerformance solvPerfVoltDrho = solve
             (
-                fvm::laplacian(voltD)
+                fvm::laplacian(voltDrho)
             );
-            convVoltD = solvPerfVoltD.nIterations();
+            convVoltDrho = solvPerfVoltDrho.nIterations();
 
             // Insulator
-            Foam::solverPerformance solvPerfVoltI = solve
+            Foam::solverPerformance solvPerfVoltIrho = solve
             (
-                fvm::laplacian(voltI)
+                fvm::laplacian(voltIrho)
             );
-            convVoltI = solvPerfVoltI.nIterations();
+            convVoltIrho = solvPerfVoltIrho.nIterations();
 
             // Region convergence
-            conver = (solvPerfVoltA.initialResidual()>1.e-6) || (solvPerfVoltD.initialResidual()>1.e-6) || (solvPerfVoltI.initialResidual()>1.e-6);
+            conver = (solvPerfVoltArho.initialResidual()>1.e-6) && (solvPerfVoltDrho.initialResidual()>1.e-6) && (solvPerfVoltIrho.initialResidual()>1.e-6);
             counter++;
-
+            
             solverPerformance::debug = 0;
             if (counter % 5000 == 0)
             {
@@ -104,6 +106,11 @@ int main(int argc, char *argv[])
 
         Info<< "Region Inner Loops = " << counter << endl;
         solverPerformance::debug = 1;
+
+        // Calculate total electric potential in all regions
+        voltA = voltAext*Foam::sin(2*3.14*(1.0/endTime)*runTime.value())  + voltArho;
+        // voltD = voltDext*Foam::sin()  + voltDrho;
+        // voltI = voltIext*Foam::sin()  + voltIrho;
 
 
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
