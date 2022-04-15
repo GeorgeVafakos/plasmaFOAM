@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    actuatorStreamerACDBDFoam
+    actuatorACDBDStreamerFoam
 
 Description
     Solver for the electrostatic field for a single streamer in an AC-DBD actuator.
