@@ -46,13 +46,8 @@ timePrecision   6;
 runTimeModifiable true;
 
 
-// Controls to implement time step according to Co number
-
-adjustTimeStep  no;
-
-maxCo           0.8;
-
-maxDeltaT       1.0;
+// Streamer time step
+streamerTime    1.218724e-05;
 
 
 // Get residuals

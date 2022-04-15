@@ -21,6 +21,13 @@ dimensionedScalar e0
     physicalProperties.lookup("e0")
 );
 
+// Read streamer time and frequency
+scalar streamerTime =
+    runTime.controlDict().lookupOrDefault<scalar>("streamerTime", 1.218724e-05);
+
+scalar freq =
+    runTime.controlDict().lookupOrDefault<scalar>("freq", 10.0e03);
+
 // Convergence variables
 int convVoltAext=1;
 int convVoltArho=1;

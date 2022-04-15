@@ -152,9 +152,9 @@ int main(int argc, char *argv[])
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
         
         // Calculate total electric potential in all regions
-        voltA = voltAext + voltArho;
-        voltD = voltDext + voltDrho;
-        voltI = voltIext + voltIrho;
+        voltA = voltAext*Foam::sin(2*3.14159*freq*streamerTime) + voltArho;
+        voltD = voltDext*Foam::sin(2*3.14159*freq*streamerTime) + voltDrho;
+        voltI = voltIext*Foam::sin(2*3.14159*freq*streamerTime) + voltIrho;
         
         // Calculate the electric field
         EAext = -fvc::grad(voltAext);

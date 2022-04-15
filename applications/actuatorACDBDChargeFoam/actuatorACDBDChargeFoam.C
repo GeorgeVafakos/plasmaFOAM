@@ -108,9 +108,9 @@ int main(int argc, char *argv[])
         solverPerformance::debug = 1;
 
         // Calculate total electric potential in all regions
-        voltA = voltAext*Foam::sin(2*3.14*(1.0/endTime)*runTime.value())  + voltArho;
-        // voltD = voltDext*Foam::sin()  + voltDrho;
-        // voltI = voltIext*Foam::sin()  + voltIrho;
+        voltA = voltAext*Foam::sin(2*3.14159*(1.0/endTime)*runTime.value())  + voltArho;
+        voltD = voltDext*Foam::sin(2*3.14159*(1.0/endTime)*runTime.value())  + voltDrho;
+        voltI = voltIext*Foam::sin(2*3.14159*(1.0/endTime)*runTime.value())  + voltIrho;
 
 
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
