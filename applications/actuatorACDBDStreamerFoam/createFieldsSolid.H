@@ -162,7 +162,7 @@ volVectorField ED
     (
         "ED",
         runTime.timeName(),
-        mesh,
+        meshD,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
@@ -204,7 +204,7 @@ volVectorField EI
     (
         "EI",
         runTime.timeName(),
-        mesh,
+        meshI,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
