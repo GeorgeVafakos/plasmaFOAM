@@ -22,19 +22,23 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Local
-    writeCustomTime
+    resetStreamer
 
 Description
-    Write data according to the stretching function defined in controlDict
+    Initialize new streamer electrostatic conditions
 
 \*---------------------------------------------------------------------------*/
 
-
-if (writeCustomTime)
+if ( runTime.time().value()>( startTime+lengthStreamer*streamerCounter ) && streamerCounter<numStreamers)
 {
-    if ( runTime.time().value()>((startTime+lengthStreamer*(streamerCounter-1))+s[writeTimeCounter]*(endTime-(startTime+lengthStreamer*(streamerCounter-1)))) )
-    {
-        runTime.writeOnce();
-        writeTimeCounter++;
-    }
+    rhoq = rhoq_strm;
+    voltArho = voltArho_strm;
+    voltDrho = voltDrho_strm;
+    voltIrho = voltIrho_strm;
+    streamerCounter++;
+    writeTimeCounter = 0;
+    // Info<< "Time ================================================================================================================================= "<< nl << endl;
+    // rhoq = dimensionedScalar("temp",dimensionSet(0, -3, 1, 0 ,0 ,1, 0),scalar(0));
+    // rhoq_strm = dimensionedScalar("temp",dimensionSet(0, -3, 1, 0 ,0 ,1, 0),scalar(0));
+    // Info<< "Max rhoq = " << max(rhoq) << endl;
 }

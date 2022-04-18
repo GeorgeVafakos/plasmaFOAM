@@ -43,6 +43,21 @@ volScalarField voltDrho
     meshD
 );
 
+Info<< "Reading field voltDrho_strm\n" << endl;
+volScalarField voltDrho_strm
+(
+    IOobject
+    (
+        "voltDrho_strm",
+        runTime.timeName(),
+        meshD,
+        IOobject::NO_READ,
+        IOobject::NO_WRITE
+    ),
+    meshD,
+    dimensionedScalar("temp",dimensionSet(1,2,-3,0,0,-1,0),scalar(0))
+);
+
 Info<< "Reading field voltD\n" << endl;
 volScalarField voltD
 (
@@ -84,6 +99,21 @@ volScalarField voltIrho
         IOobject::AUTO_WRITE
     ),
     meshI
+);
+
+Info<< "Reading field voltIrho_strm\n" << endl;
+volScalarField voltIrho_strm
+(
+    IOobject
+    (
+        "voltIrho_strm",
+        runTime.timeName(),
+        meshI,
+        IOobject::NO_READ,
+        IOobject::NO_WRITE
+    ),
+    meshI,
+    dimensionedScalar("temp",dimensionSet(1,2,-3,0,0,-1,0),scalar(0))
 );
 
 Info<< "Reading field voltI\n" << endl;

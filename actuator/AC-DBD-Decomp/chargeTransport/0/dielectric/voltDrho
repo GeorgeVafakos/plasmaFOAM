@@ -10,7 +10,7 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    object      voltA;
+    object      voltDrho;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -20,12 +20,6 @@ internalField   uniform 0;
 
 boundaryField
 {
-
-    upperBoundary
-    {
-        type            zeroGradient;
-    }
-
     leftBoundary
     {
         type            zeroGradient;
@@ -38,24 +32,32 @@ boundaryField
 
     highVoltage
     {
-        type            uniformFixedValue;
-        uniformValue
-        {
-            type             sine;
-            frequency        1.0e+4;
-            amplitude        7.0e+3;
-            scale            1;  // Scale factor for wave
-            level            0;  // Offset
-        }
+        type            fixedValue;
+        value           uniform 0;
+    }
+    
+    ground
+    {
+        type            fixedValue;
+        value           uniform 0;
     }
 
-    region0_to_dielectric
+    dielectric_to_region0
     {
         type            compressible::turbulentTemperatureCoupledBaffleMixed;
         value           $internalField;
-        Tnbr            voltD;
+        Tnbr            voltArho;
         kappaMethod     lookup;
-        kappa           epsilonA;
+        kappa           epsilonD;
+    }
+
+    dielectric_to_insulator
+    {
+        type            compressible::turbulentTemperatureCoupledBaffleMixed;
+        value           $internalField;
+        Tnbr            voltIrho;
+        kappaMethod     lookup;
+        kappa           epsilonD;
     }
 
     frontAndBack

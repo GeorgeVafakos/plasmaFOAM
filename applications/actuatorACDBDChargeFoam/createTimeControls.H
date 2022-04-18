@@ -58,6 +58,12 @@ scalar P =
 scalar Q =
     runTime.controlDict().lookupOrDefault<scalar>("Q", 5.0);
 
+int numStreamers =
+    runTime.controlDict().lookupOrDefault("numStreamers", 2);
+
+scalar lengthStreamer =
+    runTime.controlDict().lookupOrDefault<scalar>("lengthStreamer", 0.5e-5);
+
 // Create normilized count of number of printed times
 scalar n[numWriteTimes];
 for (int i = 0; i < numWriteTimes; ++i)
@@ -68,7 +74,8 @@ scalar s[numWriteTimes];
 for (int i = 0; i < numWriteTimes; ++i)
     s[i] = P*n[i] + (1.0-P)*(1.0-Foam::tanh(Q*(1.0-n[i]))/Foam::tanh(Q));
 
+// Counters
 int writeTimeCounter = 0;
-
+int streamerCounter = 1;
 
 // ************************************************************************* //

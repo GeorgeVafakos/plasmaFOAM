@@ -45,8 +45,7 @@ boundaryField
 
     highVoltage
     {
-        type            fixedValue;
-        value           uniform 0;
+        type            zeroGradient;
     }
 
     frontAndBack

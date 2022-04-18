@@ -49,6 +49,12 @@ int main(int argc, char *argv[])
 
     Info<< "\nStarting iteration loop\n" << endl;
 
+    // Save original streamer fields
+    rhoq_strm = rhoq;
+    voltArho_strm = voltArho;
+    voltDrho_strm = voltDrho;
+    voltIrho_strm = voltIrho;
+
     while (runTime.loop() && (convVoltArho>0 || convVoltDrho>0 || convVoltIrho>0 || convRhoq>0))
     {
         Info<< "Time = " << runTime.timeName() << nl << endl;
@@ -56,9 +62,8 @@ int main(int argc, char *argv[])
         // Control time step according to Co num
         #include "CourantNo.H"
         #include "setDeltaT.H" 
+        #include "resetStreamer.H"
         #include "writeCustomTime.H"
-
-        Info<< "pi = " << M_PI << nl << endl;
 
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
         // Equations for the Induced Electric Field
@@ -69,7 +74,12 @@ int main(int argc, char *argv[])
         counter = 0;
         solverPerformance::debug = 1;
 
-        while (conver && counter<30000)
+        // rhoq = dimensionedScalar("temp",dimensionSet(0, -3, 1, 0 ,0 ,1, 0),scalar(1));
+
+        Info<< "Max rhoq = " << max(rhoq_strm) << endl;
+        Info<< "Max rhoq = " << max(rhoq) << endl;
+
+        while (conver && counter<1)
         {
             // Air
             Foam::solverPerformance solvPerfVoltArho = solve 
@@ -108,9 +118,9 @@ int main(int argc, char *argv[])
         solverPerformance::debug = 1;
 
         // Calculate total electric potential in all regions
-        voltA = voltAext*Foam::sin(2*3.14159*(1.0/endTime)*runTime.value())  + voltArho;
-        voltD = voltDext*Foam::sin(2*3.14159*(1.0/endTime)*runTime.value())  + voltDrho;
-        voltI = voltIext*Foam::sin(2*3.14159*(1.0/endTime)*runTime.value())  + voltIrho;
+        voltA = voltAext*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value()) + voltArho;
+        voltD = voltDext*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value()) + voltDrho;
+        voltI = voltIext*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value()) + voltIrho;
 
 
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

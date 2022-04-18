@@ -64,6 +64,21 @@ volScalarField voltArho
     mesh
 );
 
+Info<< "Reading field voltArho_strm\n" << endl;
+volScalarField voltArho_strm
+(
+    IOobject
+    (
+        "voltArho_strm",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::NO_WRITE
+    ),
+    mesh,
+    dimensionedScalar("temp",dimensionSet(1,2,-3,0,0,-1,0),scalar(1))
+);
+
 Info<< "Reading field voltA\n" << endl;
 volScalarField voltA
 (
@@ -105,6 +120,21 @@ volScalarField rhoq
         IOobject::AUTO_WRITE
     ),
     mesh
+);
+
+Info<< "Reading field rhoq_strm\n" << endl;
+volScalarField rhoq_strm
+(
+    IOobject
+    (
+        "rhoq_strm",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::NO_WRITE
+    ),
+    mesh,
+    dimensionedScalar("temp",dimensionSet(0, -3, 1, 0 ,0 ,1, 0),scalar(0))
 );
 
 Info<< "Calculating field rhoqFlux\n" << endl;
@@ -176,3 +206,5 @@ volVectorField Fc
     ),
     rhoq*EA
 );
+
+
