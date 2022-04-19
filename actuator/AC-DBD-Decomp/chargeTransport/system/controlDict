@@ -24,7 +24,7 @@ stopAt          endTime;
 
 endTime         0.0001;
 
-deltaT          1e-07;
+deltaT          1e-09;
 
 writeControl    adjustableRunTime;
 
@@ -58,9 +58,9 @@ P               0.1;
 
 Q               7;
 
-numStreamers    3;
+numStreamers    4;
 
-lengthStreamer  5e-06;
+lengthStreamer  2e-06;
 
 functions
 {

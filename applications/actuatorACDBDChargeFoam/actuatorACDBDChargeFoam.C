@@ -49,37 +49,23 @@ int main(int argc, char *argv[])
 
     Info<< "\nStarting iteration loop\n" << endl;
 
-    // Save original streamer fields
-    rhoq_strm = rhoq;
-    voltArho_strm = voltArho;
-    voltDrho_strm = voltDrho;
-    voltIrho_strm = voltIrho;
-
-    while (runTime.loop() && (convVoltArho>0 || convVoltDrho>0 || convVoltIrho>0 || convRhoq>0))
+    while (runTime.loop())
     {
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
         // Control time step according to Co num
         #include "CourantNo.H"
         #include "setDeltaT.H" 
-        #include "resetStreamer.H"
-        #include "writeCustomTime.H"
 
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
         // Equations for the Induced Electric Field
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
         // Reset counters
-        conver = 1;
         counter = 0;
         solverPerformance::debug = 1;
 
-        // rhoq = dimensionedScalar("temp",dimensionSet(0, -3, 1, 0 ,0 ,1, 0),scalar(1));
-
-        Info<< "Max rhoq = " << max(rhoq_strm) << endl;
-        Info<< "Max rhoq = " << max(rhoq) << endl;
-
-        while (conver && counter<1)
+        while ((convVoltArho>0 || convVoltDrho>0 || convVoltIrho>0 || convRhoq>0) && counter<1)
         {
             // Air
             Foam::solverPerformance solvPerfVoltArho = solve 
@@ -102,10 +88,7 @@ int main(int argc, char *argv[])
             );
             convVoltIrho = solvPerfVoltIrho.nIterations();
 
-            // Region convergence
-            conver = (solvPerfVoltArho.initialResidual()>1.e-6) && (solvPerfVoltDrho.initialResidual()>1.e-6) && (solvPerfVoltIrho.initialResidual()>1.e-6);
             counter++;
-            
             solverPerformance::debug = 0;
             if (counter % 5000 == 0)
             {
@@ -143,6 +126,10 @@ int main(int argc, char *argv[])
         ED = -fvc::grad(voltD);
         EI = -fvc::grad(voltI);
         Fc = rhoq*EA;
+
+
+        #include "resetStreamer.H"
+        #include "writeCustomTime.H"
 
         runTime.write();
 

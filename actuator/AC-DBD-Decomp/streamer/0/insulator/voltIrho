@@ -10,7 +10,7 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    object      voltIext;
+    object      voltIrho;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -45,7 +45,7 @@ boundaryField
     {
         type            compressible::turbulentTemperatureCoupledBaffleMixed;
         value           $internalField;
-        Tnbr            voltDext;
+        Tnbr            voltDrho;
         kappaMethod     lookup;
         kappa           epsilonI;
     }

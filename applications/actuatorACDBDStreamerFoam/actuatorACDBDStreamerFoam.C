@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
         counter = 0;
         solverPerformance::debug = 1;
 
-        while (conver && counter<30000)
+        while ((convVoltAext>0 || convVoltDext>0 || convVoltIext>0) && counter<30000)
         {
             // Air
             Foam::solverPerformance solvPerfVoltAext = solve 
@@ -84,10 +84,7 @@ int main(int argc, char *argv[])
             );
             convVoltIext = solvPerfVoltIext.nIterations();
 
-            // Region convergence
-            conver = (solvPerfVoltAext.initialResidual()>1.e-6) && (solvPerfVoltDext.initialResidual()>1.e-6) && (solvPerfVoltIext.initialResidual()>1.e-6);
             counter++;
-            
             solverPerformance::debug = 0;
             if (counter % 5000 == 0)
             {
@@ -108,7 +105,7 @@ int main(int argc, char *argv[])
         counter = 0;
         solverPerformance::debug = 1;
 
-        while (conver && counter<30000)
+        while ((convVoltArho>0 || convVoltDrho>0 || convVoltIrho>0) && counter<30000)
         {
             // Air
             Foam::solverPerformance solvPerfVoltArho = solve 
@@ -131,11 +128,7 @@ int main(int argc, char *argv[])
             );
             convVoltIrho = solvPerfVoltIrho.nIterations();
 
-
-            // Region convergence
-            conver = (solvPerfVoltArho.initialResidual()>1.e-6) && (solvPerfVoltDrho.initialResidual()>1.e-6) && (solvPerfVoltIrho.initialResidual()>1.e-6);
-            counter++;
-            
+            counter++;            
             solverPerformance::debug = 0;
             if (counter % 5000 == 0)
             {

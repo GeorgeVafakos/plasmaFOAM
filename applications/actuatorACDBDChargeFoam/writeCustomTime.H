@@ -29,12 +29,11 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-
 if (writeCustomTime)
 {
     if ( runTime.time().value()>((startTime+lengthStreamer*(streamerCounter-1))+s[writeTimeCounter]*(endTime-(startTime+lengthStreamer*(streamerCounter-1)))) )
     {
-        runTime.writeOnce();
+        runTime.writeNow();
         writeTimeCounter++;
     }
 }

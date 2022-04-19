@@ -37,8 +37,4 @@ if ( runTime.time().value()>( startTime+lengthStreamer*streamerCounter ) && stre
     voltIrho = voltIrho_strm;
     streamerCounter++;
     writeTimeCounter = 0;
-    // Info<< "Time ================================================================================================================================= "<< nl << endl;
-    // rhoq = dimensionedScalar("temp",dimensionSet(0, -3, 1, 0 ,0 ,1, 0),scalar(0));
-    // rhoq_strm = dimensionedScalar("temp",dimensionSet(0, -3, 1, 0 ,0 ,1, 0),scalar(0));
-    // Info<< "Max rhoq = " << max(rhoq) << endl;
 }

@@ -33,7 +33,6 @@ int convVoltArho=1;
 int convVoltDrho=1;
 int convVoltIrho=1;
 int convRhoq=1;
-int conver=1;
 int counter=0;
 
 Info<< "Reading field voltAext\n" << endl;
@@ -75,8 +74,7 @@ volScalarField voltArho_strm
         IOobject::NO_READ,
         IOobject::NO_WRITE
     ),
-    mesh,
-    dimensionedScalar("temp",dimensionSet(1,2,-3,0,0,-1,0),scalar(1))
+    voltArho
 );
 
 Info<< "Reading field voltA\n" << endl;
@@ -133,8 +131,7 @@ volScalarField rhoq_strm
         IOobject::NO_READ,
         IOobject::NO_WRITE
     ),
-    mesh,
-    dimensionedScalar("temp",dimensionSet(0, -3, 1, 0 ,0 ,1, 0),scalar(0))
+    rhoq
 );
 
 Info<< "Calculating field rhoqFlux\n" << endl;

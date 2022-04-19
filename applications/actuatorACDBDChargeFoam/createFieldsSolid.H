@@ -54,8 +54,7 @@ volScalarField voltDrho_strm
         IOobject::NO_READ,
         IOobject::NO_WRITE
     ),
-    meshD,
-    dimensionedScalar("temp",dimensionSet(1,2,-3,0,0,-1,0),scalar(0))
+    voltDrho
 );
 
 Info<< "Reading field voltD\n" << endl;
@@ -112,8 +111,7 @@ volScalarField voltIrho_strm
         IOobject::NO_READ,
         IOobject::NO_WRITE
     ),
-    meshI,
-    dimensionedScalar("temp",dimensionSet(1,2,-3,0,0,-1,0),scalar(0))
+    voltIrho
 );
 
 Info<< "Reading field voltI\n" << endl;

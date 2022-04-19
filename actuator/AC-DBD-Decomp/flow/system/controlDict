@@ -15,7 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     actuatorACDBDStreamerFoam;
+application     actuatorStreamerRhoPimpleFoam;
 
 startFrom       startTime;
 
@@ -23,13 +23,13 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         5.0;
+endTime         30;
 
-deltaT          1.0e-7;
+deltaT          0.0001;
 
 writeControl    adjustableRunTime;
 
-writeInterval   5.0e-4;
+writeInterval   0.1;
 
 purgeWrite      0;
 
@@ -45,16 +45,25 @@ timePrecision   6;
 
 runTimeModifiable true;
 
+// Controls to implement time step according to Co number
 
-// Streamer time step
-streamerTime    1.218724e-05;
+adjustTimeStep  yes;
 
+maxCo           0.6;
 
-// Get residuals
-// functions
-// {
-//   #includeFunc residuals
-// }
+maxDeltaT       1.0;
+
+functions
+{
+    libs            ("libfieldFunctionObjects.so");
+
+    Ma
+    {
+        type            MachNo;
+        executeControl  writeTime;
+        writeControl    writeTime;
+    }
+}
 
 
 // ************************************************************************* //
