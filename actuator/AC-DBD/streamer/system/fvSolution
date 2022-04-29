@@ -17,45 +17,52 @@ FoamFile
 
 solvers
 {
-    voltA
+    voltAext
     {
         solver          PCG;
         preconditioner  DIC;
-        tolerance       1e-08;
-        relTol          0.05;
-    }
-    
-    voltD
-    {
-        solver          PCG;
-        preconditioner  DIC;
-        tolerance       1e-08;
-        relTol          0.05;
+        tolerance       1e-06;
+        // relTol          0.05;
     }
 
-    voltI
+    voltArho
     {
         solver          PCG;
         preconditioner  DIC;
-        tolerance       1e-08;
-        relTol          0.05;
+        tolerance       1e-06;
+        // relTol          0.05;
     }
     
-    voltR
+    voltDext
     {
         solver          PCG;
         preconditioner  DIC;
-        tolerance       1e-08;
-        relTol          0.05;
+        tolerance       1e-06;
+        // relTol          0.05;
     }
 
-    rhoq
+    voltDrho
     {
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
-        tolerance       1e-8;
-        relTol          0.05;
-        maxIter         0;      // This line suppresses the charge transport equation
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-06;
+        // relTol          0.05;
+    }
+
+    voltIext
+    {
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-06;
+        // relTol          0.05;
+    }
+    
+    voltIrho
+    {
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-06;
+        // relTol          0.05;
     }
 }
 

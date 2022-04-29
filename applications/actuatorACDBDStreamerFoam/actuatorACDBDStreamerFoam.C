@@ -57,7 +57,6 @@ int main(int argc, char *argv[])
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
         // Reset counters
-        conver = 1;
         counter = 0;
         solverPerformance::debug = 1;
 
@@ -101,7 +100,6 @@ int main(int argc, char *argv[])
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
         // Reset counters
-        conver = 1;
         counter = 0;
         solverPerformance::debug = 1;
 
