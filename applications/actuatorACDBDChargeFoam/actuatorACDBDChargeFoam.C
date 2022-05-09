@@ -131,7 +131,6 @@ int main(int argc, char *argv[])
         #include "resetStreamer.H"
         #include "writeCustomTime.H"
 
-        // Comment
         // runTime.write();
 
         Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
