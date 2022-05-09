@@ -71,11 +71,14 @@ echo ");" >> ./constant/forceDict
 # Convert the 0 directory into 0.org
 mv 0 0.orig
 
-# MapFields all times except last (force at the end of the oscillation period)
+# MapFields all times except last (i.e. the force at the end of the oscillation period)
 count=0
 for i in ${times[@]::${#times[@]}-1}
 do
-  mapFields ../chargeTransport/ -consistent -sourceTime $i 
+  echo
+  echo "Map Fields for force No" $((count+1)) "of" ${#times[@]}
+  echo
+  mapFieldsPar ../chargeTransport/ -mapMethod direct -consistent -sourceTime $i 
   mv 0/Fc 0.orig/Fc$count
   let count++
 done
@@ -83,7 +86,7 @@ done
 # Replace 0 directory with 0.org and delete text files
 rm -v -r 0
 mv -v 0.orig 0
-rm forceTimesText
+#rm forceTimesText
 
 
 

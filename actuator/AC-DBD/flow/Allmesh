@@ -4,8 +4,8 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-# Convert the 0 directory into 0.org
-mv 0 0.org
+# Convert the 0 directory into 0.orig
+mv 0 0.orig
 
 # Run blockMesh
 blockMesh
@@ -19,7 +19,6 @@ done
 
 # Run topoSet and Split regions
 topoSet
-createBaffles -overwrite
 splitMeshRegions -cellZones -overwrite
 
 # # Copy fvSchemes and fvSolution into Zone folders

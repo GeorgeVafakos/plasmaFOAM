@@ -23,10 +23,10 @@ dimensionedScalar e0
 
 // Read streamer time and frequency
 scalar streamerTime =
-    runTime.controlDict().lookupOrDefault<scalar>("streamerTime", 1.218724e-05);
+    runTime.controlDict().lookupOrDefault<scalar>("streamerTime", 0.5e-05);
 
 scalar freq =
-    runTime.controlDict().lookupOrDefault<scalar>("freq", 10.0e03);
+    runTime.controlDict().lookupOrDefault<scalar>("freq", 1.0e04);
 
 // Convergence variables
 int convVoltAext=1;
@@ -35,7 +35,6 @@ int convVoltDext=1;
 int convVoltDrho=1;
 int convVoltIext=1;
 int convVoltIrho=1;
-int conver=1;
 int counter=0;
 
 Info<< "Reading field voltAext\n" << endl;

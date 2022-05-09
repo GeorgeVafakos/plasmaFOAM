@@ -15,7 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     actuatorElectrostaticACDBDFoam;
+application     actuatorACDBDStreamerFoam;
 
 startFrom       startTime;
 
@@ -27,9 +27,9 @@ endTime         5.0;
 
 deltaT          1.0e-7;
 
-writeControl    adjustableRunTime;
+writeControl    timeStep;
 
-writeInterval   5.0e-4;
+writeInterval   1;
 
 purgeWrite      0;
 
@@ -46,13 +46,8 @@ timePrecision   6;
 runTimeModifiable true;
 
 
-// Controls to implement time step according to Co number
-
-adjustTimeStep  no;
-
-maxCo           0.8;
-
-maxDeltaT       1.0;
+// Streamer time step
+streamerTime    0.5e-05;
 
 
 // Get residuals

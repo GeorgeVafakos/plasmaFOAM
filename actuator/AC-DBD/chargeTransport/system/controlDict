@@ -14,21 +14,21 @@ FoamFile
     object          controlDict;
 }
 
-application     actuatorElectrostaticChargeFoam;
+application     actuatorACDBDChargeFoam;
 
 startFrom       startTime;
 
-startTime       1.21872e-05;
+startTime       5e-06;
 
 stopAt          endTime;
 
 endTime         0.0001;
 
-deltaT          1e-07;
+deltaT          1e-09;
 
 writeControl    adjustableRunTime;
 
-writeInterval   1e-06;
+writeInterval   0.0001;
 
 purgeWrite      0;
 
@@ -40,7 +40,7 @@ writeCompression off;
 
 timeFormat      general;
 
-timePrecision   14;
+timePrecision   10;
 
 runTimeModifiable true;
 
@@ -52,11 +52,15 @@ maxDeltaT       1;
 
 writeCustomTime yes;
 
-numWriteTimes   15;
+numWriteTimes   10;
 
 P               0.1;
 
-Q               5.0;
+Q               5;
+
+numStreamers    5;
+
+lengthStreamer  4.3e-06;
 
 functions
 {
@@ -68,7 +72,7 @@ functions
         writeControl    timeStep;
         writeInterval   1;
         fields          ( voltA rhoq Fc );
-        probeLocations  ( ( 0 5e-05 0.025 ) ( 0.0015 5e-05 0.025 ) ( 0.003 5e-05 0.025 ) ( 0.0045 5e-05 0.025 ) );
+        probeLocations  ( ( 0 4e-05 0.025 ) ( 0.0015 4e-05 0.025 ) ( 0.003 4e-05 0.025 ) ( 0.0045 4e-05 0.025 ) );
     }
 }
 
