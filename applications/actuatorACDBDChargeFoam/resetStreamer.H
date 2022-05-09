@@ -35,6 +35,16 @@ if ( runTime.time().value()>( startTime+lengthStreamer*streamerCounter ) && stre
     voltArho = voltArho_strm;
     voltDrho = voltDrho_strm;
     voltIrho = voltIrho_strm;
+
+    voltA = voltAext*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value()) + voltArho;
+    voltD = voltDext*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value()) + voltDrho;
+    voltI = voltIext*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value()) + voltIrho;
+
+    EA = -fvc::grad(voltA);
+    ED = -fvc::grad(voltD);
+    EI = -fvc::grad(voltI);
+    Fc = rhoq*EA;
+
     streamerCounter++;
     writeTimeCounter = 0;
 }
