@@ -24,7 +24,7 @@ H_Ins 1.1;                      // Total Dielectric height
 t_Diel 0.425e-3;                   // Dielectric between electrodes thickness
 L_HVe 5.0e-3;                     // Length of high-voltage electrode
 t_HVe 80.0e-6;                   // Thickness of high-voltage electrode
-L_GRe 15.0e-3;                     // Length of grounded electrode
+L_GRe 16.0e-3;                     // Length of grounded electrode
 t_GRe 80.0e-6;                   // Thickness of grounded electrode
 L_Gap 3.0e-3;                      // Gap between electrodes
 
