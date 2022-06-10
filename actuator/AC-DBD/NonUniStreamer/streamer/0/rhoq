@@ -44,8 +44,9 @@ internalField   #codeStream // Use codeStream to set the value of the initial co
 
             scalarField rhoq(mesh.nCells(), 0.);
 
-            scalar rhoq0 = 0.1;
-            scalar StrEnd = 18.0e-3;
+            scalar rhoq0 = 1.0;
+            scalar StrEnd = 19.0e-3;
+            scalar EleThick = 80.0e-6;
            
             forAll(rhoq, i)
             {
@@ -54,7 +55,7 @@ internalField   #codeStream // Use codeStream to set the value of the initial co
                 const scalar y = mesh.C()[i][1];
                 const scalar z = mesh.C()[i][2];
                 
-                if ( x>0 && x<18.0e-3 && y>0 && y<80.0e-6  )
+                if ( x>0 && x<StrEnd && y>0 && y<EleThick  )
                 {
                     rhoq[i] = -rhoq0*((x-StrEnd)/StrEnd);
                 }
