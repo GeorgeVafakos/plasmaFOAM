@@ -1,0 +1,69 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  8
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      fvOptions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+heatSource
+{
+    type            scalarCodedSource;
+    selectionMode   cellSet;
+    cellSet         plasmaHeating;
+
+    fields          (e);
+    name            sourceTime;
+
+    codeInclude
+    #{
+        #include "fvCFD.H"
+    #};
+    codeOptions
+    #{
+        -I$(LIB_SRC)/finiteVolume/lnInclude \
+        -I$(LIB_SRC)/meshTools/lnInclude
+    #};
+    codeLibs
+    #{
+        -lmeshTools \
+        -lfiniteVolume
+    #};
+
+    codeAddSup
+    #{
+        const Time& time = mesh().time();
+        const scalarField& V = mesh_.V();
+        scalarField& heSource = eqn.source();
+
+        // End time
+        const scalar endTime = 100.0e-9;
+
+        // Retrieve the x component of the cell centres
+        const scalarField& cellx = mesh_.C().component(0);
+        
+        // const scalar x = mesh.C()[i][0];
+
+        // When to apply the source term
+        if (time.value() < endTime)
+        {
+            // Apply the source
+            forAll(cellx, i)
+            {
+                // cell volume specific source
+                heSource[i] = 1.0;
+            };
+        }
+    #};
+}
+
+// ************************************************************************* //

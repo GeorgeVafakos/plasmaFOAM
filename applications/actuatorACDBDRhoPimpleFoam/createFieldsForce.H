@@ -41,7 +41,7 @@ forAll(forcesNames, s)
                 runTime.timeName(),
                 mesh,
                 IOobject::MUST_READ,
-                IOobject::AUTO_WRITE
+                IOobject::NO_WRITE
             ),
         mesh
         )
