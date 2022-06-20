@@ -1,0 +1,25 @@
+#!/bin/bash
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Time variables (in e-5)
+startTime=0.5
+timeStep=0.05
+
+count=$(echo "$startTime / $timeStep"|bc)
+
+for (( i=1; $i<$(bc<<<"$startTime/$timeStep"); i++  ));
+do
+    folderName=$(echo $(bc<<<"$timeStep * $i"))
+    #count1="${count}e-5"
+    cp -R 0 "${folderName}e-5"
+done
+
+
+
+
+
+
+#------------------------------------------------------------------------------
