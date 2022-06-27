@@ -102,6 +102,15 @@ int main(int argc, char *argv[])
 
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
+        // Set forceSwitch on/off
+        numPeriods = floor(runTime.value()/Tp);
+        if ( runTime.value()>=(numPeriods*Tp+startHeating) && runTime.value()<=(numPeriods*Tp+Th) )
+            ONOFFSwitch = 1.0;
+        else
+            ONOFFSwitch = 0.0;
+
+         Info<< "Run Time Info: \tON/OFF Switch = " << ONOFFSwitch << "\tPeriod: " << numPeriods+1  << endl; 
+
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {

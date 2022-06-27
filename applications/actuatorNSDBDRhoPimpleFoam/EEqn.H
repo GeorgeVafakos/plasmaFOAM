@@ -17,7 +17,7 @@
         )
       - fvm::laplacian(turbulence->alphaEff(), he)
      ==
-        lambda*fvOptions(rho, he)
+        ONOFFSwitch*alpha*fvOptions(rho, he)
     );
 
     EEqn.relax();

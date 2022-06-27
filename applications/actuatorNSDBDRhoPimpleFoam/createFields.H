@@ -11,6 +11,14 @@ thermo.validate(args.executable(), "h", "e");
 
 volScalarField& p = thermo.p();
 
+// Set the forceSwitch
+scalar ONOFFSwitch = 0;
+scalar Tp = runTime.controlDict().lookupOrDefault("Period", 1.0e-3);
+scalar Th = runTime.controlDict().lookupOrDefault("HeatingTime", 350.0e-9);
+scalar startHeating = runTime.controlDict().lookupOrDefault("startHeating", 0.0);
+// scalar stopForcePerc = runTime.controlDict().lookupOrDefault("stopForcePerc", 0.25);
+scalar numPeriods = floor(runTime.value()/Tp);
+
 volScalarField rho
 (
     IOobject
@@ -75,15 +83,16 @@ volScalarField K("K", 0.5*magSqr(U));
 #include "createMRF.H"
 #include "createFvOptions.H"
 
-volScalarField lambda
+volScalarField alpha
 (
     IOobject
     (
-        "lambda",
+        "alpha",
         runTime.timeName(),
         mesh,
         IOobject::READ_IF_PRESENT,
         IOobject::AUTO_WRITE
     ),
-    dimensionedScalar(dimless, 1.0)
+    mesh,
+    dimensionedScalar(dimless, 0.0)
 );
