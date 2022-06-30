@@ -168,6 +168,17 @@ int main(int argc, char *argv[])
         }
 
         Info<< "Time = " << runTime.timeName() << nl << endl;
+        
+        
+        // Set forceSwitch on/off
+        numPeriods = floor(runTime.value()/Tp);
+        if ( runTime.value()>=(numPeriods*Tp+startHeating) && runTime.value()<=(numPeriods*Tp+Th) )
+            ONOFFSwitch = 1.0;
+        else
+            ONOFFSwitch = 0.0;
+        
+        
+        
 
         phi = aphiv_pos*rho_pos + aphiv_neg*rho_neg;
 
@@ -233,7 +244,7 @@ int main(int argc, char *argv[])
             fvm::ddt(rhoE)
           + fvc::div(phiEp)
           - fvc::div(sigmaDotU) ==
-          alpha*fvOptions(rhoE)
+          ONOFFSwitch*alpha*fvOptions(rhoE)
         );
 	
 	    fvOptions.constrain(EEqnRCF);

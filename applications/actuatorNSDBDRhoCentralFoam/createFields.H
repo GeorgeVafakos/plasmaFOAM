@@ -12,6 +12,14 @@ thermo.validate(args.executable(), "h", "e");
 
 volScalarField& e = thermo.he();
 
+// Set the forceSwitch
+scalar ONOFFSwitch = 0;
+scalar Tp = runTime.controlDict().lookupOrDefault("Period", 1.0e-3);
+scalar Th = runTime.controlDict().lookupOrDefault("HeatingTime", 350.0e-9);
+scalar startHeating = runTime.controlDict().lookupOrDefault("startHeating", 0.0);
+// scalar stopForcePerc = runTime.controlDict().lookupOrDefault("stopForcePerc", 0.25);
+scalar numPeriods = floor(runTime.value()/Tp);
+
 Info<< "Reading field U\n" << endl;
 volVectorField U
 (
