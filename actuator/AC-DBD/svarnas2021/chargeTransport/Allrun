@@ -7,7 +7,8 @@ cd ${0%/*} || exit 1    # Run from this directory
 ./Allclean
 ./Allmesh
 ./runParallel
-reconstructPar -allRegions -latestTime
-
+reconstructPar
+rm -r processor*
+./createZeroForces
 
 #------------------------------------------------------------------------------

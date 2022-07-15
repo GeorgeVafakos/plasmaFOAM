@@ -1,0 +1,72 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  7  
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      voltDext;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [1 2 -3 0 0 -1 0];
+
+internalField   uniform 0;
+
+voltage         uniform 17.5e3;
+
+boundaryField
+{
+    leftBoundary
+    {
+        type            zeroGradient;
+    }
+
+    rightBoundary
+    {
+        type            zeroGradient;
+    }
+
+    highVoltage
+    {
+        type            fixedValue;
+        value           $voltage;
+    }
+    
+    ground
+    {
+        type            fixedValue;
+        value           uniform 0;
+    }
+
+    dielectric_to_region0
+    {
+        type            compressible::turbulentTemperatureCoupledBaffleMixed;
+        value           $internalField;
+        Tnbr            voltAext;
+        kappaMethod     lookup;
+        kappa           epsilonD;
+    }
+
+    dielectric_to_insulator
+    {
+        type            compressible::turbulentTemperatureCoupledBaffleMixed;
+        value           $internalField;
+        Tnbr            voltIext;
+        kappaMethod     lookup;
+        kappa           epsilonD;
+    }
+
+    frontAndBack
+    {
+        type            empty;
+    }
+
+}
+
+// ************************************************************************* //
