@@ -25,7 +25,7 @@ t_Diel 0.425e-3;                   // Dielectric between electrodes thickness
 L_HVe 5.0e-3;                     // Length of high-voltage electrode
 t_HVe 37.5e-6;                   // Thickness of high-voltage electrode
 L_GRe 5.0e-3;                     // Length of grounded electrode
-t_GRe 37.05-6;                   // Thickness of grounded electrode
+t_GRe 37.5e-6;                   // Thickness of grounded electrode
 L_Gap 2.0e-3;                      // Gap between electrodes
 
 // Grid managment in x-direction
