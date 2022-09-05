@@ -17,15 +17,15 @@ FoamFile
 convertToMeters 1.0;
 
 // Geometric parameters
-L_RHS 12.0e-3;                          // Domain RHS length in x-axis
-L_LHS 7.0e-3;                          // Domain LHS length in x-axis
-H_Air 10.0e-3;                      // Air height
+L_RHS 15.0e-3;                          // Domain RHS length in x-axis
+L_LHS 15.0e-3;                          // Domain LHS length in x-axis
+H_Air 14.0e-3;                      // Air height
 H_Ins 20.0e-3;                      // Total Dielectric height
 t_Diel 0.425e-3;                   // Dielectric between electrodes thickness
 L_HVe 5.0e-3;                     // Length of high-voltage electrode
-t_HVe 80.0e-6;                   // Thickness of high-voltage electrode
+t_HVe 37.5e-6;                   // Thickness of high-voltage electrode
 L_GRe 5.0e-3;                     // Length of grounded electrode
-t_GRe 80.0e-6;                   // Thickness of grounded electrode
+t_GRe 37.05-6;                   // Thickness of grounded electrode
 L_Gap 2.0e-3;                      // Gap between electrodes
 
 // Grid managment in x-direction
