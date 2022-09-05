@@ -44,9 +44,9 @@ internalField   #codeStream // Use codeStream to set the value of the initial co
 
             scalarField alpha(mesh.nCells(), 0.0);
 
-            //scalar value = 1.0;
-            scalar L = 3.0e-3;
-            scalar H = 80.0e-6;
+            scalar mag = 1.0;
+            scalar L = 9.99e-3;
+            scalar H = 65.6e-6;
            
             forAll(alpha, i)
             {
@@ -56,7 +56,7 @@ internalField   #codeStream // Use codeStream to set the value of the initial co
                 
                 if ( x>0 && x<L && y<((H/L)*(L-x))  )
                 {
-                    alpha[i] = -(x/L + y/H - 1.0);
+                    alpha[i] = -mag*(x/L + y/H - 1.0);
                 }
             }
 

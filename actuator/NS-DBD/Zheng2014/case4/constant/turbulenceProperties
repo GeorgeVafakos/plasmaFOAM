@@ -11,26 +11,11 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "constant";
-    object      fvOptions;
+    object      momentumTransport;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-heatSource
-{
-    type            scalarSemiImplicitSource;
-    active          true;
- 
-    scalarSemiImplicitSourceCoeffs
-    {
-        // timeStart       0;
-        // duration        350.0e-9;
-        selectionMode   all; 
-        volumeMode      specific; //absolute;  
-        injectionRateSuSp
-        {
-            rhoE     (2.65e08 0);
-        }
-    }
-}
+simulationType  laminar;
+
 
 // ************************************************************************* //

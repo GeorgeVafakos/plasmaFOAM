@@ -1,0 +1,93 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  7
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      alpha;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 0 0 0 0 0 0];
+
+internalField   #codeStream // Use codeStream to set the value of the initial conditions
+{
+        codeInclude
+        #{
+            #include "fvCFD.H"
+        #};
+        codeOptions
+        #{
+            -I$(LIB_SRC)/finiteVolume/lnInclude \
+            -I$(LIB_SRC)/meshTools/lnInclude
+        #};
+        codeLibs
+        #{
+            -lmeshTools \
+            -lfiniteVolume
+        #};
+        // Depending of what are you trying to do, you will need to add new files, options and libraries.
+        // For most of the cases, this part is always the same.
+       
+        code // Insert your code here. At this point, you need to know how to access internal mesh information
+        #{
+            const IOdictionary& d = static_cast<const IOdictionary&>(dict);
+            const fvMesh& mesh = refCast<const fvMesh>(d.db());
+            // Access internal mesh information
+           
+
+            scalarField alpha(mesh.nCells(), 0.0);
+
+            scalar mag = 1.0;
+            scalar L = 16.13e-3;
+            scalar H = 70.3e-6;
+           
+            forAll(alpha, i)
+            {
+                //Access cell centers coordinates
+                const scalar x = mesh.C()[i][0];
+                const scalar y = mesh.C()[i][1];
+                
+                if ( x>0 && x<L && y<((H/L)*(L-x))  )
+                {
+                    alpha[i] = -mag*(x/L + y/H - 1.0);
+                }
+            }
+
+            writeEntry(os, "", alpha);
+
+            // rhoq.write();
+        #};
+};
+
+boundaryField
+{
+    outerBoundary
+    {
+        type            fixedValue;
+        value           uniform 0;
+    }
+
+    region0_to_dielectric
+    {
+        type            zeroGradient;
+    }
+
+    highVoltage
+    {
+        type            zeroGradient;
+    }
+
+    frontAndBack
+    {
+        type            empty;
+    }
+}
+
+// ************************************************************************* //
