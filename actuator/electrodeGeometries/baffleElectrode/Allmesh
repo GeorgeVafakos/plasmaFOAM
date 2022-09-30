@@ -17,10 +17,6 @@ do
     refineMesh -dict system/refineMeshDictRegion -overwrite 
 done
 
-# Print cell stats
-rm -f log.checkMesh
-runApplication checkMesh
-
 # Run topoSet and Split regions
 topoSet
 createBaffles -overwrite

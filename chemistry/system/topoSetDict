@@ -1,0 +1,65 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  6
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      topoSetDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+actions
+(
+    // High Voltage electrode
+    {
+        name    HVelectrodeSet;
+        type    faceSet;
+        action  new;
+        source  boxToFace;
+        sourceInfo
+        {
+            box (-5.0e-3 0.0 -1.0) (0.0 0.0 1.0);
+        }
+    }
+    {
+        name    HVelectrodeZone;
+        type    faceZoneSet;
+        action  new;
+        source  setToFaceZone;
+        sourceInfo
+        {
+            faceSet HVelectrodeSet;
+        }
+    }
+
+    // Grounded Electrode
+    {
+        name    GRelectrodeSet;
+        type    faceSet;
+        action  new;
+        source  boxToFace;
+        sourceInfo
+        {
+            box (3.0e-3 -0.4250000001e-3 -1.0) (19.0e-3 -0.42499999999e-3 1.0);
+        }
+    }
+    {
+        name    GRelectrodeZone;
+        type    faceZoneSet;
+        action  new;
+        source  setToFaceZone;
+        sourceInfo
+        {
+            faceSet GRelectrodeSet;
+        }
+    }
+);
+
+// ************************************************************************* //

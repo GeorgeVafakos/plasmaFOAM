@@ -1,0 +1,77 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  7
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       polyBoundaryMesh;
+    location    "constant/dielectric/polyMesh";
+    object      boundary;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+7
+(
+    leftBoundary
+    {
+        type            wall;
+        inGroups        List<word> 1(wall);
+        nFaces          6;
+        startFace       40342;
+    }
+    rightBoundary
+    {
+        type            wall;
+        inGroups        List<word> 1(wall);
+        nFaces          6;
+        startFace       40348;
+    }
+    highVoltage
+    {
+        type            wall;
+        inGroups        List<word> 1(wall);
+        nFaces          140;
+        startFace       40354;
+    }
+    ground
+    {
+        type            wall;
+        inGroups        List<word> 1(wall);
+        nFaces          452;
+        startFace       40494;
+    }
+    frontAndBack
+    {
+        type            empty;
+        inGroups        List<word> 1(empty);
+        nFaces          41448;
+        startFace       40946;
+    }
+    dielectric_to_insulator
+    {
+        type            mappedWall;
+        inGroups        List<word> 1(wall);
+        nFaces          666;
+        startFace       82394;
+        sampleMode      nearestPatchFace;
+        sampleRegion    insulator;
+        samplePatch     insulator_to_dielectric;
+    }
+    dielectric_to_region0
+    {
+        type            mappedWall;
+        inGroups        List<word> 1(wall);
+        nFaces          978;
+        startFace       83060;
+        sampleMode      nearestPatchFace;
+        sampleRegion    region0;
+        samplePatch     region0_to_dielectric;
+    }
+)
+
+// ************************************************************************* //
