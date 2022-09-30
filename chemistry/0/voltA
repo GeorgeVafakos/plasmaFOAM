@@ -10,7 +10,7 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    object      voltExt;
+    object      voltA;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -18,10 +18,16 @@ dimensions      [1 2 -3 0 0 -1 0];
 
 internalField   uniform 0;
 
-voltage         uniform 7.0e3;
+voltage         uniform 1.2e3;
 
 boundaryField
 {
+
+    upperBoundary
+    {
+        type            zeroGradient;
+    }
+
     leftBoundary
     {
         type            zeroGradient;
@@ -37,34 +43,19 @@ boundaryField
         type            fixedValue;
         value           $voltage;
     }
-    
-    ground
-    {
-        type            fixedValue;
-        value           uniform 0;
-    }
 
-    dielectric_to_region0
+    region0_to_dielectric
     {
         type            compressible::turbulentTemperatureCoupledBaffleMixed;
         value           $internalField;
-        Tnbr            voltAext;
+        Tnbr            voltD;
         kappaMethod     lookup;
-        kappa           epsilonD;
-    }
-
-    dielectric_to_insulator
-    {
-        type            compressible::turbulentTemperatureCoupledBaffleMixed;
-        value           $internalField;
-        Tnbr            voltIext;
-        kappaMethod     lookup;
-        kappa           epsilonD;
+        kappa           epsilonA;
     }
 
     frontAndBack
     {
-        type            symmetry;
+        type            empty;
     }
 
 }

@@ -17,7 +17,7 @@ FoamFile
 
 solvers
 {
-    voltAext
+    voltA
     {
         solver          PCG;
         preconditioner  DIC;
@@ -25,39 +25,7 @@ solvers
         // relTol          0.05;
     }
 
-    voltArho
-    {
-        solver          PCG;
-        preconditioner  DIC;
-        tolerance       1e-06;
-        // relTol          0.05;
-    }
-    
-    voltDext
-    {
-        solver          PCG;
-        preconditioner  DIC;
-        tolerance       1e-06;
-        // relTol          0.05;
-    }
-
-    voltDrho
-    {
-        solver          PCG;
-        preconditioner  DIC;
-        tolerance       1e-06;
-        // relTol          0.05;
-    }
-
-    voltIext
-    {
-        solver          PCG;
-        preconditioner  DIC;
-        tolerance       1e-06;
-        // relTol          0.05;
-    }
-    
-    voltIrho
+    voltD
     {
         solver          PCG;
         preconditioner  DIC;

@@ -37,26 +37,6 @@ baffles
             }
         }
     }
-
-    GRelectrodeBaffle
-    {
-        //- Use predefined faceZone to select faces and orientation.
-        type        faceZone;
-        zoneName    GRelectrodeZone;
-
-        patches
-        {
-            master
-            {
-                name        ground;
-                type        wall;
-            }
-            slave
-            {
-                $master;
-            }
-        }
-    }
 }
 
 

@@ -25,7 +25,7 @@ actions
         source  boxToFace;
         sourceInfo
         {
-            box (-5.0e-3 0.0 -1.0) (0.0 0.0 1.0);
+            box (-100.0e-6 0.0 -1.0) (0.0 0.0 1.0);
         }
     }
     {
@@ -39,27 +39,7 @@ actions
         }
     }
 
-    // Grounded Electrode
-    {
-        name    GRelectrodeSet;
-        type    faceSet;
-        action  new;
-        source  boxToFace;
-        sourceInfo
-        {
-            box (3.0e-3 -0.4250000001e-3 -1.0) (19.0e-3 -0.42499999999e-3 1.0);
-        }
-    }
-    {
-        name    GRelectrodeZone;
-        type    faceZoneSet;
-        action  new;
-        source  setToFaceZone;
-        sourceInfo
-        {
-            faceSet GRelectrodeSet;
-        }
-    }
+    
 );
 
 // ************************************************************************* //

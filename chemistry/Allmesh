@@ -10,12 +10,12 @@ mv 0 0.org
 # Run blockMesh
 blockMesh
 
-# Refine mesh
-for index in {2..1}
-do
-    topoSet -dict system/topoSetDictRegion$index
-    refineMesh -dict system/refineMeshDictRegion -overwrite 
-done
+# # Refine mesh
+# for index in {2..1}
+# do
+#     topoSet -dict system/topoSetDictRegion$index
+#     refineMesh -dict system/refineMeshDictRegion -overwrite 
+# done
 
 # Run topoSet and Split regions
 topoSet

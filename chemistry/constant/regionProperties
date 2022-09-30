@@ -18,7 +18,7 @@ FoamFile
 regions
 (
     air         (region0)
-    solid       (dielectric insulator)
+    solid       (dielectric)
 );
 
 // ************************************************************************* //
