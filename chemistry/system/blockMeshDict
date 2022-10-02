@@ -46,7 +46,7 @@ Y8 #calc "$h";
 z_front 0.0;
 z_back 10.0e-6;
 
-Dx 5.0e-6;
+Dx 1.0e-6;
 cellsX_block0 #calc "int( $l/$Dx )";
 cellsY_block0 #calc "int( $e/$Dx )";
 cellsX_block1 #calc "int( ($L - $l)/$Dx )";

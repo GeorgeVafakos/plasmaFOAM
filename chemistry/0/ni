@@ -9,44 +9,41 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       dictionary;
-    location    "system";
-    object      fvSolution;
+    class       volScalarField;
+    location    "0";
+    object      ni;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-solvers
+dimensions      [0 -3 0 0 0 0 0];
+
+internalField   uniform 1e+13;
+
+boundaryField
 {
-    voltAext
+    upperBoundary
     {
-        solver          PCG;
-        preconditioner  DIC;
-        tolerance       1e-06;
-        // relTol          0.05;
+        type            zeroGradient;
     }
-
-    voltDext
+    leftBoundary
     {
-        solver          PCG;
-        preconditioner  DIC;
-        tolerance       1e-06;
-        // relTol          0.05;
+        type            zeroGradient;
     }
-
-    voltArho
+    rightBoundary
     {
-        solver          PCG;
-        preconditioner  DIC;
-        tolerance       1e-06;
-        // relTol          0.05;
+        type            zeroGradient;
     }
-
-    voltDrho
+    frontAndBack
     {
-        solver          PCG;
-        preconditioner  DIC;
-        tolerance       1e-06;
-        // relTol          0.05;
+        type            empty;
+    }
+    highVoltage
+    {
+        type            zeroGradient;
+    }
+    region0_to_dielectric
+    {
+        type            zeroGradient;
     }
 }
 

@@ -71,8 +71,10 @@ dimensionedScalar erD
 );
 
 // Convergence variables
-int convVoltA=1;
-int convVoltD=1;
+int convVoltAext=1;
+int convVoltDext=1;
+int convVoltArho=1;
+int convVoltDrho=1;
 int counter=0;
 
 // Electron number density
@@ -105,13 +107,43 @@ volScalarField ni
     mesh
 );
 
-// Air electric potential
-Info<< "Reading field voltA\n" << endl;
-volScalarField voltA
+// Air external electric potential
+Info<< "Reading field voltAext\n" << endl;
+volScalarField voltAext
 (
     IOobject
     (
-        "voltA",
+        "voltAext",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
+
+// Dielectric external electric potential
+Info<< "Reading field voltDext\n" << endl;
+volScalarField voltDext
+(
+    IOobject
+    (
+        "voltDext",
+        runTime.timeName(),
+        meshD,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    meshD
+);
+
+// Air induced electric potential
+Info<< "Reading field voltArho\n" << endl;
+volScalarField voltArho
+(
+    IOobject
+    (
+        "voltArho",
         runTime.timeName(),
         mesh,
         IOobject::MUST_READ,
@@ -121,6 +153,37 @@ volScalarField voltA
 );
 
 // Dielectric electric potential
+Info<< "Reading field voltDrho\n" << endl;
+volScalarField voltDrho
+(
+    IOobject
+    (
+        "voltDrho",
+        runTime.timeName(),
+        meshD,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    meshD
+);
+
+// Air total electric potential
+Info<< "Reading field voltA\n" << endl;
+volScalarField voltA
+(
+    IOobject
+    (
+        "voltA",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh,
+    dimensionedScalar("temp",dimensionSet(1,2,-3,0,0,-1,0),scalar(0))
+);
+
+// Dielectric total potential
 Info<< "Reading field voltD\n" << endl;
 volScalarField voltD
 (
@@ -129,10 +192,11 @@ volScalarField voltD
         "voltD",
         runTime.timeName(),
         meshD,
-        IOobject::MUST_READ,
+        IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    mesh
+    meshD,
+    dimensionedScalar("temp",dimensionSet(1,2,-3,0,0,-1,0),scalar(0))
 );
 
 // Electron flux
@@ -165,13 +229,73 @@ surfaceScalarField ionFlux
     -mui*mesh.magSf()*fvc::snGrad(voltA)
 );
 
-// Air electric field
+// Air external electric field
+Info<< "Calculating field EAext\n" << endl;
+volVectorField EAext
+(
+    IOobject
+    (
+        "EAext",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    -fvc::grad(voltAext)
+);
+
+// Dielectric external electric field
+Info<< "Calculating field EDext\n" << endl;
+volVectorField EDext
+(
+    IOobject
+    (
+        "EDext",
+        runTime.timeName(),
+        meshD,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    -fvc::grad(voltDext)
+);
+
+// Air induced electric field
+Info<< "Calculating field EArho\n" << endl;
+volVectorField EArho
+(
+    IOobject
+    (
+        "EArho",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    -fvc::grad(voltArho)
+);
+
+// Dielectric induced electric field
+Info<< "Calculating field EDrho\n" << endl;
+volVectorField EDrho
+(
+    IOobject
+    (
+        "EDrho",
+        runTime.timeName(),
+        meshD,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    -fvc::grad(voltDrho)
+);
+
+// Air total electric field
 Info<< "Calculating field EA\n" << endl;
 volVectorField EA
 (
     IOobject
     (
-        "E",
+        "EA",
         runTime.timeName(),
         mesh,
         IOobject::NO_READ,
@@ -180,7 +304,7 @@ volVectorField EA
     -fvc::grad(voltA)
 );
 
-// Dielectric electric field
+// Dielectric total electric field
 Info<< "Calculating field ED\n" << endl;
 volVectorField ED
 (
@@ -204,7 +328,7 @@ volScalarField epsilonA
         runTime.timeName(),
         mesh,
         IOobject::NO_READ,
-        IOobject::AUTO_WRITE
+        IOobject::NO_WRITE
     ),
     mesh,
     dimensionedScalar("temp",dimless,scalar(1))
@@ -219,8 +343,23 @@ volScalarField epsilonD
         runTime.timeName(),
         meshD,
         IOobject::NO_READ,
-        IOobject::AUTO_WRITE
+        IOobject::NO_WRITE
     ),
     meshD,
     erD
 );
+
+// // Ionization frequency
+// volScalarField ionizFreq
+// (
+//     IOobject
+//     (
+//         "ionizFreq",
+//         runTime.timeName(),
+//         mesh,
+//         IOobject::NO_READ,
+//         IOobject::NO_WRITE
+//     ),
+//     mesh,
+//     dimensionedScalar("temp",dimensionSet(0,0,-1,0,0,0,0),scalar(0))
+// );
