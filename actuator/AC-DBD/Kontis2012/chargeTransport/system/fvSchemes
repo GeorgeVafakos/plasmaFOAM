@@ -11,43 +11,40 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "system";
-    object      controlDict;
+    object      fvSchemes;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     actuatorACDBDStreamerFoam;
+ddtSchemes
+{
+    default         Euler;
+}
 
-startFrom       startTime;
+gradSchemes
+{
+    default         Gauss linear;
+}
 
-startTime       0;
+divSchemes
+{
+    default         Gauss MUSCL;
+    div(rhoqFlux,rhoq) Gauss MUSCL;
+}
 
-stopAt          endTime;
+laplacianSchemes
+{
+    default         Gauss linear corrected;
+}
 
-endTime         5.0;
+interpolationSchemes
+{
+    default         linear;
+}
 
-deltaT          1.0e-7;
-
-writeControl    timeStep;
-
-writeInterval   1;
-
-purgeWrite      0;
-
-writeFormat     ascii;
-
-writePrecision  6;
-
-writeCompression off;
-
-timeFormat      general;
-
-timePrecision   6;
-
-runTimeModifiable true;
-
-
-// Streamer time step
-streamerTime    0.5e-05;
+snGradSchemes
+{
+    default         orthogonal;
+}
 
 
 // ************************************************************************* //

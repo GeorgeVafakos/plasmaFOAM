@@ -29,7 +29,7 @@ deltaT          1.0e-7;
 
 writeControl    timeStep;
 
-writeInterval   1;
+writeInterval   2;
 
 purgeWrite      0;
 
@@ -47,7 +47,7 @@ runTimeModifiable true;
 
 
 // Streamer time step
-streamerTime    0.5e-05;
+streamerTime    3.57e-06;
 
 
 // ************************************************************************* //
