@@ -6,7 +6,7 @@
 find ../chargeTransport -maxdepth 1 -type d ! '(' -name 'constant' -o -name 'system' -o -name '0.org' -o -name 'processor*' -o -name 'dynamicCode' -o -name 'probes' -o -name 'postProcessing' ')' > forceTimesText
 sed -i 's/..\/chargeTransport\///g' ./forceTimesText
 sed -i '1d' ./forceTimesText
-sort -g -o forceTimesText forceTimesText
+LC_ALL=C sort -g -o forceTimesText forceTimesText
 
 cat > ./constant/forceDict << EOF
 /*--------------------------------*- C++ -*----------------------------------*\
@@ -69,7 +69,7 @@ echo ");" >> ./constant/forceDict
 # Map Fields the forces of each time
 #------------------------------------------------------------------------------ 
 # Convert the 0 directory into 0.org
-mv 0 0.orig
+mv 0 0.org
 
 # MapFields all times except last (i.e. the force at the end of the oscillation period)
 count=0
@@ -78,14 +78,14 @@ do
   echo
   echo "Map Fields for force No" $((count+1)) "of" ${#times[@]}
   echo
-  mapFieldsPar ../chargeTransport/ -mapMethod direct -consistent -sourceTime $i 
-  mv 0/Fc 0.orig/Fc$count
+  mapFieldsPar ../chargeTransport/ -mapMethod direct -consistent -fields '(Fc)' -sourceTime $i 
+  mv 0/Fc 0.org/Fc$count
   let count++
 done
 
 # Replace 0 directory with 0.org and delete text files
 rm -v -r 0
-mv -v 0.orig 0
+mv -v 0.org 0
 #rm forceTimesText
 
 

@@ -52,7 +52,7 @@ maxDeltaT       1;
 
 writeCustomTime yes;
 
-numWriteTimes   80;
+numWriteTimes   100;
 
 P               0.1;
 

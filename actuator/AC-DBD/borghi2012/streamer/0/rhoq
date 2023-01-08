@@ -44,10 +44,10 @@ internalField   #codeStream // Use codeStream to set the value of the initial co
 
             scalarField rhoq(mesh.nCells(), 0.);
 
-            scalar rhoq0 = 0.1;
-            scalar PlasmaStart = 50e-6;
+            scalar rhoq0 = 0.2;
+            scalar PlasmaStart = 50e-5;
             scalar PlasmaWidth = 7.0e-3;
-            scalar PlasmaThick = 1000.0e-6;
+            scalar PlasmaThick = 2.0e-3;
            
             forAll(rhoq, i)
             {

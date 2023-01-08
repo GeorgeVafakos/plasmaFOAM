@@ -41,6 +41,7 @@ int main(int argc, char *argv[])
     #include "createMesh.H"
     #include "createMeshD.H"
     #include "createFields.H"
+    #include "createTimeControls.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -87,7 +88,11 @@ int main(int argc, char *argv[])
 
     while (runTime.loop())
     {
-        Info<< "Iteration = " << runTime.timeName() << nl << endl;
+        Info<< "Time = " << runTime.timeName() << nl << endl;
+
+        // Control time step according to Co num
+        #include "CourantNo.H"
+        #include "setDeltaT.H" 
 
 
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -96,14 +101,16 @@ int main(int argc, char *argv[])
 
         // Reset counters
         counter = 0;
+        convVoltArho=1;
+        convVoltDrho=1;
         solverPerformance::debug = 1;
 
-        while ((convVoltArho>0 || convVoltDrho>0 ) && counter<100000)
+        while ((convVoltArho>0 || convVoltDrho>0 ) && counter<50)
         {
             // Air
             Foam::solverPerformance solvPerfVoltArho = solve 
             (
-                fvm::laplacian(voltArho) + (e/epsilon0)*(ni)
+                fvm::laplacian(voltArho) + (e/epsilon0)*(ni-ne)
             );
             convVoltArho = solvPerfVoltArho.nIterations();
 
@@ -125,13 +132,13 @@ int main(int argc, char *argv[])
 
         Info<< "Induced Field: Region Inner Loops = " << counter << endl;
 
-        // Calculate total electric potential
-        voltA = voltAext + voltArho;
-        voltD = voltDext + voltDrho;
-
         // Calculate the induced electric field
         EArho = -fvc::grad(voltArho);
         EDrho = -fvc::grad(voltDrho);
+
+        // Calculate total electric potential
+        voltA = voltAext + voltArho;
+        voltD = voltDext + voltDrho;
 
         // Total electric field
         EA = EAext + EArho;

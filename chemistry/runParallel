@@ -17,7 +17,7 @@ find ./system/* -type d 2>/dev/null -exec cp -v ./system/decomposeParDict {} \;
 decomposePar -allRegions -force
 
 # Run solver
-mpirun -np $nProcs $(getApplication) -parallel
+mpirun -oversubscribe -np $nProcs $(getApplication) -parallel
 
 
 #------------------------------------------------------------------------------

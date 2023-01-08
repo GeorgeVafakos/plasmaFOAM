@@ -29,29 +29,21 @@ deltaT          0.0001;
 
 writeControl    runTime;
 
-writeInterval   0.001;
+writeInterval   0.01;
 
 purgeWrite      0;
 
 writeFormat     ascii;
 
-writePrecision  6;
+writePrecision  8;
 
 writeCompression off;
 
 timeFormat      general;
 
-timePrecision   6;
+timePrecision   8;
 
 runTimeModifiable true;
-
-// Controls to implement time step according to Co number
-
-adjustTimeStep  yes;
-
-maxCo           0.6;
-
-maxDeltaT       1.0;
 
 functions
 {
@@ -63,6 +55,34 @@ functions
         executeControl  writeTime;
         writeControl    writeTime;
     }
+
+
+    fieldAverage1
+    {
+        type            fieldAverage;
+        libs            ("libfieldFunctionObjects.so");
+        timeStart       0.05;
+        writeControl    writeTime;
+
+        fields
+        (
+            U
+            {
+                mean        on;
+                prime2Mean  on;
+                base        time;
+            }
+
+            rho
+            {
+                mean        on;
+                prime2Mean  off;
+                base        time;
+            }
+        );
+        
+    }
+
 }
 
 

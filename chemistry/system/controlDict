@@ -25,11 +25,11 @@ stopAt          endTime;
 
 endTime         1.0e-7;
 
-deltaT          1.0e-7;
+deltaT          1.0e-15;
 
-writeControl    timeStep;
+writeControl    adjustableRunTime;
 
-writeInterval   1;
+writeInterval   5.0e-12;
 
 purgeWrite      0;
 
@@ -45,13 +45,25 @@ timePrecision   6;
 
 runTimeModifiable true;
 
+adjustTimeStep  yes;
 
+maxCo           0.4;
 
-// Get residuals
-// functions
-// {
-//   #includeFunc residuals
-// }
+maxDeltaT       0.00001;
+
+functions
+{
+    probes
+    {
+        functionObjectLibs ( "libsampling.so" );
+        type            probes;
+        name            probes;
+        writeControl    timeStep;
+        writeInterval   1;
+        fields          ( ni ne );
+        probeLocations  ( ( 0 10.0e-6 5.0e-6 ) ( 150.0e-6 10.0e-6 5.0e-6 ) ( 200.0e-6 10.0e-6 5.0e-6 ) );
+    }
+}
 
 
 // ************************************************************************* //

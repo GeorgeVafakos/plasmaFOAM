@@ -48,6 +48,24 @@ solvers
         tolerance       1e-06;
         // relTol          0.05;
     }
+
+    ne
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-12;
+        relTol          0.05;
+        // maxIter         0;      // This line suppresses the charge transport equation
+    }
+
+    ni
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-12;
+        relTol          0.05;
+        // maxIter         0;      // This line suppresses the charge transport equation
+    }
 }
 
 
