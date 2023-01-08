@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
             // Air
             Foam::solverPerformance solvPerfVoltArho = solve 
             (
-                fvm::laplacian(voltArho) + (e/epsilon0)*(ni)
+                fvm::laplacian(voltArho) + (e/epsilon0)*(ni-ne)
             );
             convVoltArho = solvPerfVoltArho.nIterations();
 

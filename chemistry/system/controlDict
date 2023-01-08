@@ -25,11 +25,11 @@ stopAt          endTime;
 
 endTime         1.0e-7;
 
-deltaT          1.0e-7;
+deltaT          1.0e-15;
 
-writeControl    timeStep;
+writeControl    adjustableRunTime;
 
-writeInterval   1;
+writeInterval   5.0e-13;
 
 purgeWrite      0;
 
@@ -44,14 +44,6 @@ timeFormat      general;
 timePrecision   6;
 
 runTimeModifiable true;
-
-
-
-// Get residuals
-// functions
-// {
-//   #includeFunc residuals
-// }
 
 
 // ************************************************************************* //
