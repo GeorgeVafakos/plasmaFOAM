@@ -29,7 +29,11 @@ deltaT          1.0e-15;
 
 writeControl    adjustableRunTime;
 
+<<<<<<< HEAD
 writeInterval   5.0e-12;
+=======
+writeInterval   5.0e-13;
+>>>>>>> 3294375e0bb63e374141e1c9a0ec01cf5409e8c3
 
 purgeWrite      0;
 
@@ -47,6 +51,7 @@ runTimeModifiable true;
 
 adjustTimeStep  yes;
 
+<<<<<<< HEAD
 maxCo           0.4;
 
 maxDeltaT       0.00001;
@@ -66,4 +71,6 @@ functions
 }
 
 
+=======
+>>>>>>> 3294375e0bb63e374141e1c9a0ec01cf5409e8c3
 // ************************************************************************* //
