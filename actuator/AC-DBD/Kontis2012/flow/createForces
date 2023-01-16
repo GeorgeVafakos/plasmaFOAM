@@ -78,7 +78,7 @@ do
   echo
   echo "Map Fields for force No" $((count+1)) "of" ${#times[@]}
   echo
-  mapFieldsPar ../chargeTransport/ -mapMethod direct -consistent -fields ('Fc') -sourceTime $i 
+  mapFieldsPar ../chargeTransport/ -mapMethod direct -consistent -fields '(Fc)' -sourceTime $i 
   mv 0/Fc 0.org/Fc$count
   let count++
 done
