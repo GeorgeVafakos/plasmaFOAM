@@ -18,7 +18,7 @@ application     actuatorACDBDChargeFoam;
 
 startFrom       startTime;
 
-startTime       5e-06;
+startTime       3.75e-05;
 
 stopAt          endTime;
 

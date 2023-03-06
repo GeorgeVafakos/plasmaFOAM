@@ -44,10 +44,10 @@ internalField   #codeStream // Use codeStream to set the value of the initial co
 
             scalarField rhoq(mesh.nCells(), 0.);
 
-            scalar rhoq0 = 0.1;
+            scalar rhoq0 = -0.1;
             scalar PlasmaStart = 50e-6;
-            scalar PlasmaWidth = 19.0e-3;
-            scalar PlasmaThick = 1000.0e-6;
+            scalar PlasmaWidth = 6.0e-3;
+            scalar PlasmaThick = 1.0e-3;
            
             forAll(rhoq, i)
             {
@@ -56,9 +56,9 @@ internalField   #codeStream // Use codeStream to set the value of the initial co
                 const scalar y = mesh.C()[i][1];
                 const scalar z = mesh.C()[i][2];
                 
-                if ( x>PlasmaStart && x<PlasmaWidth && y>0 && y<PlasmaThick  )
+                if ( x>PlasmaStart && x<PlasmaWidth && y>0 && y<((PlasmaThick/(PlasmaWidth-PlasmaStart))*(PlasmaWidth-x)) )
                 {
-                    rhoq[i] = rhoq0*((PlasmaWidth-(x-PlasmaStart))/PlasmaWidth);
+                    rhoq[i] = -rhoq0*((x-PlasmaStart)/PlasmaWidth + y/PlasmaThick - 1.0);
                     // rhoq[i] = rhoq0;
                 }
             }
