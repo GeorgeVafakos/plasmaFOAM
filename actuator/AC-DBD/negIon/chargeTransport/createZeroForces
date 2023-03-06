@@ -7,9 +7,9 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Set correct numberig format (e.g. 0.5 instead of .5)
 export LC_NUMERIC="en_US.UTF-8"
 
-# Time variables (in e-6)
-startTime=5.0
-timeStep=0.2
+# Time variables (in e-5)
+startTime=3.75
+timeStep=0.05
 
 count=$(echo "$startTime / $timeStep"|bc)
 
@@ -18,7 +18,7 @@ do
     folderName=$(printf "%.2f\n" $(bc -q <<< $timeStep*$i))
     #count1="${count}e-5"   
     #echo $folderName
-    cp -R 0 "${folderName}e-06"
+    cp -R 0 "${folderName}e-05"
 done
 
 
