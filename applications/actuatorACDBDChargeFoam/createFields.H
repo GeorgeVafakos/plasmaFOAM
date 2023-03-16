@@ -145,7 +145,7 @@ surfaceScalarField rhoqFlux
         IOobject::NO_READ,
         IOobject::NO_WRITE
     ),
-    -k*mesh.magSf()*fvc::snGrad(voltA)
+    k*mesh.magSf()*fvc::snGrad(voltA)
 );
 
 Info<< "Calculating field EAext\n" << endl;

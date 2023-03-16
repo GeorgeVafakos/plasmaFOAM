@@ -1,0 +1,67 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  7
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       polyBoundaryMesh;
+    location    "constant/insulator/polyMesh";
+    object      boundary;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+6
+(
+    leftBoundary
+    {
+        type            wall;
+        inGroups        List<word> 1(wall);
+        nFaces          67;
+        startFace       141253;
+    }
+    rightBoundary
+    {
+        type            wall;
+        inGroups        List<word> 1(wall);
+        nFaces          67;
+        startFace       141320;
+    }
+    ground
+    {
+        type            wall;
+        inGroups        List<word> 1(wall);
+        nFaces          248;
+        startFace       141387;
+    }
+    bottomBoundary
+    {
+        type            wall;
+        inGroups        List<word> 1(wall);
+        nFaces          516;
+        startFace       141635;
+    }
+    frontAndBack
+    {
+        type            empty;
+        inGroups        List<word> 1(empty);
+        nFaces          141786;
+        startFace       142151;
+    }
+    insulator_to_dielectric
+    {
+        type            mappedWall;
+        inGroups        List<word> 1(wall);
+        nFaces          721;
+        startFace       283937;
+        sampleMode      nearestPatchFace;
+        sampleRegion    dielectric;
+        samplePatch     dielectric_to_insulator;
+    }
+)
+
+// ************************************************************************* //
