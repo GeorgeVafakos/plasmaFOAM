@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
         // Update rhoFlux
-        rhoqFlux = k*mesh.magSf()*fvc::snGrad(voltA);
+        rhoqFlux = -sign(linearInterpolate(rhoq))*k*mesh.magSf()*fvc::snGrad(voltA);
 
         // Solve the charge transport equation
         Foam::solverPerformance solvPerfRhoq = solve
