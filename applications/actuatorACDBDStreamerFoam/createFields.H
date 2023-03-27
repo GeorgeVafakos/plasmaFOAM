@@ -29,20 +29,20 @@ scalar freq =
     runTime.controlDict().lookupOrDefault<scalar>("freq", 1.0e04);
 
 // Convergence variables
-int convVoltAext=1;
+int convVoltAextMag=1;
 int convVoltArho=1;
-int convVoltDext=1;
+int convVoltDextMag=1;
 int convVoltDrho=1;
-int convVoltIext=1;
+int convVoltIextMag=1;
 int convVoltIrho=1;
 int counter=0;
 
-Info<< "Reading field voltAext\n" << endl;
-volScalarField voltAext
+Info<< "Reading field voltAextMag\n" << endl;
+volScalarField voltAextMag
 (
     IOobject
     (
-        "voltAext",
+        "voltAextMag",
         runTime.timeName(),
         mesh,
         IOobject::MUST_READ,
@@ -109,18 +109,18 @@ volScalarField rhoq
 );
 
 
-Info<< "Calculating field EAext\n" << endl;
-volVectorField EAext
+Info<< "Calculating field EAextMag\n" << endl;
+volVectorField EAextMag
 (
     IOobject
     (
-        "EAext",
+        "EAextMag",
         runTime.timeName(),
         mesh,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    -fvc::grad(voltAext)
+    -fvc::grad(voltAextMag)
 );
 
 Info<< "Calculating field EArho\n" << endl;

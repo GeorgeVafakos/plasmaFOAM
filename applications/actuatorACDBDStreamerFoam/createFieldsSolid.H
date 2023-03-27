@@ -13,12 +13,12 @@ dimensionedScalar erI
     physicalProperties.lookup("erI")
 );
 
-Info<< "Reading field voltDext\n" << endl;
-volScalarField voltDext
+Info<< "Reading field voltDextMag\n" << endl;
+volScalarField voltDextMag
 (
     IOobject
     (
-        "voltDext",
+        "voltDextMag",
         runTime.timeName(),
         meshD,
         IOobject::MUST_READ,
@@ -56,12 +56,12 @@ volScalarField voltD
     dimensionedScalar("temp",dimensionSet(1,2,-3,0,0,-1,0),scalar(0))
 );
 
-Info<< "Reading field voltIext\n" << endl;
-volScalarField voltIext
+Info<< "Reading field voltIextMag\n" << endl;
+volScalarField voltIextMag
 (
     IOobject
     (
-        "voltIext",
+        "voltIextMag",
         runTime.timeName(),
         meshI,
         IOobject::MUST_READ,
@@ -127,18 +127,18 @@ volScalarField epsilonI
     erI
 );
 
-Info<< "Calculating field EDext\n" << endl;
-volVectorField EDext
+Info<< "Calculating field EDextMag\n" << endl;
+volVectorField EDextMag
 (
     IOobject
     (
-        "EDext",
+        "EDextMag",
         runTime.timeName(),
         meshD,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    -fvc::grad(voltDext)
+    -fvc::grad(voltDextMag)
 );
 
 Info<< "Calculating field EDrho\n" << endl;
@@ -169,18 +169,18 @@ volVectorField ED
     -fvc::grad(voltD)
 );
 
-Info<< "Calculating field EIext\n" << endl;
-volVectorField EIext
+Info<< "Calculating field EIextMag\n" << endl;
+volVectorField EIextMag
 (
     IOobject
     (
-        "EIext",
+        "EIextMag",
         runTime.timeName(),
         meshI,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    -fvc::grad(voltIext)
+    -fvc::grad(voltIextMag)
 );
 
 Info<< "Calculating field EIrho\n" << endl;

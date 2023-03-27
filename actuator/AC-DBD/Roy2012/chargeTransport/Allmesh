@@ -5,7 +5,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 # Rename directory
-startTime=3.6e-06
+startTime=5e-05
 cp -R 0 $startTime
 foamDictionary -entry "startTime" -set "$startTime" system/controlDict
 

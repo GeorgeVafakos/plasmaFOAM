@@ -17,18 +17,49 @@ FoamFile
 
 actions
 (
-    // Kinetic energy injection
+    // High Voltage electrode
     {
-        name    Kinjection;
-        type    cellSet;
+        name    HVelectrodeSet;
+        type    faceSet;
         action  new;
-        source  boxToCell;
+        source  boxToFace;
         sourceInfo
         {
-            box (0.0 0.0 -1.0) (19.0e-3 500.0e-6 1.0);
+            box (-5.0e-3 0.0 0) (0.0 0.0 0.05);
+        }
+    }
+    {
+        name    HVelectrodeZone;
+        type    faceZoneSet;
+        action  new;
+        source  setToFaceZone;
+        sourceInfo
+        {
+            faceSet HVelectrodeSet;
         }
     }
 
+    // Grounded Electrode
+    {
+        name    GRelectrodeSet;
+        type    faceSet;
+        action  new;
+        source  boxToFace;
+        sourceInfo
+        {
+            box (3.0e-3 -0.425001e-3 0) (19.0e-3 -0.424999E-3 0.05);
+        }
+    }
+    {
+        name    GRelectrodeZone;
+        type    faceZoneSet;
+        action  new;
+        source  setToFaceZone;
+        sourceInfo
+        {
+            faceSet GRelectrodeSet;
+        }
+    }
 );
 
 // ************************************************************************* //

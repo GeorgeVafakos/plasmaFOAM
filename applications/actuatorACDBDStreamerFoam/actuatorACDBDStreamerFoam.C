@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 
     Info<< "\nStarting iteration loop\n" << endl;
 
-    while (runTime.loop() && (convVoltAext>0 || convVoltArho>0 || convVoltDext>0 || convVoltDrho>0 || convVoltIext>0 || convVoltIrho>0) )
+    while (runTime.loop() && (convVoltAextMag>0 || convVoltArho>0 || convVoltDextMag>0 || convVoltDrho>0 || convVoltIextMag>0 || convVoltIrho>0) )
     {
         Info<< "Iteration = " << runTime.timeIndex() << nl << endl;
 
@@ -60,28 +60,28 @@ int main(int argc, char *argv[])
         counter = 0;
         solverPerformance::debug = 1;
 
-        while ((convVoltAext>0 || convVoltDext>0 || convVoltIext>0) && counter<30000)
+        while ((convVoltAextMag>0 || convVoltDextMag>0 || convVoltIextMag>0) && counter<30000)
         {
             // Air
-            Foam::solverPerformance solvPerfVoltAext = solve 
+            Foam::solverPerformance solvPerfVoltAextMag = solve 
             (
-                fvm::laplacian(voltAext)
+                fvm::laplacian(voltAextMag)
             );
-            convVoltAext = solvPerfVoltAext.nIterations();
+            convVoltAextMag = solvPerfVoltAextMag.nIterations();
 
             // Dielectric
-            Foam::solverPerformance solvPerfVoltDext = solve
+            Foam::solverPerformance solvPerfVoltDextMag = solve
             (
-                fvm::laplacian(voltDext)
+                fvm::laplacian(voltDextMag)
             );
-            convVoltDext = solvPerfVoltDext.nIterations();
+            convVoltDextMag = solvPerfVoltDextMag.nIterations();
 
             // Insulator
-            Foam::solverPerformance solvPerfVoltIext = solve
+            Foam::solverPerformance solvPerfVoltIextMag = solve
             (
-                fvm::laplacian(voltIext)
+                fvm::laplacian(voltIextMag)
             );
-            convVoltIext = solvPerfVoltIext.nIterations();
+            convVoltIextMag = solvPerfVoltIextMag.nIterations();
 
             counter++;
             solverPerformance::debug = 0;
@@ -143,21 +143,21 @@ int main(int argc, char *argv[])
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
         
         // Calculate total electric potential in all regions
-        voltA = voltAext*Foam::sin(2*3.14159*freq*streamerTime) + voltArho;
-        voltD = voltDext*Foam::sin(2*3.14159*freq*streamerTime) + voltDrho;
-        voltI = voltIext*Foam::sin(2*3.14159*freq*streamerTime) + voltIrho;
+        voltA = voltAextMag*Foam::sin(2*3.14159*freq*streamerTime) + voltArho;
+        voltD = voltDextMag*Foam::sin(2*3.14159*freq*streamerTime) + voltDrho;
+        voltI = voltIextMag*Foam::sin(2*3.14159*freq*streamerTime) + voltIrho;
         
         // Calculate the electric field
-        EAext = -fvc::grad(voltAext);
-        EArho = -fvc::grad(voltArho);
-        EA    = -fvc::grad(voltA);
-        EDext = -fvc::grad(voltDext);
-        EDrho = -fvc::grad(voltDrho);
-        ED    = -fvc::grad(voltD);
-        EIext = -fvc::grad(voltIext);
-        EIrho = -fvc::grad(voltIrho);
-        EI    = -fvc::grad(voltI);
-        Fc    = rhoq*EA;
+        EAextMag = -fvc::grad(voltAextMag);
+        EArho    = -fvc::grad(voltArho);
+        EA       = -fvc::grad(voltA);
+        EDextMag = -fvc::grad(voltDextMag);
+        EDrho    = -fvc::grad(voltDrho);
+        ED       = -fvc::grad(voltD);
+        EIextMag = -fvc::grad(voltIextMag);
+        EIrho    = -fvc::grad(voltIrho);
+        EI       = -fvc::grad(voltI);
+        Fc       = rhoq*EA;
 
         runTime.write();
 

@@ -86,7 +86,7 @@ done
 # Replace 0 directory with 0.org and delete text files
 rm -v -r 0
 mv -v 0.org 0
-rm forceTimesText
+#rm forceTimesText
 
 
 

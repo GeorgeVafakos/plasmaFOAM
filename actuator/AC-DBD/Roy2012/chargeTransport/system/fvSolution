@@ -45,7 +45,7 @@ solvers
     {
         solver          smoothSolver;
         smoother        symGaussSeidel;
-        tolerance       1e-12;
+        tolerance       1e-15;
         relTol          0.05;
         // maxIter         0;      // This line suppresses the charge transport equation
     }
