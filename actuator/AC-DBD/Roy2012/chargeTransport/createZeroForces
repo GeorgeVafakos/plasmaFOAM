@@ -8,7 +8,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 export LC_NUMERIC="en_US.UTF-8"
 
 # Time variables (in e-5)
-startTime=5.0
+startTime=3.571429
 timeStep=0.1
 
 count=$(echo "$startTime / $timeStep"|bc)

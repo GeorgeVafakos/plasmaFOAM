@@ -1,0 +1,27 @@
+#!/bin/bash
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Set correct numberig format (e.g. 0.5 instead of .5)
+export LC_NUMERIC="en_US.UTF-8"
+
+# Time variables (in e-4)
+startTime=5.0
+timeStep=0.1
+
+count=$(echo "$startTime / $timeStep"|bc)
+
+for (( i=1; $i<$(bc<<<"$startTime/$timeStep"); i++  ));
+do
+    folderName=$(printf "%.2f\n" $(bc -q <<< $timeStep*$i))
+    #count1="${count}e-4"   
+    #echo $folderName
+    cp -R 0 "${folderName}e-04"
+done
+
+
+
+
+#------------------------------------------------------------------------------

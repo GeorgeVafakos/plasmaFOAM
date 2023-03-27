@@ -47,7 +47,7 @@ runTimeModifiable true;
 
 
 // Streamer time step
-streamerTime    5.0e-05;
+streamerTime   3.571429e-05;
 
 
 // ************************************************************************* //

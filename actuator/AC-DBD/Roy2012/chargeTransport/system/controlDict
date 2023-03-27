@@ -18,11 +18,11 @@ application     actuatorACDBDChargeFoam;
 
 startFrom       startTime;
 
-startTime       5e-05;
+startTime       3.571429e-05;
 
 stopAt          endTime;
 
-endTime         0.0001;
+endTime         7.142857e-05;
 
 deltaT          1e-09;
 
@@ -60,7 +60,7 @@ Q               5;
 
 numStreamers    10;
 
-lengthStreamer  2.5e-06;
+lengthStreamer  1.785714e-06;
 
 functions
 {
