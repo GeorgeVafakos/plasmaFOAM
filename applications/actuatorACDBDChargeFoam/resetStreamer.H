@@ -31,18 +31,28 @@ Description
 
 if ( runTime.time().value()>( startTime+lengthStreamer*streamerCounter ) && streamerCounter<numStreamers)
 {
-    rhoq = rhoq_strm;
-    voltArho = voltArho_strm;
-    voltDrho = voltDrho_strm;
-    voltIrho = voltIrho_strm;
+    rhoq = rhoq+rhoq_strm;
+    voltArho = voltArho+voltArho_strm;
+    voltDrho = voltDrho+voltDrho_strm;
+    voltIrho = voltIrho+voltIrho_strm;
 
-    voltA = voltAext*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value()) + voltArho;
-    voltD = voltDext*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value()) + voltDrho;
-    voltI = voltIext*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value()) + voltIrho;
+    voltAext = voltAextMag*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value());
+    voltDext = voltDextMag*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value());
+    voltIext = voltIextMag*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value());
+        
+    voltA = voltAext + voltArho;
+    voltD = voltDext + voltDrho;
+    voltI = voltIext + voltIrho;
 
-    EA = -fvc::grad(voltA);
-    ED = -fvc::grad(voltD);
-    EI = -fvc::grad(voltI);
+    EAext = -fvc::grad(voltAext);
+    EArho = -fvc::grad(voltArho);
+    EA    = -fvc::grad(voltA);
+    EDext = -fvc::grad(voltDext);
+    EDrho = -fvc::grad(voltDrho);
+    ED    = -fvc::grad(voltD);
+    EIext = -fvc::grad(voltIext);
+    EIrho = -fvc::grad(voltIrho);
+    EI    = -fvc::grad(voltI);
     Fc = rhoq*EA;
 
     streamerCounter++;

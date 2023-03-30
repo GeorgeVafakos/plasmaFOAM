@@ -41,9 +41,10 @@ int main(int argc, char *argv[])
     #include "createMesh.H"
     #include "createMeshD.H"
     #include "createMeshI.H"
+    #include "createTimeControls.H"
     #include "createFields.H"
     #include "createFieldsSolid.H"
-    #include "createTimeControls.H"
+    
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -99,11 +100,15 @@ int main(int argc, char *argv[])
 
         Info<< "Region Inner Loops = " << counter << endl;
         solverPerformance::debug = 1;
-
+        
         // Calculate total electric potential in all regions
-        voltA = voltAext*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value()) + voltArho;
-        voltD = voltDext*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value()) + voltDrho;
-        voltI = voltIext*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value()) + voltIrho;
+        voltAext = voltAextMag*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value());
+        voltDext = voltDextMag*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value());
+        voltIext = voltIextMag*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value());
+        
+        voltA = voltAext + voltArho;
+        voltD = voltDext + voltDrho;
+        voltI = voltIext + voltIrho;
 
 
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -122,9 +127,15 @@ int main(int argc, char *argv[])
 
 
         // Calculate the electric field
-        EA = -fvc::grad(voltA);
-        ED = -fvc::grad(voltD);
-        EI = -fvc::grad(voltI);
+        EAext = -fvc::grad(voltAext);
+        EArho = -fvc::grad(voltArho);
+        EA    = -fvc::grad(voltA);
+        EDext = -fvc::grad(voltDext);
+        EDrho = -fvc::grad(voltDrho);
+        ED    = -fvc::grad(voltD);
+        EIext = -fvc::grad(voltIext);
+        EIrho = -fvc::grad(voltIrho);
+        EI    = -fvc::grad(voltI);
         Fc = rhoq*EA;
 
 

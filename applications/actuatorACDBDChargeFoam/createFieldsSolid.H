@@ -15,6 +15,20 @@ dimensionedScalar erI
     physicalProperties.lookup("erI")
 );
 
+Info<< "Reading field voltDextMag\n" << endl;
+volScalarField voltDextMag
+(
+    IOobject
+    (
+        "voltDextMag",
+        runTime.timeName(),
+        meshD,
+        IOobject::MUST_READ,
+        IOobject::NO_WRITE
+    ),
+    meshD
+);
+
 Info<< "Reading field voltDext\n" << endl;
 volScalarField voltDext
 (
@@ -23,10 +37,10 @@ volScalarField voltDext
         "voltDext",
         runTime.timeName(),
         meshD,
-        IOobject::MUST_READ,
+        IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    meshD
+    voltDextMag*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value())
 );
 
 Info<< "Reading field voltDrho\n" << endl;
@@ -72,6 +86,20 @@ volScalarField voltD
     dimensionedScalar("temp",dimensionSet(1,2,-3,0,0,-1,0),scalar(0))
 );
 
+Info<< "Reading field voltIextMag\n" << endl;
+volScalarField voltIextMag
+(
+    IOobject
+    (
+        "voltIextMag",
+        runTime.timeName(),
+        meshI,
+        IOobject::MUST_READ,
+        IOobject::NO_WRITE
+    ),
+    meshI
+);
+
 Info<< "Reading field voltIext\n" << endl;
 volScalarField voltIext
 (
@@ -80,10 +108,10 @@ volScalarField voltIext
         "voltIext",
         runTime.timeName(),
         meshI,
-        IOobject::MUST_READ,
+        IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    meshI
+    voltIextMag*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value())
 );
 
 Info<< "Reading field voltIrho\n" << endl;

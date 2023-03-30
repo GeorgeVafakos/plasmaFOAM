@@ -35,6 +35,20 @@ int convVoltIrho=1;
 int convRhoq=1;
 int counter=0;
 
+Info<< "Reading field voltAextMag\n" << endl;
+volScalarField voltAextMag
+(
+    IOobject
+    (
+        "voltAextMag",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::NO_WRITE
+    ),
+    mesh
+);
+
 Info<< "Reading field voltAext\n" << endl;
 volScalarField voltAext
 (
@@ -43,10 +57,11 @@ volScalarField voltAext
         "voltAext",
         runTime.timeName(),
         mesh,
-        IOobject::MUST_READ,
+        IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    mesh
+    //mesh
+    voltAextMag*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value())
 );
 
 Info<< "Reading field voltArho\n" << endl;
