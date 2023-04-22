@@ -40,11 +40,21 @@ cp -R ../streamer/constant/polyMesh ../streamer/constant/dielectric ../streamer/
 # Merge region meshes
 mergeMeshes "./" "./" -addRegion dielectric -overwrite
 mergeMeshes "./" "./" -addRegion insulator -overwrite
-rm -vr /constant/dielectric /constant/insulator
+rm -vr ./constant/dielectric ./constant/insulator
 
-mapFieldsPar ../streamer -mapMethod direct -sourceRegion region0    -consistent -fields '(volt voltRho voltExtMag E Erho EextMag)' -sourceTime latestTime -targetRegion region0
-mapFieldsPar ../streamer -mapMethod direct -sourceRegion dielectric -consistent -fields '(volt voltRho voltExtMag E Erho EextMag)' -sourceTime latestTime -targetRegion region0
-mapFieldsPar ../streamer -mapMethod direct -sourceRegion insulator  -consistent -fields '(volt voltRho voltExtMag E Erho EextMag)' -sourceTime latestTime -targetRegion region0
+# mapFieldsPar ../streamer -mapMethod direct -sourceRegion region0    -consistent -fields '(volt voltRho voltExtMag E Erho EextMag)' -sourceTime latestTime -targetRegion region0
+# mapFieldsPar ../streamer -mapMethod direct -sourceRegion dielectric -consistent -fields '(volt voltRho voltExtMag E Erho EextMag)' -sourceTime latestTime -targetRegion region0
+# mapFieldsPar ../streamer -mapMethod direct -sourceRegion insulator  -consistent -fields '(volt voltRho voltExtMag E Erho EextMag)' -sourceTime latestTime -targetRegion region0
+
+mapFieldsPar ../streamer -mapMethod direct -sourceRegion region0    -consistent -fields '( volt voltRho voltExtMag E Erho EextMag )' -sourceTime latestTime -targetRegion region0
+# sed -i 's/-nan/0/g' ./0/*
+# sed -i 's/nan/0/g' ./0/*
+mapFieldsPar ../streamer -mapMethod direct -sourceRegion dielectric -consistent -fields '( volt voltRho voltExtMag E Erho EextMag )' -sourceTime latestTime -targetRegion region0
+# sed -i 's/-nan/0/g' ./0/*
+# sed -i 's/nan/0/g' ./0/*
+mapFieldsPar ../streamer -mapMethod direct -sourceRegion insulator  -consistent -fields '( volt voltRho voltExtMag E Erho EextMag )' -sourceTime latestTime -targetRegion region0
+# sed -i 's/-nan/0/g' ./0/*
+# sed -i 's/nan/0/g' ./0/*
 
 # Output message
 echo
