@@ -46,8 +46,8 @@ internalField   #codeStream // Use codeStream to set the value of the initial co
 
             scalar rhoq0 = -0.01;
             scalar PlasmaStart = 50e-5;
-            scalar PlasmaWidth = 6.0e-3;
-            scalar PlasmaThick = 1.5e-3;
+            scalar PlasmaWidth = 2.15e-3;
+            scalar PlasmaThick = 0.486e-3;
            
             forAll(rhoq, i)
             {

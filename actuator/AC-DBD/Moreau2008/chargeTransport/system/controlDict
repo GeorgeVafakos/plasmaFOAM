@@ -52,15 +52,15 @@ maxDeltaT       1;
 
 writeCustomTime yes;
 
-numWriteTimes   10;
+numWriteTimes   50;
 
 P               0.1;
 
 Q               5;
 
-numStreamers    10;
+numStreamers    140;
 
-lengthStreamer  2.5e-05;
+lengthStreamer  1.785714e-06;
 
 functions
 {
