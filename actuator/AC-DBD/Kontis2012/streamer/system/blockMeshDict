@@ -17,7 +17,7 @@ FoamFile
 convertToMeters 1.0;
 
 // Geometric parameters
-L_RHS 0.;                          // Domain RHS length in x-axis
+L_RHS 0.2;                          // Domain RHS length in x-axis
 L_LHS 0.05;                          // Domain LHS length in x-axis
 H_Air 0.1;                      // Air height
 H_Ins 0.1;                      // Total Dielectric height
