@@ -43,8 +43,8 @@ expRatioy 120.0;                // Expansion ratio of the domain in the y-axis
 
 // Grid managment in z-direction
 z_start 0.00;
-z_end 0.05;                   // Depth in z-axis
-cellsz 1;                      // Cells in z-axis
+z_end 5.0e-3;                   // Depth in z-axis
+cellsz 5;                      // Cells in z-axis
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
