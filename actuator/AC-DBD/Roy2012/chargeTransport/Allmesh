@@ -5,9 +5,9 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 # Rename directory
-startTime=3.571429e-05
-cp -R 0 $startTime
-foamDictionary -entry "startTime" -set "$startTime" system/controlDict
+# startTime=3.571429e-05
+# cp -R 0 $startTime
+# foamDictionary -entry "startTime" -set "$startTime" system/controlDict
 
 # Copy geometry and mesh from streamer case
 cp -R ../streamer/constant/polyMesh ../streamer/constant/dielectric ../streamer/constant/insulator constant/

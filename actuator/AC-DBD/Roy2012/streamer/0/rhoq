@@ -56,11 +56,30 @@ internalField   #codeStream // Use codeStream to set the value of the initial co
                 const scalar y = mesh.C()[i][1];
                 const scalar z = mesh.C()[i][2];
                 
+                // Triangular plasma region - linear distribution in the x-y plane
                 if ( x>PlasmaStart && x<PlasmaWidth && y>0 && y<((PlasmaThick/(PlasmaWidth-PlasmaStart))*(PlasmaWidth-x)) )
                 {
-                    rhoq[i] = -rhoq0*((x-PlasmaStart)/PlasmaWidth + y/PlasmaThick - 1.0);
-                    // rhoq[i] = rhoq0;
+                    rhoq[i] = rhoq0*(1.0 - (x-PlasmaStart)/PlasmaWidth - y/PlasmaThick);
                 }
+                /*
+                // Triangular plasma region - linear distribution in the x direction
+                if ( x>PlasmaStart && x<PlasmaWidth && y>0 && y<((PlasmaThick/(PlasmaWidth-PlasmaStart))*(PlasmaWidth-x)) )
+                {
+                    rhoq[i] = rhoq0*((PlasmaWidth-(x-PlasmaStart))/PlasmaWidth);
+                }
+                
+                // Elliptical plasma region - elliptical distribution in the x-y plane
+                if ( x>PlasmaStart && x<PlasmaWidth && y>0 && y<sqrt(pow(PlasmaThick/(PlasmaWidth-PlasmaStart),2.0)*(pow(PlasmaWidth,2.0)-pow(x,2.0)) ))
+                {
+                    rhoq[i] = rhoq0*(1.0 - (x-PlasmaStart)/PlasmaWidth - y/PlasmaThick);
+                }
+                
+                // Rectangular plasma region - uniform distribution
+                if ( x>PlasmaStart && x<PlasmaWidth && y>0 && y<PlasmaThick  )
+                {
+                    rhoq[i] = rhoq0;
+                }
+                */
             }
 
             writeEntry(os, "", rhoq);

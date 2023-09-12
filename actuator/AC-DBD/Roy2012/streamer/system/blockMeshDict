@@ -17,9 +17,9 @@ FoamFile
 convertToMeters 1.0;
 
 // Geometric parameters
-L_RHS 0.2;                          // Domain RHS length in x-axis
-L_LHS 0.05;                          // Domain LHS length in x-axis
-H_Air 0.1;                      // Air height
+L_RHS 0.5;                          // Domain RHS length in x-axis
+L_LHS 0.2;                          // Domain LHS length in x-axis
+H_Air 0.5;                      // Air height
 H_Ins 0.1;                      // Total Dielectric height
 t_Diel 3.0e-3;                   // Dielectric between electrodes thickness
 L_HVe 5.0e-3;                     // Length of high-voltage electrode
@@ -29,17 +29,17 @@ t_GRe 70.0e-6;                   // Thickness of grounded electrode
 
 // Grid managment in x-direction
 cellsxNonUniRHS 40;            // Cells in RHS non-uniform part of the domain in the x-axis
-LUniRHS 0.070;                      // Length of the domain in the RHS containing non-uniform cells
+LUniRHS 0.060;                      // Length of the domain in the RHS containing non-uniform cells
 cellsxNonUniLHS 10;            // Cells in LHS non-uniform part of the domain in the x-axis
 LUniLHS 0.001;                      // Length of the domain in the LHS containing non-uniform cells
-expRatiox 120.0;                // Expansion ratio of the domain in the x-axis
+expRatiox 800.0;                // Expansion ratio of the domain in the x-axis
 
 // Grid managment in y-direction
 cellsyNonUniAir 50;            // Cells in Air non-uniform part of the domain in the y-axis
 HUniAir 0.012;                     // Length of the domain in the Air conaining non-uniform cells
 cellsyNonUniIns 20;            // Cells in Insulator non-uniform part of the domain in the y-axis
 HUniIns 0.005;                      // Length of the domain in the Insulator containing non-uniform cells
-expRatioy 120.0;                // Expansion ratio of the domain in the y-axis
+expRatioy 800.0;                // Expansion ratio of the domain in the y-axis
 
 // Grid managment in z-direction
 z_start 0.00;
