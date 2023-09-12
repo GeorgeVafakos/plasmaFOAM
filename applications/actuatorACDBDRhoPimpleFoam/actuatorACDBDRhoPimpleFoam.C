@@ -72,6 +72,7 @@ int main(int argc, char *argv[])
 
     Info<< "\nStarting time loop\n" << endl;
 
+    solverPerformance::debug = 1;
     while (runTime.run())
     {
         #include "readDyMControls.H"
@@ -207,6 +208,12 @@ int main(int argc, char *argv[])
         Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
             << "  ClockTime = " << runTime.elapsedClockTime() << " s"
             << nl << endl;
+
+        solverPerformance::debug = 0;
+        if (runTime.timeIndex() % 100 == 0)
+        {
+            solverPerformance::debug = 1;
+        }
     }
 
     Info<< "End\n" << endl;
