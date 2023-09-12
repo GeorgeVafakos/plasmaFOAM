@@ -28,6 +28,11 @@ dimensionedScalar k
     physicalProperties.lookup("k")
 );
 
+dimensionedScalar Dc
+(
+    physicalProperties.lookup("Dc")
+);
+
 // Convergence variables
 int convVoltArho=1;
 int convVoltDrho=1;

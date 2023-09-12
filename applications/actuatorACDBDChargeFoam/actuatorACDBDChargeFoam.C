@@ -121,7 +121,7 @@ int main(int argc, char *argv[])
         // Solve the charge transport equation
         Foam::solverPerformance solvPerfRhoq = solve
         (
-            fvm::ddt(rhoq) + fvm::div(rhoqFlux, rhoq)
+            fvm::ddt(rhoq) + fvm::div(rhoqFlux, rhoq) - fvm::laplacian(Dc,rhoq)
         );
         convRhoq = solvPerfRhoq.nIterations();
 
