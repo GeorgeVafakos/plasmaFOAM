@@ -52,11 +52,7 @@ int main(int argc, char *argv[])
 
     while (runTime.loop())
     {
-        if (runTime.timeIndex() % printScreenResults == 0 || runTime.timeIndex() == 1)
-        {
-            Info<< "Time = " << runTime.timeName() << "  Time step = " << runTime.timeIndex() << nl << endl;
-            solverPerformance::debug = 1;
-        }
+        Info<< "Time = " << runTime.timeName() << nl << endl;
 
         // Control time step according to Co num
         #include "CourantNo.H"
@@ -68,7 +64,7 @@ int main(int argc, char *argv[])
 
         // Reset counters
         counter = 0;
-        // solverPerformance::debug = 1;
+        solverPerformance::debug = 1;
 
         while ((convVoltArho>0 || convVoltDrho>0 || convVoltIrho>0 || convRhoq>0) && counter<1)
         {
@@ -95,18 +91,15 @@ int main(int argc, char *argv[])
 
             counter++;
             solverPerformance::debug = 0;
-            if (counter % 50000 == 0 && (runTime.timeIndex() % printScreenResults == 0 || runTime.timeIndex() == 1))
+            if (counter % 5000 == 0)
             {
                 Info<< "Current Loop = " << counter << endl;
                 solverPerformance::debug = 1;
             }
         }
 
-        if (runTime.timeIndex() % printScreenResults == 0 || runTime.timeIndex() == 1)
-        {
-            Info<< "Region Inner Loops = " << counter << endl;
-            solverPerformance::debug = 1;
-        }
+        Info<< "Region Inner Loops = " << counter << endl;
+        solverPerformance::debug = 1;
         
         // Calculate total electric potential in all regions
         voltAext = voltAextMag*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value());
@@ -151,13 +144,9 @@ int main(int argc, char *argv[])
 
         runTime.write();
 
-        solverPerformance::debug = 0;
-        if (runTime.timeIndex() % printScreenResults == 0 || runTime.timeIndex() == 1)
-        {
-            Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-                << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-                << nl << nl << endl;
-        }
+        Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
+            << "  ClockTime = " << runTime.elapsedClockTime() << " s"
+            << nl << nl << endl;
     }
 
     runTime.writeAndEnd();

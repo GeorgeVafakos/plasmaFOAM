@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,33 +21,19 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Global
-    CourantNo
+Local
+    writeCustomTime
 
 Description
-    Calculates and outputs the mean and maximum Courant Numbers.
+    Write data according to the stretching function defined in controlDict
 
 \*---------------------------------------------------------------------------*/
 
-scalar CoNum = 0.0;
-scalar meanCoNum = 0.0;
-
+if (writeCustomTime)
 {
-    scalarField sumPhi
-    (
-        fvc::surfaceSum(mag(rhoqFlux))().primitiveField()
-    );
-
-    CoNum = 0.5*gMax(sumPhi/mesh.V().field())*runTime.deltaTValue();
-
-    meanCoNum =
-        0.5*(gSum(sumPhi)/gSum(mesh.V().field()))*runTime.deltaTValue();
+    if ( runTime.time().value()>((startTime+lengthStreamer*(streamerCounter-1))+s[writeTimeCounter]*(endTime-(startTime+lengthStreamer*(streamerCounter-1)))) )
+    {
+        runTime.writeNow();
+        writeTimeCounter++;
+    }
 }
-
-if (runTime.timeIndex() % printScreenResults == 0 || runTime.timeIndex() == 1)
-{
-    Info<< "Courant Number mean: " << meanCoNum
-        << " max: " << CoNum << endl;
-}
-
-// ************************************************************************* //

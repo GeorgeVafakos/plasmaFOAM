@@ -44,10 +44,7 @@ scalar meanCoNum = 0.0;
         0.5*(gSum(sumPhi)/gSum(mesh.V().field()))*runTime.deltaTValue();
 }
 
-if (runTime.timeIndex() % printScreenResults == 0 || runTime.timeIndex() == 1)
-{
-    Info<< "Courant Number mean: " << meanCoNum
-        << " max: " << CoNum << endl;
-}
+Info<< "Courant Number mean: " << meanCoNum
+    << " max: " << CoNum << endl;
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,33 +21,40 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Global
-    CourantNo
+Local
+    resetStreamer
 
 Description
-    Calculates and outputs the mean and maximum Courant Numbers.
+    Initialize new streamer electrostatic conditions
 
 \*---------------------------------------------------------------------------*/
 
-scalar CoNum = 0.0;
-scalar meanCoNum = 0.0;
-
+if ( runTime.time().value()>( startTime+lengthStreamer*streamerCounter ) && streamerCounter<numStreamers)
 {
-    scalarField sumPhi
-    (
-        fvc::surfaceSum(mag(rhoqFlux))().primitiveField()
-    );
+    rhoq = rhoq+rhoq_strm;
+    voltArho = voltArho+voltArho_strm;
+    voltDrho = voltDrho+voltDrho_strm;
+    voltIrho = voltIrho+voltIrho_strm;
 
-    CoNum = 0.5*gMax(sumPhi/mesh.V().field())*runTime.deltaTValue();
+    voltAext = voltAextMag*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value());
+    voltDext = voltDextMag*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value());
+    voltIext = voltIextMag*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value());
+        
+    voltA = voltAext + voltArho;
+    voltD = voltDext + voltDrho;
+    voltI = voltIext + voltIrho;
 
-    meanCoNum =
-        0.5*(gSum(sumPhi)/gSum(mesh.V().field()))*runTime.deltaTValue();
+    EAext = -fvc::grad(voltAext);
+    EArho = -fvc::grad(voltArho);
+    EA    = -fvc::grad(voltA);
+    EDext = -fvc::grad(voltDext);
+    EDrho = -fvc::grad(voltDrho);
+    ED    = -fvc::grad(voltD);
+    EIext = -fvc::grad(voltIext);
+    EIrho = -fvc::grad(voltIrho);
+    EI    = -fvc::grad(voltI);
+    Fc = rhoq*EA;
+
+    streamerCounter++;
+    writeTimeCounter = 0;
 }
-
-if (runTime.timeIndex() % printScreenResults == 0 || runTime.timeIndex() == 1)
-{
-    Info<< "Courant Number mean: " << meanCoNum
-        << " max: " << CoNum << endl;
-}
-
-// ************************************************************************* //

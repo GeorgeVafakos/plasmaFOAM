@@ -43,9 +43,6 @@ scalar maxDeltaT =
 bool writeCustomTime =
     runTime.controlDict().lookupOrDefault("writeCustomTime", true);
 
-int printScreenResults =
-    runTime.controlDict().lookupOrDefault("printScreenResults", 1);
-
 scalar startTime =
     runTime.controlDict().lookupOrDefault<scalar>("startTime", 0);
 

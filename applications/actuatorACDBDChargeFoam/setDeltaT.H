@@ -22,32 +22,33 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Global
-    CourantNo
+    setDeltaT
 
 Description
-    Calculates and outputs the mean and maximum Courant Numbers.
+    Reset the timestep to maintain a constant maximum courant Number.
+    Reduction of time-step is immediate, but increase is damped to avoid
+    unstable oscillations.
 
 \*---------------------------------------------------------------------------*/
 
-scalar CoNum = 0.0;
-scalar meanCoNum = 0.0;
-
+if (adjustTimeStep)
 {
-    scalarField sumPhi
+    scalar maxDeltaTFact = maxCo/(CoNum + small);
+    scalar deltaTFact = min(min(maxDeltaTFact, 1.0 + 0.1*maxDeltaTFact), 1.2);
+
+    runTime.setDeltaT
     (
-        fvc::surfaceSum(mag(rhoqFlux))().primitiveField()
+        min
+        (
+            deltaTFact*runTime.deltaTValue(),
+            maxDeltaT
+        )
     );
 
-    CoNum = 0.5*gMax(sumPhi/mesh.V().field())*runTime.deltaTValue();
-
-    meanCoNum =
-        0.5*(gSum(sumPhi)/gSum(mesh.V().field()))*runTime.deltaTValue();
-}
-
-if (runTime.timeIndex() % printScreenResults == 0 || runTime.timeIndex() == 1)
-{
-    Info<< "Courant Number mean: " << meanCoNum
-        << " max: " << CoNum << endl;
+    if (runTime.timeIndex() % printScreenResults == 0 || runTime.timeIndex() == 1)
+    {
+        Info<< "deltaT = " <<  runTime.deltaTValue() << endl;
+    }
 }
 
 // ************************************************************************* //

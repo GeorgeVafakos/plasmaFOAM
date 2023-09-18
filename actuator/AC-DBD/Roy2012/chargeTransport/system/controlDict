@@ -52,6 +52,8 @@ maxDeltaT       1;
 
 writeCustomTime yes;
 
+printScreenResults 100;
+
 numWriteTimes   50;
 
 P               0.1;
