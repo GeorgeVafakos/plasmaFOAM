@@ -52,7 +52,7 @@ maxDeltaT       1;
 
 writeCustomTime yes;
 
-printScreenResults 100;
+printScreenResults 500;
 
 numWriteTimes   50;
 
@@ -85,6 +85,7 @@ functions
         libs            ( "libfieldFunctionObjects.so" );
         writeControl    writeTime;
         fields          ( Fc { mean on ; prime2Mean off ; base time ; } );
+        log             false;
     }
 }
 
