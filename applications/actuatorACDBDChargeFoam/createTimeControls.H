@@ -67,15 +67,28 @@ int numStreamers =
 scalar lengthStreamer =
     runTime.controlDict().lookupOrDefault<scalar>("lengthStreamer", 0.5e-5);
 
-// Create normilized count of number of printed times
+// Create normilized count of number of printed times for discharges
 scalar n[numWriteTimes];
 for (int i = 0; i < numWriteTimes; ++i)
-    n[i] = i/(numWriteTimes-1.0);
+    n[i] = 1.0*i/(numWriteTimes-1.0);
 
 // Create stretching function
 scalar s[numWriteTimes];
 for (int i = 0; i < numWriteTimes; ++i)
     s[i] = P*n[i] + (1.0-P)*(1.0-Foam::tanh(Q*(1.0-n[i]))/Foam::tanh(Q));
+
+// Create normilized count of number of printed times for final discharge and
+// rest of the cycle
+int multiplier=3;
+scalar n1[multiplier*numWriteTimes];
+for (int i = 0; i < multiplier*numWriteTimes; ++i)
+    n1[i] = 1.0*i/(multiplier*numWriteTimes-1.0);
+
+// Create stretching function for final discharge and
+// rest of the cycle
+scalar s1[multiplier*numWriteTimes];
+for (int i = 0; i < multiplier*numWriteTimes; ++i)
+    s1[i] = P*n1[i] + (1.0-P)*(1.0-Foam::tanh(Q*(1.0-n1[i]))/Foam::tanh(Q));
 
 // Counters
 int writeTimeCounter = 0;

@@ -149,7 +149,7 @@ int main(int argc, char *argv[])
         #include "resetStreamer.H"
         #include "writeCustomTime.H"
 
-        runTime.write();
+        //runTime.write();
 
         solverPerformance::debug = 0;
         if (runTime.timeIndex() % printScreenResults == 0 || runTime.timeIndex() == 1)

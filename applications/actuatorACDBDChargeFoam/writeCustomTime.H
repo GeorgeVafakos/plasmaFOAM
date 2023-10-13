@@ -30,10 +30,23 @@ Description
 \*---------------------------------------------------------------------------*/
 
 if (writeCustomTime)
-{
-    if ( runTime.time().value()>((startTime+lengthStreamer*(streamerCounter-1))+s[writeTimeCounter]*(endTime-(startTime+lengthStreamer*(streamerCounter-1)))) )
+{/*
+    if ( runTime.time().value()>=((startTime+lengthStreamer*(streamerCounter-1))+s[writeTimeCounter]*(endTime-(startTime+lengthStreamer*(streamerCounter-1)))) )
     {
         runTime.writeNow();
         writeTimeCounter++;
+    }*/
+    
+    if ( runTime.time().value()>=((startTime+lengthStreamer*(streamerCounter-1))+s[writeTimeCounter]*(0.99*lengthStreamer)) &&  streamerCounter!=numStreamers )
+    {
+        runTime.writeNow();
+        writeTimeCounter++;   
     }
+    
+    if ( runTime.time().value()>=((startTime+lengthStreamer*(streamerCounter-1))+s1[writeTimeCounter]*(endTime-(startTime+lengthStreamer*(streamerCounter-1)))) &&  streamerCounter==numStreamers )
+    {
+        runTime.writeNow();
+        writeTimeCounter++;   
+    }
+    
 }

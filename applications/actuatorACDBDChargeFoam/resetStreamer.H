@@ -29,7 +29,7 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-if ( runTime.time().value()>( startTime+lengthStreamer*streamerCounter ) && streamerCounter<numStreamers)
+if ( runTime.time().value()>=( startTime+lengthStreamer*streamerCounter ) && streamerCounter<numStreamers)
 {
     rhoq = rhoq+rhoq_strm;
     voltArho = voltArho+voltArho_strm;
@@ -57,4 +57,5 @@ if ( runTime.time().value()>( startTime+lengthStreamer*streamerCounter ) && stre
 
     streamerCounter++;
     writeTimeCounter = 0;
+    runTime.writeNow();
 }
