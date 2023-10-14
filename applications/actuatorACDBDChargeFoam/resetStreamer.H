@@ -57,5 +57,5 @@ if ( runTime.time().value()>=( startTime+lengthStreamer*streamerCounter ) && str
 
     streamerCounter++;
     writeTimeCounter = 0;
-    runTime.writeNow();
+    // runTime.writeNow();
 }

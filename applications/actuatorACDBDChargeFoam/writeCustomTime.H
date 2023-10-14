@@ -35,9 +35,9 @@ if (writeCustomTime)
     {
         runTime.writeNow();
         writeTimeCounter++;
-    }
+    }*/
     
-    if ( runTime.time().value()>=((startTime+lengthStreamer*(streamerCounter-1))+s[writeTimeCounter]*(0.99*lengthStreamer)) &&  streamerCounter!=numStreamers )
+    if ( runTime.time().value()>=((startTime+lengthStreamer*(streamerCounter-1))+s[writeTimeCounter]*(0.99*lengthStreamer)) &&  streamerCounter<numStreamers )
     {
         runTime.writeNow();
         writeTimeCounter++;   
@@ -47,19 +47,19 @@ if (writeCustomTime)
     {
         runTime.writeNow();
         writeTimeCounter++;   
-    }*/
+    }
 
-
+    /*
     if ( runTime.time().value()>=((startTime+lengthStreamer*(streamerCounter-1))+s[writeTimeCounter]*(0.99*lengthStreamer)))
     {
         runTime.writeNow();
         writeTimeCounter++;   
     }
     
-    if ( runTime.time().value()>=((startTime+lengthStreamer*(streamerCounter-1))+s1[writeTimeCounter]*(endTime-(startTime+lengthStreamer*(numStreamers)))) )
+    if ( runTime.time().value()>=((startTime+lengthStreamer*(streamerCounter-1))+s[writeTimeCounter]*(endTime-(startTime+lengthStreamer*(numStreamers)))) )
     {
         runTime.writeNow();
         writeTimeCounter++;   
-    }
+    }*/
     
 }

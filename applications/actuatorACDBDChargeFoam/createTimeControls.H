@@ -88,10 +88,12 @@ for (int i = 0; i < multiplier*numWriteTimes; ++i)
 // rest of the cycle
 scalar s1[multiplier*numWriteTimes];
 for (int i = 0; i < multiplier*numWriteTimes; ++i)
+    // s1[i] = n1[i];
     s1[i] = P*n1[i] + (1.0-P)*(1.0-Foam::tanh(Q*(1.0-n1[i]))/Foam::tanh(Q));
 
 // Counters
 int writeTimeCounter = 0;
+int writeTimeCounter2 = 0;
 int streamerCounter = 1;
 
 // ************************************************************************* //
