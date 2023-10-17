@@ -67,7 +67,7 @@ int numStreamers =
 scalar lengthStreamer =
     runTime.controlDict().lookupOrDefault<scalar>("lengthStreamer", 0.5e-5);
 
-// Create normilized count of number of printed times for discharges
+// Create normilized count of number of printed times
 scalar n[numWriteTimes];
 for (int i = 0; i < numWriteTimes; ++i)
     n[i] = 1.0*i/(numWriteTimes-1.0);
@@ -76,24 +76,26 @@ for (int i = 0; i < numWriteTimes; ++i)
 scalar s[numWriteTimes];
 for (int i = 0; i < numWriteTimes; ++i)
     s[i] = P*n[i] + (1.0-P)*(1.0-Foam::tanh(Q*(1.0-n[i]))/Foam::tanh(Q));
-
-// Create normilized count of number of printed times for final discharge and
-// rest of the cycle
+    
 int multiplier=3;
 scalar n1[multiplier*numWriteTimes];
 for (int i = 0; i < multiplier*numWriteTimes; ++i)
     n1[i] = 1.0*i/(multiplier*numWriteTimes-1.0);
 
-// Create stretching function for final discharge and
-// rest of the cycle
+// Create stretching function
 scalar s1[multiplier*numWriteTimes];
 for (int i = 0; i < multiplier*numWriteTimes; ++i)
-    // s1[i] = n1[i];
     s1[i] = P*n1[i] + (1.0-P)*(1.0-Foam::tanh(Q*(1.0-n1[i]))/Foam::tanh(Q));
+
 
 // Counters
 int writeTimeCounter = 0;
-int writeTimeCounter2 = 0;
 int streamerCounter = 1;
+
+Info<< "numWriteTimes = " << numWriteTimes << endl;
+for (int i = 0; i < numWriteTimes; ++i)
+{
+	Info<< "n[" << i << "] = " << s[i] << endl;
+}
 
 // ************************************************************************* //
