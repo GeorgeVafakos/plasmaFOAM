@@ -1,0 +1,95 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  8
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     actuatorNSDBDRhoCentralFoam;
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         1e-04;
+
+deltaT          1e-09;
+
+writeControl    adjustableRunTime;
+
+writeInterval   0.1e-5;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  8
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   8;
+
+runTimeModifiable true;
+
+adjustTimeStep  yes;
+
+maxCo           0.1;
+
+maxDeltaT       1.0e-8;
+
+printScreenResults 1000;
+
+Period          1.0e-4;
+
+HeatingTime     350.0e-9;
+
+startHeating    0.0;
+
+DebugSwitches 
+{ 
+    SolverPerformance 0; 
+}
+
+functions
+{
+
+    libs            ("libfieldFunctionObjects.so");
+
+    Ma
+    {
+        type            MachNo;
+        executeControl  writeTime;
+        writeControl    writeTime;
+    }
+
+
+    probes
+    {
+        functionObjectLibs ( "libsampling.so" );
+        type            probes;
+        name            probes;
+        writeControl    timeStep;
+        writeInterval   1;
+        fields          ( p U );
+        probeLocations  
+        ( 
+        ( 0 0.25e-2 0.025 ) ( 0 0.5e-2 0.025 ) ( 0 1.0e-2 0.025 ) ( 0 1.5e-2 0.025 ) 
+        );
+    }
+}
+
+// ************************************************************************* //

@@ -1,3 +1,0 @@
-electrostatic_DBD.C
-
-EXE = $(FOAM_USER_APPBIN)/electrostatic_DBD

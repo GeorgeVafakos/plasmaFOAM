@@ -22,46 +22,46 @@ dimensionedScalar epsilon0
     physicalProperties.lookup("epsilon0")
 );
 
+// Boltzmann constant
+dimensionedScalar kB
+(
+    physicalProperties.lookup("kB")
+);
+
 // Electron charge
 dimensionedScalar e
 (
     physicalProperties.lookup("e")
 );
 
-// Electron Diffusion coefficient
-dimensionedScalar De
+// Ambient Pressure
+dimensionedScalar press
 (
-    physicalProperties.lookup("De")
+    physicalProperties.lookup("press")
 );
 
-// Ion Diffusion coefficient
-dimensionedScalar Di
+// Ambient temperature
+dimensionedScalar Tamb
 (
-    physicalProperties.lookup("Di")
+    physicalProperties.lookup("Tamb")
 );
 
-// Electron mobility
-dimensionedScalar mue
+// Electron temperature
+dimensionedScalar Te
 (
-    physicalProperties.lookup("mue")
-);
-
-// Ion mobility
-dimensionedScalar mui
-(
-    physicalProperties.lookup("mui")
+    physicalProperties.lookup("Te")
 );
 
 // Recombination coefficient
-dimensionedScalar r
+dimensionedScalar rnp
 (
-    physicalProperties.lookup("r")
+    physicalProperties.lookup("rnp")
 );
 
-// Ionization coefficient
-dimensionedScalar alpha
+// Recombination coefficient
+dimensionedScalar rep
 (
-    physicalProperties.lookup("alpha")
+    physicalProperties.lookup("rep")
 );
 
 // Dielectric elative permittivity
@@ -70,42 +70,22 @@ dimensionedScalar erD
     physicalProperties.lookup("erD")
 );
 
+// Insulator elative permittivity
+dimensionedScalar erI
+(
+    physicalProperties.lookup("erI")
+);
+
 // Convergence variables
 int convVoltAext=1;
 int convVoltDext=1;
-int convVoltArho=1;
-int convVoltDrho=1;
+int convVoltIext=1;
+int convVoltAind=1;
+int convVoltDind=1;
+int convVoltIind=1;
 int counter=0;
 
-// Electron number density
-Info<< "Reading field ne\n" << endl;
-volScalarField ne
-(
-    IOobject
-    (
-        "ne",
-        runTime.timeName(),
-        mesh,
-        IOobject::MUST_READ,
-        IOobject::AUTO_WRITE
-    ),
-    mesh
-);
-
-// Ion number density
-Info<< "Reading field ni\n" << endl;
-volScalarField ni
-(
-    IOobject
-    (
-        "ni",
-        runTime.timeName(),
-        mesh,
-        IOobject::MUST_READ,
-        IOobject::AUTO_WRITE
-    ),
-    mesh
-);
+// scalar cond=1.0e-3;
 
 // Air external electric potential
 Info<< "Reading field voltAext\n" << endl;
@@ -137,13 +117,28 @@ volScalarField voltDext
     meshD
 );
 
-// Air induced electric potential
-Info<< "Reading field voltArho\n" << endl;
-volScalarField voltArho
+// Insulator external electric potential
+Info<< "Reading field voltIext\n" << endl;
+volScalarField voltIext
 (
     IOobject
     (
-        "voltArho",
+        "voltIext",
+        runTime.timeName(),
+        meshI,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    meshI
+);
+
+// Air induced electric potential
+Info<< "Reading field voltAind\n" << endl;
+volScalarField voltAind
+(
+    IOobject
+    (
+        "voltAind",
         runTime.timeName(),
         mesh,
         IOobject::MUST_READ,
@@ -153,18 +148,33 @@ volScalarField voltArho
 );
 
 // Dielectric electric potential
-Info<< "Reading field voltDrho\n" << endl;
-volScalarField voltDrho
+Info<< "Reading field voltDind\n" << endl;
+volScalarField voltDind
 (
     IOobject
     (
-        "voltDrho",
+        "voltDind",
         runTime.timeName(),
         meshD,
         IOobject::MUST_READ,
         IOobject::AUTO_WRITE
     ),
     meshD
+);
+
+// Insulator electric potential
+Info<< "Reading field voltIind\n" << endl;
+volScalarField voltIind
+(
+    IOobject
+    (
+        "voltIind",
+        runTime.timeName(),
+        meshI,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    meshI
 );
 
 // Air total electric potential
@@ -199,34 +209,20 @@ volScalarField voltD
     dimensionedScalar("temp",dimensionSet(1,2,-3,0,0,-1,0),scalar(0))
 );
 
-// Electron flux
-Info<< "Calculating field eleFlux\n" << endl;
-surfaceScalarField eleFlux
+// Insulator total potential
+Info<< "Reading field voltI\n" << endl;
+volScalarField voltI
 (
     IOobject
     (
-        "eleFlux",
+        "voltI",
         runTime.timeName(),
-        mesh,
+        meshI,
         IOobject::NO_READ,
-        IOobject::NO_WRITE
+        IOobject::AUTO_WRITE
     ),
-    -mue*mesh.magSf()*fvc::snGrad(voltA)
-);
-
-// Ion flux
-Info<< "Calculating field ionFlux\n" << endl;
-surfaceScalarField ionFlux
-(
-    IOobject
-    (
-        "ionFlux",
-        runTime.timeName(),
-        mesh,
-        IOobject::NO_READ,
-        IOobject::NO_WRITE
-    ),
-    -mui*mesh.magSf()*fvc::snGrad(voltA)
+    meshI,
+    dimensionedScalar("temp",dimensionSet(1,2,-3,0,0,-1,0),scalar(0))
 );
 
 // Air external electric field
@@ -259,34 +255,64 @@ volVectorField EDext
     -fvc::grad(voltDext)
 );
 
-// Air induced electric field
-Info<< "Calculating field EArho\n" << endl;
-volVectorField EArho
+// Insulator external electric field
+Info<< "Calculating field EIext\n" << endl;
+volVectorField EIext
 (
     IOobject
     (
-        "EArho",
+        "EIext",
+        runTime.timeName(),
+        meshI,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    -fvc::grad(voltIext)
+);
+
+// Air induced electric field
+Info<< "Calculating field EAind\n" << endl;
+volVectorField EAind
+(
+    IOobject
+    (
+        "EAind",
         runTime.timeName(),
         mesh,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    -fvc::grad(voltArho)
+    -fvc::grad(voltAind)
 );
 
 // Dielectric induced electric field
-Info<< "Calculating field EDrho\n" << endl;
-volVectorField EDrho
+Info<< "Calculating field EDind\n" << endl;
+volVectorField EDind
 (
     IOobject
     (
-        "EDrho",
+        "EDind",
         runTime.timeName(),
         meshD,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    -fvc::grad(voltDrho)
+    -fvc::grad(voltDind)
+);
+
+// Insulator induced electric field
+Info<< "Calculating field EIind\n" << endl;
+volVectorField EIind
+(
+    IOobject
+    (
+        "EIind",
+        runTime.timeName(),
+        meshI,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    -fvc::grad(voltIind)
 );
 
 // Air total electric field
@@ -319,6 +345,21 @@ volVectorField ED
     -fvc::grad(voltD)
 );
 
+// Insulator total electric field
+Info<< "Calculating field EI\n" << endl;
+volVectorField EI
+(
+    IOobject
+    (
+        "EI",
+        runTime.timeName(),
+        meshI,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    -fvc::grad(voltI)
+);
+
 // Air relative permittivity field
 volScalarField epsilonA
 (
@@ -349,17 +390,355 @@ volScalarField epsilonD
     erD
 );
 
-// // Ionization frequency
-// volScalarField ionizFreq
-// (
-//     IOobject
-//     (
-//         "ionizFreq",
-//         runTime.timeName(),
-//         mesh,
-//         IOobject::NO_READ,
-//         IOobject::NO_WRITE
-//     ),
-//     mesh,
-//     dimensionedScalar("temp",dimensionSet(0,0,-1,0,0,0,0),scalar(0))
-// );
+// Insulator relative permittivity field
+volScalarField epsilonI
+(
+    IOobject
+    (
+        "epsilonI",
+        runTime.timeName(),
+        meshI,
+        IOobject::NO_READ,
+        IOobject::NO_WRITE
+    ),
+    meshI,
+    erI
+);
+
+
+
+
+
+
+
+// Electron number density
+Info<< "Reading field ne\n" << endl;
+volScalarField ne
+(
+    IOobject
+    (
+        "ne",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
+
+// Positive ion number density
+Info<< "Reading field np\n" << endl;
+volScalarField np
+(
+    IOobject
+    (
+        "np",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
+
+// Negative ion number density
+Info<< "Reading field nn\n" << endl;
+volScalarField nn
+(
+    IOobject
+    (
+        "nn",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
+
+// Electron mobility
+Info<< "Calculating field mue\n" << endl;
+volScalarField mue
+(
+    IOobject
+    (
+        "mue",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh,
+    dimensionedScalar("temp",dimensionSet(-1, 0, 2, 0, 0, 1, 0),scalar(0))
+);
+
+// Positive ion mobility
+Info<< "Calculating field mup\n" << endl;
+volScalarField mup
+(
+    IOobject
+    (
+        "mup",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh,
+    dimensionedScalar("temp",dimensionSet(-1, 0, 2, 0, 0, 1, 0),scalar(0))
+);
+
+// Negative ion mobility
+Info<< "Calculating field mun\n" << endl;
+volScalarField mun
+(
+    IOobject
+    (
+        "mun",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh,
+    dimensionedScalar("temp",dimensionSet(-1, 0, 2, 0, 0, 1, 0),scalar(0))
+);
+
+// Electron flux
+Info<< "Calculating field eleFlux\n" << endl;
+surfaceScalarField eleFlux
+(
+    IOobject
+    (
+        "eleFlux",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::NO_WRITE
+    ),
+    -linearInterpolate(mue)*mesh.magSf()*fvc::snGrad(voltA)
+);
+
+// Positive ion flux
+Info<< "Calculating field posFlux\n" << endl;
+surfaceScalarField posFlux
+(
+    IOobject
+    (
+        "posFlux",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::NO_WRITE
+    ),
+    -linearInterpolate(mup)*mesh.magSf()*fvc::snGrad(voltA)
+);
+
+// Negative ion flux
+Info<< "Calculating field negFlux\n" << endl;
+surfaceScalarField negFlux
+(
+    IOobject
+    (
+        "negFlux",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::NO_WRITE
+    ),
+    -linearInterpolate(mun)*mesh.magSf()*fvc::snGrad(voltA)
+);
+
+// Ionisation coefficient
+Info<< "Calculating field alpha\n" << endl;
+volScalarField alpha
+(
+    IOobject
+    (
+        "alpha",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh,
+    dimensionedScalar("temp",dimensionSet(0,-1,0,0,0,0,0),scalar(0))
+);
+
+// Recombination coefficient
+Info<< "Calculating field heta\n" << endl;
+volScalarField heta
+(
+    IOobject
+    (
+        "heta",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh,
+    dimensionedScalar("temp",dimensionSet(0,-1,0,0,0,0,0),scalar(0))
+);
+
+// Electron diffusion coefficient
+Info<< "Calculating field De\n" << endl;
+volScalarField De
+(
+    IOobject
+    (
+        "De",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh,
+    dimensionedScalar("temp",dimensionSet(0,2,-1,0,0,0,0),scalar(0))
+);
+
+// Positive Ion diffusion coefficient
+Info<< "Calculating field Dp\n" << endl;
+volScalarField Dp
+(
+    IOobject
+    (
+        "Dp",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh,
+    dimensionedScalar("temp",dimensionSet(0,2,-1,0,0,0,0),scalar(0))
+);
+
+// Negative Ion diffusion coefficient
+Info<< "Calculating field Dn\n" << endl;
+volScalarField Dn
+(
+    IOobject
+    (
+        "Dn",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh,
+    dimensionedScalar("temp",dimensionSet(0,2,-1,0,0,0,0),scalar(0))
+);
+
+// Electron flux vector
+Info<< "Calculating field GammaEle\n" << endl;
+volVectorField GammaEle
+(
+    IOobject
+    (
+        "GammaEle",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    -mue*ne*EA - De*fvc::grad(ne)
+);
+
+// Positive ion flux vector
+Info<< "Calculating field GammaPos\n" << endl;
+volVectorField GammaPos
+(
+    IOobject
+    (
+        "GammaPos",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mup*np*EA - Dp*fvc::grad(np)
+);
+
+// Negative ion flux vector
+Info<< "Calculating field GammaNeg\n" << endl;
+volVectorField GammaNeg
+(
+    IOobject
+    (
+        "GammaNeg",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    -mun*nn*EA - Dn*fvc::grad(nn)
+);
+
+// Electric field dimentions
+Info<< "Calculating field dimE\n" << endl;
+volScalarField dimE
+(
+    IOobject
+    (
+        "dimE",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::NO_WRITE
+    ),
+    mesh,
+    // dimensionedScalar("temp",dimless,scalar(0))
+    dimensionedScalar("temp",dimensionSet(1,1,-3,0,0,-1,0),scalar(1))
+);
+
+// Voltage dimentions
+Info<< "Calculating field dimVolt\n" << endl;
+volScalarField dimVolt
+(
+    IOobject
+    (
+        "dimVolt",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::NO_WRITE
+    ),
+    mesh,
+    // dimensionedScalar("temp",dimless,scalar(0))
+    dimensionedScalar("temp",dimensionSet(1,2,-3,0,0,-1,0),scalar(1))
+);
+
+// Ionisation coefficient dimentions
+Info<< "Calculating field dimAlpha\n" << endl;
+volScalarField dimAlpha
+(
+    IOobject
+    (
+        "dimAlpha",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::NO_WRITE
+    ),
+    mesh,
+    // dimensionedScalar("temp",dimless,scalar(0))
+    dimensionedScalar("temp",dimensionSet(0,-1,0,0,0,0,0),scalar(1))
+);
+
+// Mobility dimentions
+Info<< "Calculating field dimMu\n" << endl;
+volScalarField dimMu
+(
+    IOobject
+    (
+        "dimMu",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::NO_WRITE
+    ),
+    mesh,
+    // dimensionedScalar("temp",dimless,scalar(0))
+    dimensionedScalar("temp",dimensionSet(-1,0,2,0,0,1,0),scalar(1))
+);
+

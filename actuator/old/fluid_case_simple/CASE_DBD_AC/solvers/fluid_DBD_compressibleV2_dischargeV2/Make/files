@@ -1,3 +1,0 @@
-fluid_DBD_compressibleV2_dischargeV2.C
-
-EXE = $(FOAM_USER_APPBIN)/fluid_DBD_compressibleV2_dischargeV2

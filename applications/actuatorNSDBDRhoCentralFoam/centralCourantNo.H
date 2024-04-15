@@ -39,7 +39,13 @@ if (mesh.nInternalFaces())
         0.5*(gSum(sumAmaxSf)/gSum(mesh.V().field()))*runTime.deltaTValue();
 }
 
-Info<< "Mean and max Courant Numbers = "
-    << meanCoNum << " " << CoNum << endl;
+// solverPerformance::debug = 0;
+if (runTime.timeIndex() % printScreenResults == 0 || runTime.timeIndex() == 1)
+{
+    Info<< "Mean and max Courant Numbers = "
+        << meanCoNum << " " << CoNum << endl;
+}
+
+
 
 // ************************************************************************* //

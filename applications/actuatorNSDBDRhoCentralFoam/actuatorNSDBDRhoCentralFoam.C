@@ -72,6 +72,12 @@ int main(int argc, char *argv[])
     {
         #include "readTimeControls.H"
 
+        if (runTime.timeIndex() % printScreenResults == 0 || runTime.timeIndex() == 1)
+        {
+            Info<< "Time = " << runTime.timeName() << "  Time step = " << runTime.timeIndex() << endl;
+            // solverPerformance::debug = 0;
+        }
+
         if (!LTS)
         {
             #include "setDeltaT.H"
@@ -167,7 +173,12 @@ int main(int argc, char *argv[])
             runTime++;
         }
 
-        Info<< "Time = " << runTime.timeName() << nl << endl;
+
+        if (runTime.timeIndex() % printScreenResults == 0 || runTime.timeIndex() == 1)
+        {
+             Info<< "Time = " << runTime.timeName() << endl;
+        }
+       
         
         
         // Set forceSwitch on/off
@@ -281,9 +292,17 @@ int main(int argc, char *argv[])
 
         runTime.write();
 
-        Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-            << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-            << nl << endl;
+        // solverPerformance::debug = 0;
+        if (runTime.timeIndex() % printScreenResults == 0 || runTime.timeIndex() == 1)
+        {
+            Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
+                << "  ClockTime = " << runTime.elapsedClockTime() << " s"
+                << nl << nl << endl;
+        }
+
+        // Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
+        //     << "  ClockTime = " << runTime.elapsedClockTime() << " s"
+        //     << nl << endl;
     }
 
     Info<< "End\n" << endl;

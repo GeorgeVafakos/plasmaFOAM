@@ -40,50 +40,62 @@ int main(int argc, char *argv[])
     #include "createTime.H"
     #include "createMesh.H"
     #include "createMeshD.H"
-    #include "createMeshA.H"
+    #include "createMeshI.H"
     #include "createFields.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
     Info<< "\nStarting iteration loop\n" << endl;
 
-    while (runTime.loop() && (convVolt>0 || convVoltD>0 || convVoltA>0))
+    while (runTime.loop() && (convVolt>0 || convVoltD>0 || convVoltI>0))
     {
-        Info<< "Iteration = " << runTime.timeName() << nl << endl;
-
-        // Iteration counter
-        iterCount++;
+        Info<< "Iteration = " << runTime.timeIndex() << nl << endl;
 
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
         // Poisson Equations
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+        
+        // Reset counters
+        counter = 0;
+        solverPerformance::debug = 1;
+        
+        while ((convVolt>0 || convVoltD>0 || convVoltI>0) && counter<30000)
+        {
 
-        // Inner tube plasma
-        Foam::solverPerformance solvPerfVolt = solve 
-        (
-            fvm::laplacian(volt)
-        );
-        convVolt = solvPerfVolt.nIterations();
+            // Inner tube plasma
+            Foam::solverPerformance solvPerfVolt = solve 
+            (
+                fvm::laplacian(volt)// + rhoq/e0
+            );
+            convVolt = solvPerfVolt.nIterations();
 
-        // Dielectric
-        Foam::solverPerformance solvPerfVoltD = solve
-        (
-            fvm::laplacian(voltD)
-        );
-        convVoltD = solvPerfVoltD.nIterations();
+            // Dielectric
+            Foam::solverPerformance solvPerfVoltD = solve
+            (
+                fvm::laplacian(voltD)
+            );
+            convVoltD = solvPerfVoltD.nIterations();
 
-        // Air
-        Foam::solverPerformance solvPerfVoltA = solve
-        (
-            fvm::laplacian(voltA)
-        );
-        convVoltA = solvPerfVoltA.nIterations();
-
+            // Air
+            Foam::solverPerformance solvPerfVoltI = solve
+            (
+                fvm::laplacian(voltI)
+            );
+            convVoltI = solvPerfVoltI.nIterations();
+            
+            counter++;
+            solverPerformance::debug = 0;
+            if (counter % 100 == 0)
+            {
+                Info<< "Current Loop = " << counter << endl;
+                solverPerformance::debug = 1;
+            }
+        }
 
         // Calculate the electric field
         E = -fvc::grad(volt);
         ED = -fvc::grad(voltD);
-        EA = -fvc::grad(voltA);
+        EI = -fvc::grad(voltI);
 
         runTime.write();
 

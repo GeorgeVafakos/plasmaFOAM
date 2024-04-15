@@ -28,11 +28,17 @@ dimensionedScalar erD
     physicalProperties.lookup("erD")
 );
 
+dimensionedScalar erI
+(
+    physicalProperties.lookup("erD")
+);
+
 // Convergence variables
-scalar iterCount=0.0;
+int counter=0;
 int convVolt=1;
 int convVoltD=1;
-int convVoltA=1;
+int convVoltI=1;
+
 
 Info<< "Reading field volt\n" << endl;
 volScalarField volt
@@ -62,20 +68,34 @@ volScalarField voltD
     meshD
 );
 
-Info<< "Reading field voltA\n" << endl;
-volScalarField voltA
+Info<< "Reading field voltI\n" << endl;
+volScalarField voltI
 (
     IOobject
     (
-        "voltA",
+        "voltI",
         runTime.timeName(),
-        meshA,
+        meshI,
         IOobject::MUST_READ,
         IOobject::AUTO_WRITE
     ),
-    meshA
+    meshI
 );
-
+/*
+Info<< "Reading field rhoq\n" << endl;
+volScalarField rhoq
+(
+    IOobject
+    (
+        "rhoq",
+        runTime.timeName(),
+        mesh,
+        IOobject::READ_IF_PRESENT,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
+*/
 volScalarField epsilon
 (
     IOobject
@@ -104,18 +124,18 @@ volScalarField epsilonD
     erD
 );
 
-volScalarField epsilonA
+volScalarField epsilonI
 (
     IOobject
     (
-        "epsilonA",
+        "epsilonI",
         runTime.timeName(),
-        meshA,
+        meshI,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    meshA,
-    dimensionedScalar("temp",dimless,scalar(1))
+    meshI,
+    erI
 );
 
 Info<< "Calculating field E\n" << endl;
@@ -146,16 +166,17 @@ volVectorField ED
     -fvc::grad(voltD)
 );
 
-Info<< "Calculating field EA\n" << endl;
-volVectorField EA
+Info<< "Calculating field EI\n" << endl;
+volVectorField EI
 (
     IOobject
     (
-        "EA",
+        "EI",
         runTime.timeName(),
-        meshA,
+        meshI,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    -fvc::grad(voltA)
+    -fvc::grad(voltI)
 );
+

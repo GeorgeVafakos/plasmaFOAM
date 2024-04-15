@@ -1,0 +1,20 @@
+#!/bin/bash
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Run blockMesh
+blockMesh
+
+# Run topoSet for baffles and kinetic energy injection region
+topoSet
+createBaffles -overwrite
+
+# Output message
+echo
+echo Case created.
+
+
+
+#------------------------------------------------------------------------------

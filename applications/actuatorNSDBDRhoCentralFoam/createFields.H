@@ -19,6 +19,7 @@ scalar Th = runTime.controlDict().lookupOrDefault("HeatingTime", 350.0e-9);
 scalar startHeating = runTime.controlDict().lookupOrDefault("startHeating", 0.0);
 // scalar stopForcePerc = runTime.controlDict().lookupOrDefault("stopForcePerc", 0.25);
 scalar numPeriods = floor(runTime.value()/Tp);
+int printScreenResults = runTime.controlDict().lookupOrDefault("printScreenResults", 1);
 
 Info<< "Reading field U\n" << endl;
 volVectorField U
