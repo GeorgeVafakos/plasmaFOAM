@@ -1,0 +1,2 @@
+Added the coeffs.H that contains the fields alphaF , mueF and muiF 
+Changed in the equations scalars alpha, mue and mui to the corresponding fields

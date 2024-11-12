@@ -1,0 +1,30 @@
+#!/bin/bash
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+find ./[0-9]* -type d 2>/dev/null -exec sed -i 's/voltA/volt/g' ./{}/voltA {} \;
+find ./[0-9]* -type d 2>/dev/null -exec sed -i 's/voltD/volt/g' ./{}/dielectric/voltD {} \;
+find ./[0-9]* -type d 2>/dev/null -exec sed -i 's/voltI/volt/g' ./{}/insulator/voltI {} \;
+
+find ./[0-9]* -type d 2>/dev/null -exec sed -i 's/voltAextMag/voltExtMag/g' ./{}/voltAextMag {} \;
+find ./[0-9]* -type d 2>/dev/null -exec sed -i 's/voltDextMag/voltExtMag/g' ./{}/dielectric/voltDextMag {} \;
+find ./[0-9]* -type d 2>/dev/null -exec sed -i 's/voltIextMag/voltExtMag/g' ./{}/insulator/voltIextMag {} \;
+
+find ./[0-9]* -type d 2>/dev/null -exec sed -i 's/voltArho/voltRho/g' ./{}/voltArho {} \;
+find ./[0-9]* -type d 2>/dev/null -exec sed -i 's/voltDrho/voltRho/g' ./{}/dielectric/voltDrho {} \;
+find ./[0-9]* -type d 2>/dev/null -exec sed -i 's/voltIrho/voltRho/g' ./{}/insulator/voltIrho {} \;
+
+find ./[0-9]* -type d 2>/dev/null -exec sed -i 's/EA/E/g' ./{}/EA {} \;
+find ./[0-9]* -type d 2>/dev/null -exec sed -i 's/ED/E/g' ./{}/dielectric/ED {} \;
+find ./[0-9]* -type d 2>/dev/null -exec sed -i 's/EI/E/g' ./{}/insulator/EI {} \;
+
+find ./[0-9]* -type d 2>/dev/null -exec sed -i 's/EAextMag/EextMag/g' ./{}/EAextMag {} \;
+find ./[0-9]* -type d 2>/dev/null -exec sed -i 's/EDextMag/EextMag/g' ./{}/dielectric/EDextMag {} \;
+find ./[0-9]* -type d 2>/dev/null -exec sed -i 's/EIextMag/EextMag/g' ./{}/insulator/EIextMag {} \;
+
+find ./[0-9]* -type d 2>/dev/null -exec sed -i 's/EArho/Erho/g' ./{}/EArho {} \;
+find ./[0-9]* -type d 2>/dev/null -exec sed -i 's/EDrho/Erho/g' ./{}/dielectric/EDrho {} \;
+find ./[0-9]* -type d 2>/dev/null -exec sed -i 's/EIrho/Erho/g' ./{}/insulator/EIrho {} \;
+#------------------------------------------------------------------------------

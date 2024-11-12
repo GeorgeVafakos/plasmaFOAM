@@ -1,3 +1,0 @@
-actuatorElectrostatic2RegionsFoam.C
-
-EXE = $(FOAM_USER_APPBIN)/actuatorElectrostatic2RegionsFoam

@@ -1,0 +1,76 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  7
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     plasmaChemFoam;
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         1.0e-7;
+
+deltaT          1.0e-15;
+
+writeControl    adjustableRunTime;
+
+<<<<<<< HEAD
+writeInterval   5.0e-12;
+=======
+writeInterval   5.0e-13;
+>>>>>>> 3294375e0bb63e374141e1c9a0ec01cf5409e8c3
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  6;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable true;
+
+adjustTimeStep  yes;
+
+<<<<<<< HEAD
+maxCo           0.4;
+
+maxDeltaT       0.00001;
+
+functions
+{
+    probes
+    {
+        functionObjectLibs ( "libsampling.so" );
+        type            probes;
+        name            probes;
+        writeControl    timeStep;
+        writeInterval   1;
+        fields          ( ni ne );
+        probeLocations  ( ( 0 10.0e-6 5.0e-6 ) ( 150.0e-6 10.0e-6 5.0e-6 ) ( 200.0e-6 10.0e-6 5.0e-6 ) );
+    }
+}
+
+
+=======
+>>>>>>> 3294375e0bb63e374141e1c9a0ec01cf5409e8c3
+// ************************************************************************* //

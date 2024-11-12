@@ -1,0 +1,80 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  7
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solvers
+{
+    voltAext
+    {
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-06;
+        // relTol          0.05;
+    }
+
+    voltDext
+    {
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-06;
+        // relTol          0.05;
+    }
+
+    voltArho
+    {
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-06;
+        // relTol          0.05;
+    }
+
+    voltDrho
+    {
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-06;
+        // relTol          0.05;
+    }
+
+<<<<<<< HEAD
+    ne
+=======
+    ni
+>>>>>>> 3294375e0bb63e374141e1c9a0ec01cf5409e8c3
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-12;
+        relTol          0.05;
+        // maxIter         0;      // This line suppresses the charge transport equation
+    }
+
+<<<<<<< HEAD
+    ni
+=======
+    ne
+>>>>>>> 3294375e0bb63e374141e1c9a0ec01cf5409e8c3
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-12;
+        relTol          0.05;
+        // maxIter         0;      // This line suppresses the charge transport equation
+    }
+}
+
+
+// ************************************************************************* //

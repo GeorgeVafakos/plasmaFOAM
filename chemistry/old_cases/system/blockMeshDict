@@ -1,0 +1,150 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  7
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 1;
+
+// Geometric variables
+h 150.0e-6;
+e 50.0e-6;
+L 400.0e-6;
+l 100.0e-6;
+
+X0 #calc "-$l";
+Y0 #calc "-$e";
+X1 0.0;
+Y1 #calc "-$e";
+X2 #calc "$L - $l";
+Y2 #calc "-$e";
+
+X3 #calc "-$l";
+Y3 0.0;
+X4 0.0;
+Y4 0.0;
+X5 #calc "$L - $l";
+Y5 0.0;
+
+X6 #calc "-$l";
+Y6 #calc "$h";
+X7 0.0;
+Y7 #calc "$h";
+X8 #calc "$L - $l";
+Y8 #calc "$h";
+
+z_front 0.0;
+z_back 10.0e-6;
+
+Dx 1.0e-6;
+cellsX_block0 #calc "int( $l/$Dx )";
+cellsY_block0 #calc "int( $e/$Dx )";
+cellsX_block1 #calc "int( ($L - $l)/$Dx )";
+cellsY_block1 #calc "int( $e/$Dx )";
+cellsX_block2 #calc "int( $l/$Dx )";
+cellsY_block2 #calc "int( $h/$Dx )";
+cellsX_block3 #calc "int( ($L - $l)/$Dx )";
+cellsY_block3 #calc "int( $h/$Dx )";
+
+vertices
+(
+    ($X0 $Y0 $z_front)                  // 0
+    ($X1 $Y1 $z_front)                  // 1
+    ($X2 $Y2 $z_front)                  // 2
+    ($X3 $Y3 $z_front)                  // 3
+    ($X4 $Y4 $z_front)                  // 4
+    ($X5 $Y5 $z_front)                  // 5
+    ($X6 $Y6 $z_front)                  // 6
+    ($X7 $Y7 $z_front)                  // 7
+    ($X8 $Y8 $z_front)                  // 8
+
+    ($X0 $Y0 $z_back)                   // 9
+    ($X1 $Y1 $z_back)                   // 10
+    ($X2 $Y2 $z_back)                   // 11
+    ($X3 $Y3 $z_back)                   // 12
+    ($X4 $Y4 $z_back)                   // 13
+    ($X5 $Y5 $z_back)                   // 14
+    ($X6 $Y6 $z_back)                   // 15
+    ($X7 $Y7 $z_back)                   // 16
+    ($X8 $Y8 $z_back)                   // 17
+);
+
+blocks
+(
+    hex (0 1 4 3 9  10 13 12) dielectric ($cellsX_block0 $cellsY_block0 1) simpleGrading (1 1 1)
+    hex (1 2 5 4 10 11 14 13) dielectric ($cellsX_block1 $cellsY_block1 1) simpleGrading (1 1 1)
+    hex (3 4 7 6 12 13 16 15) ($cellsX_block2 $cellsY_block2 1) simpleGrading (1 1 1)
+    hex (4 5 8 7 13 14 17 16) ($cellsX_block3 $cellsY_block3 1) simpleGrading (1 1 1)
+);
+
+boundary
+(
+    upperBoundary
+    {
+        type patch;
+        faces
+        (
+            (6 15 16 7)
+            (7 16 17 8)
+        );
+    }
+
+    leftBoundary
+    {
+        type patch;
+        faces
+        (
+            (0 9 12 3)
+            (3 12 15 6)
+        );
+    }
+
+    rightBoundary
+    {
+        type patch;
+        faces
+        (
+            (5 14 11 2)
+            (8 17 14 5)
+        );
+    }
+
+    ground
+    {
+        type wall;
+        faces
+        (
+            (1 10 9 0)
+            (2 11 10 1)
+        );
+    }
+
+    frontAndBack
+    {
+        type empty;
+        faces
+        (
+            (0 3 4 1)
+            (1 4 5 2)
+            (3 6 7 4)
+            (4 7 8 5)
+
+            (9 10 13 12)
+            (10 11 14 13)
+            (12 13 16 15)
+            (13 14 17 16)
+        );
+    }
+);
+
+// ************************************************************************* //

@@ -1,0 +1,65 @@
+#!/bin/bash
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Remove 0 folder
+rm -vr 0
+
+# Fix names of fieds
+../streamer/prepForParaView
+
+find ../streamer/[0-9]* -type d 2>/dev/null -exec mv ../streamer/{}/voltA ../streamer/{}/volt \;
+find ../streamer/[0-9]* -type d 2>/dev/null -exec mv ../streamer/{}/dielectric/voltD ../streamer/{}/dielectric/volt \;
+find ../streamer/[0-9]* -type d 2>/dev/null -exec mv ../streamer/{}/insulator/voltI ../streamer/{}/insulator/volt \;
+
+find ../streamer/[0-9]* -type d 2>/dev/null -exec mv ../streamer/{}/voltAextMag ../streamer/{}/voltExtMag \;
+find ../streamer/[0-9]* -type d 2>/dev/null -exec mv ../streamer/{}/dielectric/voltDextMag ../streamer/{}/dielectric/voltExtMag \;
+find ../streamer/[0-9]* -type d 2>/dev/null -exec mv ../streamer/{}/insulator/voltIextMag ../streamer/{}/insulator/voltExtMag \;
+
+find ../streamer/[0-9]* -type d 2>/dev/null -exec mv ../streamer/{}/voltArho ../streamer/{}/voltRho \;
+find ../streamer/[0-9]* -type d 2>/dev/null -exec mv ../streamer/{}/dielectric/voltDrho ../streamer/{}/dielectric/voltRho \;
+find ../streamer/[0-9]* -type d 2>/dev/null -exec mv ../streamer/{}/insulator/voltIrho ../streamer/{}/insulator/voltRho \;
+
+find ../streamer/[0-9]* -type d 2>/dev/null -exec mv ../streamer/{}/EA ../streamer/{}/E \;
+find ../streamer/[0-9]* -type d 2>/dev/null -exec mv ../streamer/{}/dielectric/ED ../streamer/{}/dielectric/E \;
+find ../streamer/[0-9]* -type d 2>/dev/null -exec mv ../streamer/{}/insulator/EI ../streamer/{}/insulator/E \;
+
+find ../streamer/[0-9]* -type d 2>/dev/null -exec mv ../streamer/{}/EAextMag ../streamer/{}/EextMag \;
+find ../streamer/[0-9]* -type d 2>/dev/null -exec mv ../streamer/{}/dielectric/EDextMag ../streamer/{}/dielectric/EextMag \;
+find ../streamer/[0-9]* -type d 2>/dev/null -exec mv ../streamer/{}/insulator/EIextMag ../streamer/{}/insulator/EextMag \;
+
+find ../streamer/[0-9]* -type d 2>/dev/null -exec mv ../streamer/{}/EArho ../streamer/{}/Erho \;
+find ../streamer/[0-9]* -type d 2>/dev/null -exec mv ../streamer/{}/dielectric/EDrho ../streamer/{}/dielectric/Erho \;
+find ../streamer/[0-9]* -type d 2>/dev/null -exec mv ../streamer/{}/insulator/EIrho ../streamer/{}/insulator/Erho \;
+
+# Copy geometry and mesh from streamer case
+cp -R ../streamer/constant/polyMesh ../streamer/constant/dielectric ../streamer/constant/insulator constant/
+
+# Merge region meshes
+mergeMeshes "./" "./" -addRegion dielectric -overwrite
+mergeMeshes "./" "./" -addRegion insulator -overwrite
+rm -vr ./constant/dielectric ./constant/insulator
+
+# mapFieldsPar ../streamer -mapMethod direct -sourceRegion region0    -consistent -fields '(volt voltRho voltExtMag E Erho EextMag)' -sourceTime latestTime -targetRegion region0
+# mapFieldsPar ../streamer -mapMethod direct -sourceRegion dielectric -consistent -fields '(volt voltRho voltExtMag E Erho EextMag)' -sourceTime latestTime -targetRegion region0
+# mapFieldsPar ../streamer -mapMethod direct -sourceRegion insulator  -consistent -fields '(volt voltRho voltExtMag E Erho EextMag)' -sourceTime latestTime -targetRegion region0
+
+mapFieldsPar ../streamer -mapMethod direct -sourceRegion region0    -consistent -fields '( volt voltRho voltExtMag E Erho EextMag )' -sourceTime latestTime -targetRegion region0
+# sed -i 's/-nan/0/g' ./0/*
+# sed -i 's/nan/0/g' ./0/*
+mapFieldsPar ../streamer -mapMethod direct -sourceRegion dielectric -consistent -fields '( volt voltRho voltExtMag E Erho EextMag )' -sourceTime latestTime -targetRegion region0
+# sed -i 's/-nan/0/g' ./0/*
+# sed -i 's/nan/0/g' ./0/*
+mapFieldsPar ../streamer -mapMethod direct -sourceRegion insulator  -consistent -fields '( volt voltRho voltExtMag E Erho EextMag )' -sourceTime latestTime -targetRegion region0
+# sed -i 's/-nan/0/g' ./0/*
+# sed -i 's/nan/0/g' ./0/*
+
+# Output message
+echo
+echo Regions Merged.
+
+
+
+#------------------------------------------------------------------------------

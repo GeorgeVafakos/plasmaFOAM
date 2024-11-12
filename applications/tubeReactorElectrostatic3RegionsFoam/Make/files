@@ -1,3 +1,0 @@
-tubeReactorElectrostatic3RegionsFoam.C
-
-EXE = $(FOAM_USER_APPBIN)/tubeReactorElectrostatic3RegionsFoam

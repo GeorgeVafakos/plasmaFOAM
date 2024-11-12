@@ -1,0 +1,61 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  7
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    location    "0/dielectric";
+    object      epsilonD;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 0 0 0 0 0 0];
+
+internalField   uniform 3;
+
+boundaryField
+{
+    leftBoundary
+    {
+        type            calculated;
+        value           uniform 3;
+    }
+    rightBoundary
+    {
+        type            calculated;
+        value           uniform 3;
+    }
+    highVoltage
+    {
+        type            calculated;
+        value           uniform 3;
+    }
+    ground
+    {
+        type            calculated;
+        value           uniform 3;
+    }
+    frontAndBack
+    {
+        type            empty;
+    }
+    dielectric_to_insulator
+    {
+        type            calculated;
+        value           uniform 3;
+    }
+    dielectric_to_region0
+    {
+        type            calculated;
+        value           uniform 3;
+    }
+}
+
+
+// ************************************************************************* //
