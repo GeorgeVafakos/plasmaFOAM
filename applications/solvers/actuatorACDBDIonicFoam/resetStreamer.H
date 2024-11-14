@@ -1,9 +1,12 @@
 /*---------------------------------------------------------------------------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
-   \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+   \\    /   O peration     |
+    \\  /    A nd           | www.openfoam.com
      \\/     M anipulation  |
+-------------------------------------------------------------------------------
+    Copyright (C) 2011-2016 OpenFOAM Foundation
+    Copyright (C) 2019 OpenCFD Ltd.
 -------------------------------------------------------------------------------
 License
     This file is part of OpenFOAM.
@@ -34,15 +37,15 @@ if ( runTime.time().value()>=( startTime+lengthStreamer*streamerCounter ) && str
     rhoq = rhoq+rhoq_strm;
     voltArho = voltArho+voltArho_strm;
     voltDrho = voltDrho+voltDrho_strm;
-    voltIrho = voltIrho+voltIrho_strm;
+    voltErho = voltErho+voltErho_strm;
 
     voltAext = voltAextMag*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value());
     voltDext = voltDextMag*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value());
-    voltIext = voltIextMag*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value());
+    voltEext = voltEextMag*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value());
         
     voltA = voltAext + voltArho;
     voltD = voltDext + voltDrho;
-    voltI = voltIext + voltIrho;
+    voltE = voltEext + voltErho;
 
     EAext = -fvc::grad(voltAext);
     EArho = -fvc::grad(voltArho);
@@ -50,9 +53,9 @@ if ( runTime.time().value()>=( startTime+lengthStreamer*streamerCounter ) && str
     EDext = -fvc::grad(voltDext);
     EDrho = -fvc::grad(voltDrho);
     ED    = -fvc::grad(voltD);
-    EIext = -fvc::grad(voltIext);
-    EIrho = -fvc::grad(voltIrho);
-    EI    = -fvc::grad(voltI);
+    EEext = -fvc::grad(voltEext);
+    EErho = -fvc::grad(voltErho);
+    EE    = -fvc::grad(voltE);
     Fc = rhoq*EA;
 
     streamerCounter++;

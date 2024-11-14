@@ -1,9 +1,9 @@
 /*--------------------------------*- C++ -*----------------------------------*\
-  =========                 |
-  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
-   \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Version:  7
-     \\/     M anipulation  |
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2406                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
@@ -41,7 +41,6 @@ internalField   #codeStream // Use codeStream to set the value of the initial co
             const fvMesh& mesh = refCast<const fvMesh>(d.db());
             // Access internal mesh information
            
-
             scalarField rhoq(mesh.nCells(), 0.);
 
             scalar rhoq0 = -0.01;
@@ -54,18 +53,18 @@ internalField   #codeStream // Use codeStream to set the value of the initial co
                 //Access cell centers coordinates
                 const scalar x = mesh.C()[i][0];
                 const scalar y = mesh.C()[i][1];
-                const scalar z = mesh.C()[i][2];
+                // const scalar z = mesh.C()[i][2];
                 
-                if ( x>PlasmaStart && x<PlasmaWidth && y>0 && y<((PlasmaThick/(PlasmaWidth-PlasmaStart))*(PlasmaWidth-x)) )
+                if ( x>PlasmaStart && x<PlasmaWidth && y>0 && y<((PlasmaThick /(PlasmaWidth-PlasmaStart))*(PlasmaWidth-x)) )
                 {
-                    rhoq[i] = -rhoq0*((x-PlasmaStart)/PlasmaWidth + y/PlasmaThick - 1.0);
+                    rhoq[i] = -rhoq0*((x-PlasmaStart) /PlasmaWidth + y /PlasmaThick - 1.0);
                     // rhoq[i] = rhoq0;
                 }
             }
 
-            writeEntry(os, "", rhoq);
-
+            // writeEntry(os, "", rhoq);
             // rhoq.write();
+            rhoq.writeEntry("", os);
         #};
 };
 

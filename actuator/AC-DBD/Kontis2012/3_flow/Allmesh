@@ -5,10 +5,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 # Copy geometry and mesh from streamer case
-cp -R ../streamer/constant/polyMesh constant/
-
-# TopoSet for kinetic energy injection
-topoSet
+cp -R ../1_discharge/constant/polyMesh constant/
 
 # Output message
 echo

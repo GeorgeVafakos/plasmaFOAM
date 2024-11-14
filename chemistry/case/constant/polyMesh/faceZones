@@ -1,0 +1,38 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2406                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    arch        "LSB;label=32;scalar=64";
+    class       regIOobject;
+    location    "constant/domain0/polyMesh";
+    object      faceZones;
+    meta
+    {
+        names           2 ( HVelectrodeZone HVelectrodeBaffle );
+    }
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+2
+(HVelectrodeZone
+{
+    type            faceZone;
+    faceLabels      List<label> 0();
+    flipMap         List<bool> 0();
+}
+HVelectrodeBaffle
+{
+    type            faceZone;
+    faceLabels      List<label> 0();
+    flipMap         List<bool> 0();
+}
+)
+
+// ************************************************************************* //

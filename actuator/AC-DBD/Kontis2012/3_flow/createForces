@@ -3,25 +3,24 @@
 #------------------------------------------------------------------------------ 
 # Specify the times of each period that the force will act
 #------------------------------------------------------------------------------ 
-find ../chargeTransport -maxdepth 1 -type d ! '(' -name 'constant' -o -name 'system' -o -name '0.org' -o -name 'processor*' -o -name 'dynamicCode' -o -name 'probes' -o -name 'postProcessing' ')' > forceTimesText
-sed -i 's/..\/chargeTransport\///g' ./forceTimesText
+find ../2_ionicMotion -maxdepth 1 -type d ! '(' -name 'constant' -o -name 'system' -o -name '0.org' -o -name 'processor*' -o -name 'dynamicCode' -o -name 'probes' -o -name 'postProcessing' ')' > forceTimesText
+sed -i 's/..\/2_ionicMotion\///g' ./forceTimesText
 sed -i '1d' ./forceTimesText
 LC_ALL=C sort -g -o forceTimesText forceTimesText
 
 cat > ./constant/forceDict << EOF
 /*--------------------------------*- C++ -*----------------------------------*\
-  =========                 |
-  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
-   \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Version:  7
-     \\/     M anipulation  |
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2406                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "constant";
     object      forceDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -78,7 +77,7 @@ do
   echo
   echo "Map Fields for force No" $((count+1)) "of" ${#times[@]}
   echo
-  mapFieldsPar ../chargeTransport/ -mapMethod direct -consistent -fields '(Fc)' -sourceTime $i 
+  mapFieldsPar ../2_ionicMotion/ -mapMethod direct -consistent -fields '(Fc)' -sourceTime $i 
   mv 0/Fc 0.org/Fc$count
   let count++
 done

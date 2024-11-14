@@ -51,7 +51,7 @@ boundaryField
 
     dielectric_to_region0
     {
-        type            compressible::turbulentTemperatureCoupledBaffleMixed;
+        type            compressible::turbulentTemperatureRadCoupledMixed;
         value           $internalField;
         Tnbr            voltAext;
         kappaMethod     lookup;

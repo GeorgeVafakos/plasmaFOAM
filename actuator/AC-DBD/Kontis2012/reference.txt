@@ -1,0 +1,22 @@
+# ---------------------------------------------------------------------
+# This case follows the geometry and conditions of the following works
+# ---------------------------------------------------------------------
+
+# Text format
+# -----------
+Erfani, R., H. Zare-Behtash, and K. Kontis. 2012. “Plasma Actuator: Influence of Dielectric Surface Temperature.” 
+    Experimental Thermal and Fluid Science 42 (June): 258–64. https://doi.org/10.1016/j.expthermflusci.2012.04.023.
+
+# BibTeX format
+# -------------
+@article{erfani-2012,
+	author = {Erfani, R. and Zare-Behtash, H. and Kontis, K.},
+	journal = {Experimental Thermal and Fluid Science},
+	month = {6},
+	pages = {258--264},
+	title = {{Plasma Actuator: Influence of Dielectric Surface Temperature}},
+	volume = {42},
+	year = {2012},
+	doi = {10.1016/j.expthermflusci.2012.04.023},
+	url = {https://doi.org/10.1016/j.expthermflusci.2012.04.023},
+}

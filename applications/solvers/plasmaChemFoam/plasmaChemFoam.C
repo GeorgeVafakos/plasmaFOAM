@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
     counter = 0;
     solverPerformance::debug = 1;
 
-    while ((convVoltAext>0 || convVoltDext>0 ) && counter<100000)
+    while ((convVoltAext>0 || convVoltDext>0 ) && counter<100)
     {
         // Air
         Foam::solverPerformance solvPerfVoltAext = solve 

@@ -18,12 +18,14 @@ IOdictionary physicalProperties
 
 dimensionedScalar e0
 (
-    physicalProperties.lookup("e0")
+    "e0",
+    dimensionSet(-1, -3, 4, 0, 0, 2, 0),
+    physicalProperties
 );
 
 // Read streamer time and frequency
-scalar streamerTime =
-    runTime.controlDict().lookupOrDefault<scalar>("streamerTime", 0.5e-05);
+scalar dischargeTime =
+    runTime.controlDict().lookupOrDefault<scalar>("dischargeTime", 0.5e-05);
 
 scalar freq =
     runTime.controlDict().lookupOrDefault<scalar>("freq", 1.0e04);
@@ -33,8 +35,8 @@ int convVoltAextMag=1;
 int convVoltArho=1;
 int convVoltDextMag=1;
 int convVoltDrho=1;
-int convVoltIextMag=1;
-int convVoltIrho=1;
+int convVoltEextMag=1;
+int convVoltErho=1;
 int counter=0;
 
 Info<< "Reading field voltAextMag\n" << endl;

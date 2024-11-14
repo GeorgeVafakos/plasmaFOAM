@@ -1,9 +1,9 @@
 /*--------------------------------*- C++ -*----------------------------------*\
-  =========                 |
-  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
-   \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Version:  7
-     \\/     M anipulation  |
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2406                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
@@ -20,12 +20,13 @@ convertToMeters 1.0;
 L_RHS 0.2;                          // Domain RHS length in x-axis
 L_LHS 0.05;                          // Domain LHS length in x-axis
 H_Air 0.1;                      // Air height
-H_Ins 0.1;                      // Total Dielectric height
+H_Enc 0.1;                      // Total Dielectric height
 t_Diel 0.3e-3;                   // Dielectric between electrodes thickness
 L_HVe 5.0e-3;                     // Length of high-voltage electrode
 t_HVe 74.0e-6;                   // Thickness of high-voltage electrode
 L_GRe 40.0e-3;                     // Length of grounded electrode
 t_GRe 74.0e-6;                   // Thickness of grounded electrode
+L_Gap 0.005;                    // Gap between electrodes
 
 // Grid managment in x-direction
 cellsxNonUniRHS 40;            // Cells in RHS non-uniform part of the domain in the x-axis
@@ -37,8 +38,8 @@ expRatiox 120.0;                // Expansion ratio of the domain in the x-axis
 // Grid managment in y-direction
 cellsyNonUniAir 50;            // Cells in Air non-uniform part of the domain in the y-axis
 HUniAir 0.012;                     // Length of the domain in the Air conaining non-uniform cells
-cellsyNonUniIns 20;            // Cells in Insulator non-uniform part of the domain in the y-axis
-HUniIns 0.005;                      // Length of the domain in the Insulator containing non-uniform cells
+cellsyNonUniEnc 20;            // Cells in encapsulator non-uniform part of the domain in the y-axis
+HUniEnc 0.005;                      // Length of the domain in the encapsulator containing non-uniform cells
 expRatioy 120.0;                // Expansion ratio of the domain in the y-axis
 
 // Grid managment in z-direction
@@ -62,7 +63,7 @@ Dxn (#codeStream {
         scalar suma = 0;
         int i = 0;
         for (i=0 ; i<$cellsxNonUniRHS ; i++)
-            suma += pow($expRatiox , (i/($cellsxNonUniRHS - 1.0)) );
+            suma += pow($expRatiox , (1.0*i/($cellsxNonUniRHS - 1.0)) );
         os << $LnonUniRHS/suma << endl;
     #};
 } ); 
@@ -108,18 +109,18 @@ cellsyHVe #calc "int(1.0*$t_HVe/$Dyn + 0.5)";
 cellsyDiel #calc "int(1.0*$t_Diel/$Dyn + 0.5)";
 cellsyGRe #calc "int(1.0*$t_GRe/$Dyn + 0.5)";
 
-HUniPercIns #calc "$HUniIns/($H_Ins-$t_GRe)";
-HnonUniIns #calc "$H_Ins-$HUniIns-$t_GRe";
-HnonUniPercIns #calc "1.0-$HUniPercAir";
-cellsyUniIns  #calc "int($HUniIns/$Dyn + 0.5)";
-cellsyTotalIns #calc "$cellsyNonUniIns + $cellsyUniIns";
-cellsyNonUniPercIns #calc "1.0*$cellsyNonUniIns/$cellsyTotalIns";
-cellsyUniPercIns #calc "1.0*$cellsyUniIns/$cellsyTotalIns";
+HUniPercEnc #calc "$HUniEnc/($H_Enc-$t_GRe)";
+HnonUniEnc #calc "$H_Enc-$HUniEnc-$t_GRe";
+HnonUniPercEnc #calc "1.0-$HUniPercAir";
+cellsyUniEnc  #calc "int($HUniEnc/$Dyn + 0.5)";
+cellsyTotalEnc #calc "$cellsyNonUniEnc + $cellsyUniEnc";
+cellsyNonUniPercEnc #calc "1.0*$cellsyNonUniEnc/$cellsyTotalEnc";
+cellsyUniPercEnc #calc "1.0*$cellsyUniEnc/$cellsyTotalEnc";
 
-expRatioyIns #calc "1.0/$expRatioy";
+expRatioyEnc #calc "1.0/$expRatioy";
 
-#calc "Info << $t_HVe << nl << endl";
-#calc "Info << $Dyn << nl << endl";
+// #calc "Info << $t_HVe << nl << endl";
+// #calc "Info << $Dyn << nl << endl";
 
 // Calculated parameters for vertices
 X0 #calc "-$L_LHS";
@@ -162,17 +163,17 @@ X17 #calc "$L_RHS";
 Y17 #calc "$H_Air";
 
 X36 #calc "-$L_LHS";
-Y36 #calc "-$H_Ins-$t_Diel";
+Y36 #calc "-$H_Enc-$t_Diel";
 X37 #calc "-$L_HVe";
-Y37 #calc "-$H_Ins-$t_Diel";
+Y37 #calc "-$H_Enc-$t_Diel";
 X38 0.0;
-Y38 #calc "-$H_Ins-$t_Diel";
+Y38 #calc "-$H_Enc-$t_Diel";
 X39 #calc "$L_Gap";
-Y39 #calc "-$H_Ins-$t_Diel";
+Y39 #calc "-$H_Enc-$t_Diel";
 X40 #calc "$L_Gap+$L_GRe";
-Y40 #calc "-$H_Ins-$t_Diel";
+Y40 #calc "-$H_Enc-$t_Diel";
 X41 #calc "$L_RHS";
-Y41 #calc "-$H_Ins-$t_Diel";
+Y41 #calc "-$H_Enc-$t_Diel";
 
 X42 #calc "-$L_LHS";
 Y42 #calc "-$t_Diel-$t_GRe";
@@ -382,7 +383,7 @@ blocks
         1 
     )
 
-    hex (36 37 43 42 54 55 61 60) insulator ($cellsxTotalLHS $cellsyTotalIns 1)                 // Block 9
+    hex (36 37 43 42 54 55 61 60) encapsulator ($cellsxTotalLHS $cellsyTotalEnc 1)                 // Block 9
     simpleGrading
     (
         (
@@ -390,46 +391,46 @@ blocks
             ($LUniPercLHS $cellsxUniPercLHS 1)
         )
         (
-            ($HnonUniPercIns $cellsyNonUniPercIns $expRatioyIns)
-            ($HUniPercIns $cellsyUniPercIns 1)
+            ($HnonUniPercEnc $cellsyNonUniPercEnc $expRatioyEnc)
+            ($HUniPercEnc $cellsyUniPercEnc 1)
         )
         1 
     )
 
-    hex (37 38 44 43 55 56 62 61) insulator ($cellsxHVe $cellsyTotalIns 1)                      // Block 10
+    hex (37 38 44 43 55 56 62 61) encapsulator ($cellsxHVe $cellsyTotalEnc 1)                      // Block 10
     simpleGrading
     (
         1
         (
-            ($HnonUniPercIns $cellsyNonUniPercIns $expRatioyIns)
-            ($HUniPercIns $cellsyUniPercIns 1)
+            ($HnonUniPercEnc $cellsyNonUniPercEnc $expRatioyEnc)
+            ($HUniPercEnc $cellsyUniPercEnc 1)
         )
         1
     )
 
-    hex (38 39 45 44 56 57 63 62) insulator ($cellsxGap $cellsyTotalIns 1)                      // Block 11
+    hex (38 39 45 44 56 57 63 62) encapsulator ($cellsxGap $cellsyTotalEnc 1)                      // Block 11
     simpleGrading
     (
         1
         (
-            ($HnonUniPercIns $cellsyNonUniPercIns $expRatioyIns)
-            ($HUniPercIns $cellsyUniPercIns 1)
+            ($HnonUniPercEnc $cellsyNonUniPercEnc $expRatioyEnc)
+            ($HUniPercEnc $cellsyUniPercEnc 1)
         )
         1
     )
 
-    hex (39 40 46 45 57 58 64 63) insulator ($cellsxGRe $cellsyTotalIns 1)                      // Block 12
+    hex (39 40 46 45 57 58 64 63) encapsulator ($cellsxGRe $cellsyTotalEnc 1)                      // Block 12
     simpleGrading
     (
         1
         (
-            ($HnonUniPercIns $cellsyNonUniPercIns $expRatioyIns)
-            ($HUniPercIns $cellsyUniPercIns 1)
+            ($HnonUniPercEnc $cellsyNonUniPercEnc $expRatioyEnc)
+            ($HUniPercEnc $cellsyUniPercEnc 1)
         )
         1
     )
 
-    hex (40 41 47 46 58 59 65 64) insulator ($cellsxTotalRHS $cellsyTotalIns 1)                 // Block 13
+    hex (40 41 47 46 58 59 65 64) encapsulator ($cellsxTotalRHS $cellsyTotalEnc 1)                 // Block 13
     simpleGrading
     (
         (
@@ -437,13 +438,13 @@ blocks
             ($LnonUniPercRHS $cellsxNonUniPercRHS $expRatiox)
         )
         (
-            ($HnonUniPercIns $cellsyNonUniPercIns $expRatioyIns)
-            ($HUniPercIns $cellsyUniPercIns 1)
+            ($HnonUniPercEnc $cellsyNonUniPercEnc $expRatioyEnc)
+            ($HUniPercEnc $cellsyUniPercEnc 1)
         )
         1 
     )
 
-    hex (42 43 49 48 60 61 67 66) insulator ($cellsxTotalLHS $cellsyGRe 1)                      // Block 14
+    hex (42 43 49 48 60 61 67 66) encapsulator ($cellsxTotalLHS $cellsyGRe 1)                      // Block 14
     simpleGrading
     (
         (
@@ -454,11 +455,11 @@ blocks
         1 
     )
 
-    hex (43 44 50 49 61 62 68 67) insulator ($cellsxHVe $cellsyGRe 1) simpleGrading (1 1 1)     // Block 15
+    hex (43 44 50 49 61 62 68 67) encapsulator ($cellsxHVe $cellsyGRe 1) simpleGrading (1 1 1)     // Block 15
 
-    hex (44 45 51 50 62 63 69 68) insulator ($cellsxGap $cellsyGRe 1) simpleGrading (1 1 1)     // Block 16
+    hex (44 45 51 50 62 63 69 68) encapsulator ($cellsxGap $cellsyGRe 1) simpleGrading (1 1 1)     // Block 16
 
-    hex (46 47 53 52 64 65 71 70) insulator ($cellsxTotalRHS $cellsyGRe 1)                      // Block 17
+    hex (46 47 53 52 64 65 71 70) encapsulator ($cellsxTotalRHS $cellsyGRe 1)                      // Block 17
     simpleGrading
     (
         (

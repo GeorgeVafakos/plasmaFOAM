@@ -1,9 +1,12 @@
 /*---------------------------------------------------------------------------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
-   \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+   \\    /   O peration     |
+    \\  /    A nd           | www.openfoam.com
      \\/     M anipulation  |
+-------------------------------------------------------------------------------
+    Copyright (C) 2011-2016 OpenFOAM Foundation
+    Copyright (C) 2019 OpenCFD Ltd.
 -------------------------------------------------------------------------------
 License
     This file is part of OpenFOAM.
@@ -40,7 +43,7 @@ int main(int argc, char *argv[])
     #include "createTime.H"
     #include "createMesh.H"
     #include "createMeshD.H"
-    #include "createMeshI.H"
+    #include "createMeshE.H"
     #include "createTimeControls.H"
     #include "createFields.H"
     #include "createFieldsSolid.H"
@@ -70,7 +73,7 @@ int main(int argc, char *argv[])
         counter = 0;
         // solverPerformance::debug = 1;
 
-        while ((convVoltArho>0 || convVoltDrho>0 || convVoltIrho>0 || convRhoq>0) && counter<1)
+        while ((convVoltArho>0 || convVoltDrho>0 || convVoltErho>0 || convRhoq>0) && counter<1)
         {
             // Air
             Foam::solverPerformance solvPerfVoltArho = solve 
@@ -86,12 +89,12 @@ int main(int argc, char *argv[])
             );
             convVoltDrho = solvPerfVoltDrho.nIterations();
 
-            // Insulator
-            Foam::solverPerformance solvPerfVoltIrho = solve
+            // Encapsulator
+            Foam::solverPerformance solvPerfVoltErho = solve
             (
-                fvm::laplacian(voltIrho)
+                fvm::laplacian(voltErho)
             );
-            convVoltIrho = solvPerfVoltIrho.nIterations();
+            convVoltErho = solvPerfVoltErho.nIterations();
 
             counter++;
             solverPerformance::debug = 0;
@@ -111,11 +114,11 @@ int main(int argc, char *argv[])
         // Calculate total electric potential in all regions
         voltAext = voltAextMag*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value());
         voltDext = voltDextMag*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value());
-        voltIext = voltIextMag*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value());
+        voltEext = voltEextMag*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value());
         
         voltA = voltAext + voltArho;
         voltD = voltDext + voltDrho;
-        voltI = voltIext + voltIrho;
+        voltE = voltEext + voltErho;
 
 
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -123,12 +126,12 @@ int main(int argc, char *argv[])
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
         // Update rhoFlux
-        rhoqFlux = -sign(linearInterpolate(rhoq))*k*mesh.magSf()*fvc::snGrad(voltA);
+        rhoqFlux = -sign(linearInterpolate(rhoq))*muc*mesh.magSf()*fvc::snGrad(voltA);
 
         // Solve the charge transport equation
         Foam::solverPerformance solvPerfRhoq = solve
         (
-            fvm::ddt(rhoq) + fvm::div(rhoqFlux, rhoq) - fvm::laplacian(Dc,rhoq)
+            fvm::ddt(rhoq) + fvm::div(rhoqFlux, rhoq) - fvm::laplacian(Dc, rhoq)
         );
         convRhoq = solvPerfRhoq.nIterations();
 
@@ -140,9 +143,9 @@ int main(int argc, char *argv[])
         EDext = -fvc::grad(voltDext);
         EDrho = -fvc::grad(voltDrho);
         ED    = -fvc::grad(voltD);
-        EIext = -fvc::grad(voltIext);
-        EIrho = -fvc::grad(voltIrho);
-        EI    = -fvc::grad(voltI);
+        EEext = -fvc::grad(voltEext);
+        EErho = -fvc::grad(voltErho);
+        EE    = -fvc::grad(voltE);
         Fc = rhoq*EA;
 
 
@@ -154,9 +157,10 @@ int main(int argc, char *argv[])
         solverPerformance::debug = 0;
         if (runTime.timeIndex() % printScreenResults == 0 || runTime.timeIndex() == 1)
         {
-            Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-                << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-                << nl << nl << endl;
+            // Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
+            //     << "  ClockTime = " << runTime.elapsedClockTime() << " s"
+            //     << nl << nl << endl;
+            runTime.printExecutionTime(Info);
         }
     }
 

@@ -1,9 +1,12 @@
 /*---------------------------------------------------------------------------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
-   \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+   \\    /   O peration     |
+    \\  /    A nd           | www.openfoam.com
      \\/     M anipulation  |
+-------------------------------------------------------------------------------
+    Copyright (C) 2011-2016 OpenFOAM Foundation
+    Copyright (C) 2019 OpenCFD Ltd.
 -------------------------------------------------------------------------------
 License
     This file is part of OpenFOAM.
@@ -25,7 +28,8 @@ Application
     actuatorACDBDDischargeFoam
 
 Description
-    Solver for the electrostatic field for a single streamer in an AC-DBD actuator.
+    Solver for the electrostatic field for a single discharge event for 
+    an AC-DBD actuator.
 
 \*---------------------------------------------------------------------------*/
 
@@ -40,7 +44,7 @@ int main(int argc, char *argv[])
     #include "createTime.H"
     #include "createMesh.H"
     #include "createMeshD.H"
-    #include "createMeshI.H"
+    #include "createMeshE.H"
     #include "createFields.H"
     #include "createFieldsSolid.H"
 
@@ -48,7 +52,7 @@ int main(int argc, char *argv[])
 
     Info<< "\nStarting iteration loop\n" << endl;
 
-    while (runTime.loop() && (convVoltAextMag>0 || convVoltArho>0 || convVoltDextMag>0 || convVoltDrho>0 || convVoltIextMag>0 || convVoltIrho>0) )
+    while (runTime.loop() && (convVoltAextMag>0 || convVoltArho>0 || convVoltDextMag>0 || convVoltDrho>0 || convVoltEextMag>0 || convVoltErho>0) )
     {
         Info<< "Iteration = " << runTime.timeIndex() << nl << endl;
 
@@ -60,7 +64,7 @@ int main(int argc, char *argv[])
         counter = 0;
         solverPerformance::debug = 1;
 
-        while ((convVoltAextMag>0 || convVoltDextMag>0 || convVoltIextMag>0) && counter<30000)
+        while ((convVoltAextMag>0 || convVoltDextMag>0 || convVoltEextMag>0) && counter<30000)
         {
             // Air
             Foam::solverPerformance solvPerfVoltAextMag = solve 
@@ -76,12 +80,12 @@ int main(int argc, char *argv[])
             );
             convVoltDextMag = solvPerfVoltDextMag.nIterations();
 
-            // Insulator
-            Foam::solverPerformance solvPerfVoltIextMag = solve
+            // Encapsulator
+            Foam::solverPerformance solvPerfVoltEextMag = solve
             (
-                fvm::laplacian(voltIextMag)
+                fvm::laplacian(voltEextMag)
             );
-            convVoltIextMag = solvPerfVoltIextMag.nIterations();
+            convVoltEextMag = solvPerfVoltEextMag.nIterations();
 
             counter++;
             solverPerformance::debug = 0;
@@ -103,7 +107,7 @@ int main(int argc, char *argv[])
         counter = 0;
         solverPerformance::debug = 1;
 
-        while ((convVoltArho>0 || convVoltDrho>0 || convVoltIrho>0) && counter<30000)
+        while ((convVoltArho>0 || convVoltDrho>0 || convVoltErho>0) && counter<30000)
         {
             // Air
             Foam::solverPerformance solvPerfVoltArho = solve 
@@ -119,12 +123,12 @@ int main(int argc, char *argv[])
             );
             convVoltDrho = solvPerfVoltDrho.nIterations();
 
-            // Insulator
-            Foam::solverPerformance solvPerfVoltIrho = solve
+            // Encapsulator
+            Foam::solverPerformance solvPerfVoltErho = solve
             (
-                fvm::laplacian(voltIrho)
+                fvm::laplacian(voltErho)
             );
-            convVoltIrho = solvPerfVoltIrho.nIterations();
+            convVoltErho = solvPerfVoltErho.nIterations();
 
             counter++;            
             solverPerformance::debug = 0;
@@ -143,9 +147,9 @@ int main(int argc, char *argv[])
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
         
         // Calculate total electric potential in all regions
-        voltA = voltAextMag*Foam::sin(2*3.14159*freq*streamerTime) + voltArho;
-        voltD = voltDextMag*Foam::sin(2*3.14159*freq*streamerTime) + voltDrho;
-        voltI = voltIextMag*Foam::sin(2*3.14159*freq*streamerTime) + voltIrho;
+        voltA = voltAextMag*Foam::sin(2*3.14159*freq*dischargeTime) + voltArho;
+        voltD = voltDextMag*Foam::sin(2*3.14159*freq*dischargeTime) + voltDrho;
+        voltE = voltEextMag*Foam::sin(2*3.14159*freq*dischargeTime) + voltErho;
         
         // Calculate the electric field
         EAextMag = -fvc::grad(voltAextMag);
@@ -154,16 +158,18 @@ int main(int argc, char *argv[])
         EDextMag = -fvc::grad(voltDextMag);
         EDrho    = -fvc::grad(voltDrho);
         ED       = -fvc::grad(voltD);
-        EIextMag = -fvc::grad(voltIextMag);
-        EIrho    = -fvc::grad(voltIrho);
-        EI       = -fvc::grad(voltI);
+        EEextMag = -fvc::grad(voltEextMag);
+        EErho    = -fvc::grad(voltErho);
+        EE       = -fvc::grad(voltE);
         Fc       = rhoq*EA;
 
-        runTime.write();
+        // runTime.write();
 
-        Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-            << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-            << nl << nl << endl;
+        // Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
+        //     << "  ClockTime = " << runTime.elapsedClockTime() << " s"
+        //     << nl << nl << endl;
+        runTime.printExecutionTime(Info);
+        runTime.write();
     }
 
     runTime.writeAndEnd();

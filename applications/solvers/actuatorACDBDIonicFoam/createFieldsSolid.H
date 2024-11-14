@@ -3,16 +3,20 @@
 // Create fields in the solid regions
 //
 // ************************************************************************* //
-
-
+// Dielectric material relative permittivity
 dimensionedScalar erD
 (
-    physicalProperties.lookup("erD")
+    "erD",
+    dimless,
+    physicalProperties
 );
 
-dimensionedScalar erI
+// Encapsulator material relative permittivity
+dimensionedScalar erE
 (
-    physicalProperties.lookup("erI")
+    "erE",
+    dimless,
+    physicalProperties
 );
 
 Info<< "Reading field voltDextMag\n" << endl;
@@ -86,74 +90,74 @@ volScalarField voltD
     dimensionedScalar("temp",dimensionSet(1,2,-3,0,0,-1,0),scalar(0))
 );
 
-Info<< "Reading field voltIextMag\n" << endl;
-volScalarField voltIextMag
+Info<< "Reading field voltEextMag\n" << endl;
+volScalarField voltEextMag
 (
     IOobject
     (
-        "voltIextMag",
+        "voltEextMag",
         runTime.timeName(),
-        meshI,
+        meshE,
         IOobject::MUST_READ,
         IOobject::NO_WRITE
     ),
-    meshI
+    meshE
 );
 
-Info<< "Reading field voltIext\n" << endl;
-volScalarField voltIext
+Info<< "Reading field voltEext\n" << endl;
+volScalarField voltEext
 (
     IOobject
     (
-        "voltIext",
+        "voltEext",
         runTime.timeName(),
-        meshI,
+        meshE,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    voltIextMag*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value())
+    voltEextMag*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value())
 );
 
-Info<< "Reading field voltIrho\n" << endl;
-volScalarField voltIrho
+Info<< "Reading field voltErho\n" << endl;
+volScalarField voltErho
 (
     IOobject
     (
-        "voltIrho",
+        "voltErho",
         runTime.timeName(),
-        meshI,
+        meshE,
         IOobject::MUST_READ,
         IOobject::AUTO_WRITE
     ),
-    meshI
+    meshE
 );
 
-Info<< "Reading field voltIrho_strm\n" << endl;
-volScalarField voltIrho_strm
+Info<< "Reading field voltErho_strm\n" << endl;
+volScalarField voltErho_strm
 (
     IOobject
     (
-        "voltIrho_strm",
+        "voltErho_strm",
         runTime.timeName(),
-        meshI,
+        meshE,
         IOobject::NO_READ,
         IOobject::NO_WRITE
     ),
-    voltIrho
+    voltErho
 );
 
-Info<< "Reading field voltI\n" << endl;
-volScalarField voltI
+Info<< "Reading field voltE\n" << endl;
+volScalarField voltE
 (
     IOobject
     (
-        "voltI",
+        "voltE",
         runTime.timeName(),
-        meshI,
+        meshE,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    meshI,
+    meshE,
     dimensionedScalar("temp",dimensionSet(1,2,-3,0,0,-1,0),scalar(0))
 );
 
@@ -171,18 +175,18 @@ volScalarField epsilonD
     erD
 );
 
-volScalarField epsilonI
+volScalarField epsilonE
 (
     IOobject
     (
-        "epsilonI",
+        "epsilonE",
         runTime.timeName(),
-        meshI,
+        meshE,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    meshI,
-    erI
+    meshE,
+    erE
 );
 
 Info<< "Calculating field EDext\n" << endl;
@@ -227,44 +231,44 @@ volVectorField ED
     -fvc::grad(voltD)
 );
 
-Info<< "Calculating field EIext\n" << endl;
-volVectorField EIext
+Info<< "Calculating field EEext\n" << endl;
+volVectorField EEext
 (
     IOobject
     (
-        "EIext",
+        "EEext",
         runTime.timeName(),
-        meshI,
+        meshE,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    -fvc::grad(voltIext)
+    -fvc::grad(voltEext)
 );
 
-Info<< "Calculating field EIrho\n" << endl;
-volVectorField EIrho
+Info<< "Calculating field EErho\n" << endl;
+volVectorField EErho
 (
     IOobject
     (
-        "EIrho",
+        "EErho",
         runTime.timeName(),
-        meshI,
+        meshE,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    -fvc::grad(voltIrho)
+    -fvc::grad(voltErho)
 );
 
-Info<< "Calculating field EI\n" << endl;
-volVectorField EI
+Info<< "Calculating field EE\n" << endl;
+volVectorField EE
 (
     IOobject
     (
-        "EI",
+        "EE",
         runTime.timeName(),
-        meshI,
+        meshE,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    -fvc::grad(voltI)
+    -fvc::grad(voltE)
 );

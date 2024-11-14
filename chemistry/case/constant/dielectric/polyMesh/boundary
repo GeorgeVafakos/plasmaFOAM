@@ -1,0 +1,75 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2406                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    arch        "LSB;label=32;scalar=64";
+    class       polyBoundaryMesh;
+    location    "constant/dielectric/polyMesh";
+    object      boundary;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+7
+(
+    leftBoundary
+    {
+        type            wall;
+        inGroups        1(wall);
+        nFaces          62;
+        startFace       62672;
+    }
+    rightBoundary
+    {
+        type            wall;
+        inGroups        1(wall);
+        nFaces          62;
+        startFace       62734;
+    }
+    highVoltage
+    {
+        type            wall;
+        inGroups        1(wall);
+        nFaces          60;
+        startFace       62796;
+    }
+    ground
+    {
+        type            wall;
+        inGroups        1(wall);
+        nFaces          402;
+        startFace       62856;
+    }
+    bottomBoundary
+    {
+        type            wall;
+        inGroups        1(wall);
+        nFaces          510;
+        startFace       63258;
+    }
+    frontAndBack
+    {
+        type            empty;
+        inGroups        1(empty);
+        nFaces          63440;
+        startFace       63768;
+    }
+    dielectric_to_region0
+    {
+        type            mappedWall;
+        inGroups        1(wall);
+        nFaces          470;
+        startFace       127208;
+        sampleMode      nearestPatchFace;
+        sampleRegion    region0;
+        samplePatch     region0_to_dielectric;
+    }
+)
+
+// ************************************************************************* //

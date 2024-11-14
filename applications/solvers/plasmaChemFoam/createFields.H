@@ -27,43 +27,75 @@ IOdictionary physicalProperties
 
 // Vacuum permittivity
 dimensionedScalar epsilon0
-(physicalProperties.lookup("epsilon0"));
+(
+    "epsilon0",
+    dimensionSet(-1, -3, 4, 0, 0, 2, 0),
+    physicalProperties
+);
 
 // Boltzmann constant
-dimensionedScalar kB(physicalProperties.lookup("kB"));
-
+dimensionedScalar kB
+(
+    "kB",
+    dimensionSet(1, 2, -2, -1, 0, 0, 0),
+    physicalProperties
+);
 
 // Electron charge
 dimensionedScalar e
-(physicalProperties.lookup("e"));
+(
+    "e",
+    dimensionSet(0, 0, 1, 0, 0, 1, 0),
+    physicalProperties
+);
 
 // Ambient Pressure
 dimensionedScalar press
-(physicalProperties.lookup("press"));
+(
+    "press",
+    dimensionSet(0, 0, 0, 0, 0, 0, 0),
+    physicalProperties
+);
 
 // Ambient temperature
 dimensionedScalar Tamb
 (
-    physicalProperties.lookup("Tamb")
+    "Tamb",
+    dimensionSet(0, 0, 0, 1, 0, 0, 0),
+    physicalProperties
 );
 
 // Electron temperature
 dimensionedScalar Te
 (
-    physicalProperties.lookup("Te")
+    "Te",
+    dimensionSet(0, 0, 0, 1, 0, 0, 0),
+    physicalProperties
 );
 
 // Electron Diffusion coefficient
 dimensionedScalar De
-(physicalProperties.lookup("De"));
+(
+    "De",
+    dimensionSet(0, 2, -1, 0, 0, 0, 0),
+    physicalProperties
+);
 
 // Ion Diffusion coefficient
 dimensionedScalar Di
-(physicalProperties.lookup("Di"));
+(
+    "Di",
+    dimensionSet(0, 2, -1, 0, 0, 0, 0),
+    physicalProperties
+);
 
 // Electron mobility
 dimensionedScalar mue
-(physicalProperties.lookup("mue"));
+(
+    "mue",
+    dimensionSet(-1, 0, 2, 0, 0, 1, 0),
+    physicalProperties
+);
 volScalarField mueF
 (IOobject("mueF",runTime.timeName(),mesh,IOobject::NO_READ,IOobject::AUTO_WRITE),
     mesh,
@@ -71,31 +103,42 @@ volScalarField mueF
 );
 
 // Positive Ion mobility
-dimensionedScalar mup(physicalProperties.lookup("mup"));
+dimensionedScalar mup
+(
+    "mup",
+    dimensionSet(-1, 0, 2, 0, 0, 1, 0),
+    physicalProperties
+);
 volScalarField mupF(IOobject("mupF",runTime.timeName(),mesh,IOobject::NO_READ,IOobject::AUTO_WRITE),
     mesh,
     mup * dimensionedScalar("temp",dimless,scalar(1))
 );
 
 // Negative Ion mobility
-dimensionedScalar mun(physicalProperties.lookup("mun"));
+dimensionedScalar mun
+(
+    "mun",
+    dimensionSet(-1, 0, 2, 0, 0, 1, 0),
+    physicalProperties
+);
 volScalarField munF(IOobject("munF",runTime.timeName(),mesh,IOobject::NO_READ,IOobject::AUTO_WRITE),
     mesh,
     mun * dimensionedScalar("temp",dimless,scalar(1))
 );
 
-// Recombination coefficient
-dimensionedScalar r(physicalProperties.lookup("r"));
-dimensionedScalar rnp(physicalProperties.lookup("rnp"));
-dimensionedScalar rep(physicalProperties.lookup("rep"));
+// Recombination coefficients
+dimensionedScalar r("r", dimensionSet(-1, 0, 2, 0, 0, 1, 0), physicalProperties);
+dimensionedScalar rnp("rnp", dimensionSet(-1, 0, 2, 0, 0, 1, 0), physicalProperties);
+dimensionedScalar rep("rep", dimensionSet(-1, 0, 2, 0, 0, 1, 0), physicalProperties);
 
 // Ionization coefficient
-dimensionedScalar alpha(physicalProperties.lookup("alpha"));
+dimensionedScalar alpha("alpha", dimensionSet(0, -1, 0, 0, 0, 0, 0), physicalProperties);
 Info<< "Calculating field alphaField\n" << endl;
 volScalarField alphaF(IOobject("alphaF", runTime.timeName(),mesh,IOobject::NO_READ,IOobject::AUTO_WRITE),
     mesh,
     alpha * dimensionedScalar("temp",dimensionSet(0,0,0,0,0,0,0),scalar(1))
 );
+
 // Recombinations rate
 volScalarField etaF(IOobject("etaF", runTime.timeName(),mesh,IOobject::NO_READ,IOobject::AUTO_WRITE),
     mesh,
@@ -105,7 +148,9 @@ volScalarField etaF(IOobject("etaF", runTime.timeName(),mesh,IOobject::NO_READ,I
 // Dielectric elative permittivity
 dimensionedScalar erD
 (
-    physicalProperties.lookup("erD")
+    "erD",
+    dimensionSet(0, 0, 0, 0, 0, 0, 0),
+    physicalProperties
 );
 
 // Convergence variables
@@ -188,7 +233,6 @@ surfaceScalarField posFlux(IOobject("posFlux",runTime.timeName(),mesh,IOobject::
     -mup*mesh.magSf()*fvc::snGrad(voltA)
 );
 
-
 //Negative Ion flux
 surfaceScalarField negFlux(IOobject("negFlux",runTime.timeName(),mesh,IOobject::NO_READ,IOobject::NO_WRITE),
     -mun*mesh.magSf()*fvc::snGrad(voltA)
@@ -241,6 +285,7 @@ volScalarField epsilonD(IOobject("epsilonD",runTime.timeName(),meshD,IOobject::N
     meshD,
     erD
 );
+
 // Electron diffusion coefficient
 volScalarField DeF(IOobject("DeF",runTime.timeName(),mesh,IOobject::NO_READ,IOobject::AUTO_WRITE),
     mesh,
@@ -258,7 +303,6 @@ volScalarField DnF(IOobject("DnF",runTime.timeName(),mesh,IOobject::NO_READ,IOob
     mesh,
     dimensionedScalar("temp",dimensionSet(0,2,-1,0,0,0,0),scalar(0))
 );
-
 
 // Electron flux vector
 volVectorField GammaEle(IOobject("GammaEle",runTime.timeName(),mesh,IOobject::NO_READ,IOobject::AUTO_WRITE),

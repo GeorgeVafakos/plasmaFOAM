@@ -10,12 +10,12 @@ cp -R 0 $startTime
 foamDictionary -entry "startTime" -set "$startTime" system/controlDict
 
 # Copy geometry and mesh from streamer case
-cp -R ../streamer/constant/polyMesh ../streamer/constant/dielectric ../streamer/constant/insulator constant/
+cp -R ../1_discharge/constant/polyMesh ../1_discharge/constant/dielectric ../1_discharge/constant/encapsulator constant/
 
 # Run mapFields
-mapFieldsPar ../streamer -mapMethod direct -consistent -sourceTime latestTime
-mapFieldsPar ../streamer -mapMethod direct -sourceRegion dielectric -consistent -sourceTime latestTime -targetRegion dielectric
-mapFieldsPar ../streamer -mapMethod direct -sourceRegion insulator  -consistent -sourceTime latestTime -targetRegion insulator
+mapFieldsPar ../1_discharge -mapMethod direct -consistent -sourceTime latestTime
+mapFieldsPar ../1_discharge -mapMethod direct -sourceRegion dielectric -consistent -sourceTime latestTime -targetRegion dielectric
+mapFieldsPar ../1_discharge -mapMethod direct -sourceRegion encapsulator  -consistent -sourceTime latestTime -targetRegion encapsulator
 
 # Output message
 echo

@@ -18,25 +18,34 @@ IOdictionary physicalProperties
     )
 );
 
+// Vacuum permittivity
 dimensionedScalar e0
 (
-    physicalProperties.lookup("e0")
+    "e0",
+    dimensionSet(-1, -3, 4, 0, 0, 2, 0),
+    physicalProperties
 );
 
-dimensionedScalar k
+// Ion mobility
+dimensionedScalar muc
 (
-    physicalProperties.lookup("k")
+    "muc",
+    dimensionSet(-1, 0, 2, 0, 0, 1, 0),
+    physicalProperties
 );
 
+// Ion diffusivity
 dimensionedScalar Dc
 (
-    physicalProperties.lookup("Dc")
+    "Dc",
+    dimensionSet(0, 2, -1, 0, 0, 0, 0),
+    physicalProperties
 );
 
 // Convergence variables
 int convVoltArho=1;
 int convVoltDrho=1;
-int convVoltIrho=1;
+int convVoltErho=1;
 int convRhoq=1;
 int counter=0;
 
@@ -165,7 +174,7 @@ surfaceScalarField rhoqFlux
         IOobject::NO_READ,
         IOobject::NO_WRITE
     ),
-    -sign(linearInterpolate(rhoq))*k*mesh.magSf()*fvc::snGrad(voltA)
+    -sign(linearInterpolate(rhoq))*muc*mesh.magSf()*fvc::snGrad(voltA)
 );
 
 Info<< "Calculating field EAext\n" << endl;
