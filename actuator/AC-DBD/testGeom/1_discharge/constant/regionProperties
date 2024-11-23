@@ -10,14 +10,14 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "constant";
     object      regionProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 regions
 (
-    dielectric       (dielectric encapsulator)
+    fluid               (region0)
+    dielectric          (dielectric encapsulator)
 );
 
 // ************************************************************************* //

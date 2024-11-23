@@ -27,13 +27,6 @@ scalar dischargeTime =
 scalar freq =
     runTime.controlDict().lookupOrDefault<scalar>("freq", 1.0e04);
 
-// int convVoltAextMag=1;
-// int convVoltArho=1;
-// int convVoltDextMag=1;
-// int convVoltDrho=1;
-// int convVoltEextMag=1;
-// int convVoltErho=1;
-// int counter=0;
 // Convergence variables
 int regionLoopCounter=0;
 std::vector<int> voltExtAmpIter = {1};
@@ -90,7 +83,7 @@ volScalarField epsilon
         runTime.timeName(),
         mesh,
         IOobject::NO_READ,
-        IOobject::AUTO_WRITE
+        IOobject::NO_WRITE
     ),
     mesh,
     dimensionedScalar("temp", dimless, scalar(1))
