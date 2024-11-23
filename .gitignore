@@ -1,4 +1,3 @@
-# Ignore wmake files in solvers
-/applications/solvers/*/Make/linux64GccDPInt32Opt
+linux64GccDPInt32Opt/
 .vscode
 
