@@ -167,11 +167,11 @@ int main(int argc, char *argv[])
         // Calculate Local Fields
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
         // Calculate local electric potential in all regions
-        volt = voltExtAmp*Foam::sin(2*3.14159*freq*dischargeTime) + voltInd;
+        volt = voltExtAmp*Foam::sin(2*M_PI*freq*dischargeTime) + voltInd;
         forAll(solidRegions, i)
         {
             #include "setRegionDielectricFields.H"
-            volt = voltExtAmp*Foam::sin(2*3.14159*freq*dischargeTime) + voltInd;
+            volt = voltExtAmp*Foam::sin(2*M_PI*freq*dischargeTime) + voltInd;
         }
         
         // Calculate the local electric field

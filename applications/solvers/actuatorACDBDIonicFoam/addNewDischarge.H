@@ -25,40 +25,38 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Local
-    resetStreamer
+    addNewDischarge
 
 Description
-    Initialize new streamer electrostatic conditions
+    Superimpose additional discharges over existing electrostatic conditions
 
 \*---------------------------------------------------------------------------*/
 
-if ( runTime.time().value()>=( startTime+lengthStreamer*streamerCounter ) && streamerCounter<numStreamers)
+if (runTime.time().value() >= (startTime+timeBetweenDischarges*dischargeCounter) && dischargeCounter<numDischarges)
 {
-    rhoq = rhoq+rhoq_strm;
-    voltArho = voltArho+voltArho_strm;
-    voltDrho = voltDrho+voltDrho_strm;
-    voltErho = voltErho+voltErho_strm;
+    // Gas region
+    rhoq = rhoq+rhoqDischarge;
+    voltInd = voltInd+voltIndDischarge;
+    voltExt = voltExtAmp*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value());
+    volt = voltExt + voltInd;
+    EExt = -fvc::grad(voltExt);
+    EInd = -fvc::grad(voltInd);
+    E = -fvc::grad(volt);
+    Fc = rhoq*E;
 
-    voltAext = voltAextMag*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value());
-    voltDext = voltDextMag*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value());
-    voltEext = voltEextMag*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value());
-        
-    voltA = voltAext + voltArho;
-    voltD = voltDext + voltDrho;
-    voltE = voltEext + voltErho;
+    // Dielectric regions
+    forAll(solidRegions, i)
+    {
+        #include "setRegionDielectricFields.H"
+        voltInd = voltInd+voltIndDischarge;
+        voltExt = voltExtAmp*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value());
+        volt = voltExt + voltInd;
+        EExt = -fvc::grad(voltExt);
+        EInd = -fvc::grad(voltInd);
+        E = -fvc::grad(volt);
+    }
 
-    EAext = -fvc::grad(voltAext);
-    EArho = -fvc::grad(voltArho);
-    EA    = -fvc::grad(voltA);
-    EDext = -fvc::grad(voltDext);
-    EDrho = -fvc::grad(voltDrho);
-    ED    = -fvc::grad(voltD);
-    EEext = -fvc::grad(voltEext);
-    EErho = -fvc::grad(voltErho);
-    EE    = -fvc::grad(voltE);
-    Fc = rhoq*EA;
-
-    streamerCounter++;
+    dischargeCounter++;
     writeTimeCounter = 0;
     runTime.writeNow();
 }

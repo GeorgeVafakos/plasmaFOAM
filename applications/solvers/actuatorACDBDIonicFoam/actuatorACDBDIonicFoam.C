@@ -33,20 +33,18 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
+#include "regionProperties.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 int main(int argc, char *argv[])
 {
     #include "setRootCaseLists.H"
-
+    #include "addCheckCaseOptions.H"
     #include "createTime.H"
-    #include "createMesh.H"
-    #include "createMeshD.H"
-    #include "createMeshE.H"
+    #include "createMeshes.H"
     #include "createTimeControls.H"
     #include "createFields.H"
-    #include "createFieldsSolid.H"
     
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -70,89 +68,83 @@ int main(int argc, char *argv[])
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
         // Reset counters
-        counter = 0;
+        regionLoopCounter = 0;
         // solverPerformance::debug = 1;
 
-        while ((convVoltArho>0 || convVoltDrho>0 || convVoltErho>0 || convRhoq>0) && counter<1)
+        while (*std::max_element(voltIndIter.begin(), voltIndIter.end()) && regionLoopCounter<1)
         {
-            // Air
-            Foam::solverPerformance solvPerfVoltArho = solve 
-            (
-                fvm::laplacian(voltArho) + rhoq/e0
-            );
-            convVoltArho = solvPerfVoltArho.nIterations();
+            voltIndIter.clear();
 
-            // Dielectric
-            Foam::solverPerformance solvPerfVoltDrho = solve
+            // Solve gas regions
+            Foam::solverPerformance solvPerfVolt = solve
             (
-                fvm::laplacian(voltDrho)
+                fvm::laplacian(voltInd) + rhoq/e0
             );
-            convVoltDrho = solvPerfVoltDrho.nIterations();
+            voltIndIter.push_back(solvPerfVolt.nIterations());
 
-            // Encapsulator
-            Foam::solverPerformance solvPerfVoltErho = solve
-            (
-                fvm::laplacian(voltErho)
-            );
-            convVoltErho = solvPerfVoltErho.nIterations();
-
-            counter++;
-            solverPerformance::debug = 0;
-            if (counter % 50000 == 0 && (runTime.timeIndex() % printScreenResults == 0 || runTime.timeIndex() == 1))
+            // Solve dielectric regions
+            forAll(solidRegions, i)
             {
-                Info<< "Current Loop = " << counter << endl;
+                #include "setRegionDielectricFields.H"
+                Foam::solverPerformance solvPerfVolt = solve 
+                (
+                    fvm::laplacian(voltInd)
+                );
+                voltIndIter.push_back(solvPerfVolt.nIterations());
+            }
+
+            // Print performance at custom iteration intervals
+            regionLoopCounter++;
+            solverPerformance::debug = 0;
+            int printPerformance = 500;
+            if (regionLoopCounter % printPerformance == 0 && (runTime.timeIndex() % printScreenResults == 0 || runTime.timeIndex() == 1))
+            {
+                Info<< "Current Loop = " << regionLoopCounter << endl;
                 solverPerformance::debug = 1;
             }
         }
 
         if (runTime.timeIndex() % printScreenResults == 0 || runTime.timeIndex() == 1)
         {
-            Info<< "Region Inner Loops = " << counter << endl;
+            Info<< "Region Inner Loops = " << regionLoopCounter << endl;
             solverPerformance::debug = 1;
         }
         
-        // Calculate total electric potential in all regions
-        voltAext = voltAextMag*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value());
-        voltDext = voltDextMag*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value());
-        voltEext = voltEextMag*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value());
-        
-        voltA = voltAext + voltArho;
-        voltD = voltDext + voltDrho;
-        voltE = voltEext + voltErho;
+
+        // Calculate total electric potential and field in all regions
+        voltExt = voltExtAmp*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value());
+        volt = voltExt + voltInd;
+        EExt = -fvc::grad(voltExt);
+        EInd = -fvc::grad(voltInd);
+        E = -fvc::grad(volt);
+        forAll(solidRegions, i)
+        {
+            #include "setRegionDielectricFields.H"
+            voltExt = voltExtAmp*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value());
+            volt = voltExt + voltInd;
+            EExt = -fvc::grad(voltExt);
+            EInd = -fvc::grad(voltInd);
+            E = -fvc::grad(volt);
+        }
 
 
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
         // Charge Transport
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
         // Update rhoFlux
-        rhoqFlux = -sign(linearInterpolate(rhoq))*muc*mesh.magSf()*fvc::snGrad(voltA);
+        rhoqFlux = -sign(linearInterpolate(rhoq))*muc*mesh.magSf()*fvc::snGrad(volt);
 
         // Solve the charge transport equation
-        Foam::solverPerformance solvPerfRhoq = solve
+        solve
         (
             fvm::ddt(rhoq) + fvm::div(rhoqFlux, rhoq) - fvm::laplacian(Dc, rhoq)
         );
-        convRhoq = solvPerfRhoq.nIterations();
 
+        // Calculate the EHD force
+        Fc = rhoq*E;
 
-        // Calculate the electric field
-        EAext = -fvc::grad(voltAext);
-        EArho = -fvc::grad(voltArho);
-        EA    = -fvc::grad(voltA);
-        EDext = -fvc::grad(voltDext);
-        EDrho = -fvc::grad(voltDrho);
-        ED    = -fvc::grad(voltD);
-        EEext = -fvc::grad(voltEext);
-        EErho = -fvc::grad(voltErho);
-        EE    = -fvc::grad(voltE);
-        Fc = rhoq*EA;
-
-
-        #include "resetStreamer.H"
+        #include "addNewDischarge.H"
         #include "writeCustomTime.H"
-
-        //runTime.write();
 
         solverPerformance::debug = 0;
         if (runTime.timeIndex() % printScreenResults == 0 || runTime.timeIndex() == 1)

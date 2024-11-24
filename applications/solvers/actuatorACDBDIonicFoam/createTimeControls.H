@@ -28,7 +28,7 @@ Global
     readTimeControls
 
 Description
-    Read the control parameters used by setDeltaT and writeCustomTime
+    Read the control parameters used by addNewDischarge and writeCustomTime
 
 \*---------------------------------------------------------------------------*/
 
@@ -39,7 +39,7 @@ scalar maxCo =
     runTime.controlDict().lookupOrDefault<scalar>("maxCo", 1.0);
 
 scalar maxDeltaT =
-    runTime.controlDict().lookupOrDefault<scalar>("maxDeltaT", great);
+    runTime.controlDict().lookupOrDefault<scalar>("maxDeltaT", 0.1);
 
 
 // Custom time write controls
@@ -64,11 +64,11 @@ scalar P =
 scalar Q =
     runTime.controlDict().lookupOrDefault<scalar>("Q", 5.0);
 
-int numStreamers =
-    runTime.controlDict().lookupOrDefault("numStreamers", 2);
+int numDischarges =
+    runTime.controlDict().lookupOrDefault("numDischarges", 2);
 
-scalar lengthStreamer =
-    runTime.controlDict().lookupOrDefault<scalar>("lengthStreamer", 0.5e-5);
+scalar timeBetweenDischarges =
+    runTime.controlDict().lookupOrDefault<scalar>("timeBetweenDischarges", 0.5e-5);
 
 // Create normilized count of number of printed times
 scalar n[numWriteTimes];
@@ -90,10 +90,9 @@ scalar s1[multiplier*numWriteTimes];
 for (int i = 0; i < multiplier*numWriteTimes; ++i)
     s1[i] = P*n1[i] + (1.0-P)*(1.0-Foam::tanh(Q*(1.0-n1[i]))/Foam::tanh(Q));
 
-
 // Counters
 int writeTimeCounter = 0;
-int streamerCounter = 1;
+int dischargeCounter = 1;
 
 Info<< "numWriteTimes = " << numWriteTimes << endl;
 for (int i = 0; i < numWriteTimes; ++i)
