@@ -9,7 +9,7 @@ rm -f ./constant/cellToRegion
 
 # Delete all subdirectories into the system and constant directories
 find ./system/*   -type d 2>/dev/null -exec rm -v -r {} \;
-find ./constant/* -type d 2>/dev/null -exec rm -v -r {} \;
+find ./constant/*/polyMesh -type d 2>/dev/null -exec rm -v -r {} \;
 
 # Reset fields
 if [ -d ./0.org ]; then 

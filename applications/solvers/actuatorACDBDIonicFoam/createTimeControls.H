@@ -94,10 +94,4 @@ for (int i = 0; i < multiplier*numWriteTimes; ++i)
 int writeTimeCounter = 0;
 int dischargeCounter = 1;
 
-Info<< "numWriteTimes = " << numWriteTimes << endl;
-for (int i = 0; i < numWriteTimes; ++i)
-{
-	Info<< "n[" << i << "] = " << s[i] << endl;
-}
-
 // ************************************************************************* //

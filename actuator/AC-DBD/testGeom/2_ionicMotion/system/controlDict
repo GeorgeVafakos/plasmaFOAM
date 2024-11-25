@@ -10,11 +10,10 @@ FoamFile
     version         2;
     format          ascii;
     class           dictionary;
-    location        "system";
     object          controlDict;
 }
 
-application     actuatorACDBDChargeFoam;
+application     actuatorACDBDIonicFoam;
 
 startFrom       startTime;
 
@@ -58,15 +57,15 @@ P               0.1;
 
 Q               5;
 
-numStreamers    14;
+numDischarges    14;
 
-lengthStreamer  2.5e-06;
+timeBetweenDischarges  2.5e-06;
 
 functions
 {
     probes
     {
-        functionObjectLibs ( "libsampling.so" );
+        libs            (fieldFunctionObjects);
         type            probes;
         name            probes;
         writeControl    timeStep;

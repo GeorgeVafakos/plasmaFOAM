@@ -1,10 +1,12 @@
 PtrList<IOdictionary> physicalPropertiesDiel(solidRegions.size());
 PtrList<dimensionedScalar> erDiel(solidRegions.size());
 PtrList<volScalarField> voltExtAmpDiel(solidRegions.size());
+PtrList<volScalarField> voltExtDiel(solidRegions.size());
 PtrList<volScalarField> voltIndDiel(solidRegions.size());
 PtrList<volScalarField> voltIndDischargeDiel(solidRegions.size());
 PtrList<volScalarField> voltDiel(solidRegions.size());
 PtrList<volVectorField> EExtAmpDiel(solidRegions.size());
+PtrList<volVectorField> EExtDiel(solidRegions.size());
 PtrList<volVectorField> EIndDiel(solidRegions.size());
 PtrList<volVectorField> EDiel(solidRegions.size());
 PtrList<volScalarField> epsilonDiel(solidRegions.size());
@@ -59,6 +61,24 @@ forAll(solidRegions, i)
         )
     );
 
+    Info<< "    Adding to voltExtDiel\n" << endl;
+    voltExtDiel.set
+    (
+        i,
+        new volScalarField
+        (
+            IOobject
+            (
+                "voltExt",
+                runTime.timeName(),
+                solidRegions[i],
+                IOobject::NO_READ,
+                IOobject::AUTO_WRITE
+            ),
+            voltExtAmpDiel[i]*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value())
+        )
+    );
+
     Info<< "    Adding to voltIndDiel\n" << endl;
     voltIndDiel.set
     (
@@ -85,13 +105,13 @@ forAll(solidRegions, i)
         (
             IOobject
             (
-                "voltIndDischargeDiel",
+                "voltIndDischarge",
                 runTime.timeName(),
                 solidRegions[i],
-                IOobject::MUST_READ,
-                IOobject::AUTO_WRITE
+                IOobject::NO_READ,
+                IOobject::NO_WRITE
             ),
-            solidRegions[i]
+            voltIndDiel[i]
         )
     );
 
@@ -129,6 +149,24 @@ forAll(solidRegions, i)
                 IOobject::AUTO_WRITE
             ),
             -fvc::grad(voltExtAmpDiel[i])
+        )
+    );
+
+    Info<< "    Adding to EExtDiel\n" << endl;
+    EExtDiel.set
+    (
+        i,
+        new volVectorField
+        (
+            IOobject
+            (
+                "EExt",
+                runTime.timeName(),
+                solidRegions[i],
+                IOobject::NO_READ,
+                IOobject::AUTO_WRITE
+            ),
+            -fvc::grad(voltExtDiel[i])
         )
     );
 
