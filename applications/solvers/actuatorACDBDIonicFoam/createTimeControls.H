@@ -64,11 +64,8 @@ scalar P =
 scalar Q =
     runTime.controlDict().lookupOrDefault<scalar>("Q", 5.0);
 
-int numDischarges =
-    runTime.controlDict().lookupOrDefault("numDischarges", 2);
-
-scalar timeBetweenDischarges =
-    runTime.controlDict().lookupOrDefault<scalar>("timeBetweenDischarges", 0.5e-5);
+int maxRegionLoopsIndEqn =
+    runTime.controlDict().lookupOrDefault("maxRegionLoopsIndEqn", 1);
 
 // Create normilized count of number of printed times
 scalar n[numWriteTimes];

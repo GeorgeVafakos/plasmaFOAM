@@ -1,12 +1,8 @@
 PtrList<IOdictionary> physicalPropertiesDiel(solidRegions.size());
 PtrList<dimensionedScalar> erDiel(solidRegions.size());
-PtrList<volScalarField> voltExtAmpDiel(solidRegions.size());
-PtrList<volScalarField> voltIndDiel(solidRegions.size());
-PtrList<volScalarField> voltDiel(solidRegions.size());
-PtrList<volVectorField> EExtAmpDiel(solidRegions.size());
-PtrList<volVectorField> EIndDiel(solidRegions.size());
-PtrList<volVectorField> EDiel(solidRegions.size());
 PtrList<volScalarField> epsilonDiel(solidRegions.size());
+PtrList<volScalarField> voltIndDiel(solidRegions.size());
+PtrList<volVectorField> EIndDiel(solidRegions.size());
 
 // Populate solid field pointer lists
 forAll(solidRegions, i)
@@ -40,21 +36,22 @@ forAll(solidRegions, i)
         )
     );
 
-    Info<< "    Adding to voltExtAmpDiel\n" << endl;
-    voltExtAmpDiel.set
+    Info<< "    Adding to epsilonDiel\n" << endl;
+    epsilonDiel.set
     (
         i,
         new volScalarField
         (
             IOobject
             (
-                "voltExtAmp",
+                "epsilon",
                 runTime.timeName(),
                 solidRegions[i],
-                IOobject::MUST_READ,
-                IOobject::AUTO_WRITE
+                IOobject::NO_READ,
+                IOobject::NO_WRITE
             ),
-            solidRegions[i]
+            solidRegions[i],
+            erDiel[i]
         )
     );
 
@@ -76,43 +73,6 @@ forAll(solidRegions, i)
         )
     );
 
-    Info<< "    Adding to voltDiel\n" << endl;
-    voltDiel.set
-    (
-        i,
-        new volScalarField
-        (
-            IOobject
-            (
-                "volt",
-                runTime.timeName(),
-                solidRegions[i],
-                IOobject::NO_READ,
-                IOobject::AUTO_WRITE
-            ),
-            solidRegions[i],
-            dimensionedScalar("temp", dimensionSet(1,2,-3,0,0,-1,0), scalar(0))
-        )
-    );
-
-    Info<< "    Adding to EExtAmpDiel\n" << endl;
-    EExtAmpDiel.set
-    (
-        i,
-        new volVectorField
-        (
-            IOobject
-            (
-                "EExtAmp",
-                runTime.timeName(),
-                solidRegions[i],
-                IOobject::NO_READ,
-                IOobject::AUTO_WRITE
-            ),
-            -fvc::grad(voltExtAmpDiel[i])
-        )
-    );
-
     Info<< "    Adding to EIndDiel\n" << endl;
     EIndDiel.set
     (
@@ -128,43 +88,6 @@ forAll(solidRegions, i)
                 IOobject::AUTO_WRITE
             ),
             -fvc::grad(voltIndDiel[i])
-        )
-    );
-
-    Info<< "    Adding to EDiel\n" << endl;
-    EDiel.set
-    (
-        i,
-        new volVectorField
-        (
-            IOobject
-            (
-                "E",
-                runTime.timeName(),
-                solidRegions[i],
-                IOobject::NO_READ,
-                IOobject::AUTO_WRITE
-            ),
-            -fvc::grad(voltDiel[i])
-        )
-    );
-
-    Info<< "    Adding to epsilonDiel\n" << endl;
-    epsilonDiel.set
-    (
-        i,
-        new volScalarField
-        (
-            IOobject
-            (
-                "epsilon",
-                runTime.timeName(),
-                solidRegions[i],
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            solidRegions[i],
-            erDiel[i]
         )
     );
 }

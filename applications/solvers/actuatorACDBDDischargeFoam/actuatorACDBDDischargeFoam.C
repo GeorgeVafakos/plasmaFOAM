@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
 {
     argList::addNote
     (
-        "Solver for external electric field."
+        "Solver for electrostatic field."
     );
 
     #include "addCheckCaseOptions.H"
@@ -55,142 +55,7 @@ int main(int argc, char *argv[])
 
     Info<< "\nStarting iteration loop\n" << endl;
 
-    while ( runTime.loop() && (*std::max_element(voltExtAmpIter.begin(),voltExtAmpIter.end()) || *std::max_element(voltIndIter.begin(),voltIndIter.end())) )
-    {
-        Info<< "Time Iteration = " << runTime.timeIndex() << nl << endl;
-
-        // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-        // Equations for the External Electric Field
-        // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-        // Reset counters
-        regionLoopCounter = 0;
-        solverPerformance::debug = 1;
-        Info<< "Current Iteration = " << 1 << endl;
-
-        // Loop through different regions to solve the Laplace equations for voltExtAmp
-        while (*std::max_element(voltExtAmpIter.begin(), voltExtAmpIter.end()) && regionLoopCounter<10000)
-        {
-            voltExtAmpIter.clear();
-
-            // Solve gas regions
-            Foam::solverPerformance solvPerfVolt = solve
-            (
-                fvm::laplacian(voltExtAmp)
-            );
-            voltExtAmpIter.push_back(solvPerfVolt.nIterations());
-
-            // Solve dielectric regions
-            forAll(solidRegions, i)
-            {
-                #include "setRegionDielectricFields.H"
-                Foam::solverPerformance solvPerfVolt = solve 
-                (
-                    fvm::laplacian(voltExtAmp)
-                );
-                voltExtAmpIter.push_back(solvPerfVolt.nIterations());
-            }
-
-            // Print performance at custom iteration intervals
-            regionLoopCounter++;
-            solverPerformance::debug = 0;
-            int printPerformance = 500;
-            if (regionLoopCounter % printPerformance == 0)
-            {
-                Info<< "Current Iteration = " << regionLoopCounter << endl;
-                solverPerformance::debug = 1;
-            }
-        }
-        Info<< "External Field Region Inner Loops = " << regionLoopCounter << endl;
-
-        // Calculate the electric field EExtAmp
-        EExtAmp = -fvc::grad(voltExtAmp);
-        forAll(solidRegions, i)
-        {
-            #include "setRegionDielectricFields.H"
-            EExtAmp = -fvc::grad(voltExtAmp);
-        }
-
-
-        // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-        // Equations for the Induced Electric Field
-        // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-        // Reset counters
-        regionLoopCounter = 0;
-        solverPerformance::debug = 1;
-        Info<< "Current Iteration = " << 1 << endl;
-
-        // Loop through different regions to solve the Laplace equations for voltExtAmp
-        while (*std::max_element(voltIndIter.begin(), voltIndIter.end()) && regionLoopCounter<10000)
-        {
-            voltIndIter.clear();
-
-            // Solve gas regions
-            Foam::solverPerformance solvPerfVolt = solve
-            (
-                fvm::laplacian(voltInd) + rhoq/e0
-            );
-            voltIndIter.push_back(solvPerfVolt.nIterations());
-
-            // Solve dielectric regions
-            forAll(solidRegions, i)
-            {
-                #include "setRegionDielectricFields.H"
-                Foam::solverPerformance solvPerfVolt = solve 
-                (
-                    fvm::laplacian(voltInd)
-                );
-                voltIndIter.push_back(solvPerfVolt.nIterations());
-            }
-
-            // Print performance at custom iteration intervals
-            regionLoopCounter++;
-            solverPerformance::debug = 0;
-            int printPerformance = 500;
-            if (regionLoopCounter % printPerformance == 0)
-            {
-                Info<< "Current Iteration = " << regionLoopCounter << endl;
-                solverPerformance::debug = 1;
-            }
-        }
-        Info<< "Induced Field Region Inner Loops = " << regionLoopCounter << endl;
-
-        // Calculate the electric field EInd
-        EInd = -fvc::grad(voltInd);
-        forAll(solidRegions, i)
-        {
-            #include "setRegionDielectricFields.H"
-            EInd = -fvc::grad(voltInd);
-        }
-
-
-        // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-        // Calculate Local Fields
-        // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-        // Calculate local electric potential in all regions
-        volt = voltExtAmp*Foam::sin(2*M_PI*freq*dischargeTime) + voltInd;
-        forAll(solidRegions, i)
-        {
-            #include "setRegionDielectricFields.H"
-            volt = voltExtAmp*Foam::sin(2*M_PI*freq*dischargeTime) + voltInd;
-        }
-        
-        // Calculate the local electric field
-        E = -fvc::grad(volt);
-        forAll(solidRegions, i)
-        {
-            #include "setRegionDielectricFields.H"
-            E = -fvc::grad(volt);
-        }
-
-        // Calculate Coulomb force
-        Fc = rhoq*E;
-
-        // Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-        //     << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-        //     << nl << nl << endl;
-        runTime.printExecutionTime(Info);
-        runTime.write();
-    }
+    #include "EIndEqn.H"
 
     runTime.writeAndEnd();
 

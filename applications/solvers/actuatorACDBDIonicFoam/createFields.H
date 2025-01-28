@@ -18,7 +18,7 @@ dimensionedScalar e0
 (
     "e0",
     dimensionSet(-1, -3, 4, 0, 0, 2, 0),
-    physicalProperties
+    scalar(8.85419e-12)
 );
 
 // Ion mobility
@@ -39,7 +39,15 @@ dimensionedScalar Dc
 
 // Convergence variables
 int regionLoopCounter=0;
-std::vector<int> voltIndIter = {1};
+std::vector<int> voltEqnIter = {1};
+
+// Number of occuring discharge events
+int numDischarges =
+    physicalProperties.lookupOrDefault("numDischarges", 2);
+
+// Time between every discharge event
+scalar timeBetweenDischarges =
+    physicalProperties.lookupOrDefault<scalar>("timeBetweenDischarges", 0.5e-5);
 
 Info<< "Reading field voltExtAmp\n" << endl;
 volScalarField voltExtAmp
@@ -66,7 +74,7 @@ volScalarField voltExt
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    voltExtAmp*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value())
+    voltExtAmp*Foam::sin(2.0*constant::mathematical::pi*(1.0/endTime)*runTime.value())
 );
 
 Info<< "Reading field voltInd\n" << endl;
@@ -166,6 +174,20 @@ surfaceScalarField rhoqFlux
         IOobject::NO_WRITE
     ),
     -sign(linearInterpolate(rhoq))*muc*mesh.magSf()*fvc::snGrad(volt)
+);
+
+Info<< "Calculating field EExtAmp\n" << endl;
+volVectorField EExtAmp
+(
+    IOobject
+    (
+        "EExtAmp",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::NO_WRITE
+    ),
+    -fvc::grad(voltExtAmp)
 );
 
 Info<< "Calculating field EExt\n" << endl;

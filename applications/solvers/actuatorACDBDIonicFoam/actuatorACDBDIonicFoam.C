@@ -46,6 +46,8 @@ int main(int argc, char *argv[])
     #include "createTimeControls.H"
     #include "createFields.H"
     
+    // Calculate amplitude of potenetial of external field
+    #include "EExtAmpEqn.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -59,60 +61,14 @@ int main(int argc, char *argv[])
             solverPerformance::debug = 1;
         }
 
-        // Control time step according to Co num
-        #include "CourantNo.H"
-        #include "setDeltaT.H" 
-
-        // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-        // Equations for the Induced Electric Field
-        // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-        // Reset counters
-        regionLoopCounter = 0;
-        // solverPerformance::debug = 1;
-
-        while (*std::max_element(voltIndIter.begin(), voltIndIter.end()) && regionLoopCounter<1)
-        {
-            voltIndIter.clear();
-
-            // Solve gas regions
-            Foam::solverPerformance solvPerfVolt = solve
-            (
-                fvm::laplacian(voltInd) + rhoq/e0
-            );
-            voltIndIter.push_back(solvPerfVolt.nIterations());
-
-            // Solve dielectric regions
-            forAll(solidRegions, i)
-            {
-                #include "setRegionDielectricFields.H"
-                Foam::solverPerformance solvPerfVolt = solve 
-                (
-                    fvm::laplacian(voltInd)
-                );
-                voltIndIter.push_back(solvPerfVolt.nIterations());
-            }
-
-            // Print performance at custom iteration intervals
-            regionLoopCounter++;
-            solverPerformance::debug = 0;
-            int printPerformance = 500;
-            if (regionLoopCounter % printPerformance == 0 && (runTime.timeIndex() % printScreenResults == 0 || runTime.timeIndex() == 1))
-            {
-                Info<< "Current Loop = " << regionLoopCounter << endl;
-                solverPerformance::debug = 1;
-            }
-        }
-
-        if (runTime.timeIndex() % printScreenResults == 0 || runTime.timeIndex() == 1)
-        {
-            Info<< "Region Inner Loops = " << regionLoopCounter << endl;
-            solverPerformance::debug = 1;
-        }
+        // Calculate potential of induced field
+        #include "EIndEqn.H"
         
-
-        // Calculate total electric potential and field in all regions
-        voltExt = voltExtAmp*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value());
+        
+        // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+        // Local Electric Fields
+        // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+        voltExt = voltExtAmp*Foam::sin(2.0*constant::mathematical::pi*(1.0/endTime)*runTime.value());
         volt = voltExt + voltInd;
         EExt = -fvc::grad(voltExt);
         EInd = -fvc::grad(voltInd);
@@ -120,7 +76,7 @@ int main(int argc, char *argv[])
         forAll(solidRegions, i)
         {
             #include "setRegionDielectricFields.H"
-            voltExt = voltExtAmp*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value());
+            voltExt = voltExtAmp*Foam::sin(2.0*constant::mathematical::pi*(1.0/endTime)*runTime.value());
             volt = voltExt + voltInd;
             EExt = -fvc::grad(voltExt);
             EInd = -fvc::grad(voltInd);
@@ -133,6 +89,10 @@ int main(int argc, char *argv[])
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
         // Update rhoFlux
         rhoqFlux = -sign(linearInterpolate(rhoq))*muc*mesh.magSf()*fvc::snGrad(volt);
+
+        // Control time step according to Co num
+        #include "CourantNo.H"
+        #include "setDeltaT.H" 
 
         // Solve the charge transport equation
         solve
@@ -149,9 +109,6 @@ int main(int argc, char *argv[])
         solverPerformance::debug = 0;
         if (runTime.timeIndex() % printScreenResults == 0 || runTime.timeIndex() == 1)
         {
-            // Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-            //     << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-            //     << nl << nl << endl;
             runTime.printExecutionTime(Info);
         }
     }

@@ -1,0 +1,95 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2312                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+FoamFile
+{
+    version         2;
+    format          ascii;
+    class           dictionary;
+    object          controlDict;
+}
+
+application     actuatorACDBDIonicFoam;
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         7.142857e-05;
+
+deltaT          1e-09;
+
+writeControl    adjustableRunTime;
+
+writeInterval   0.0001;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  14;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   10;
+
+runTimeModifiable true;
+
+adjustTimeStep  yes;
+
+maxCo           0.8;
+
+maxDeltaT       1;
+
+writeCustomTime true;
+
+printScreenResults 100;
+
+numWriteTimes   5;
+
+P               0.1;
+
+Q               3;
+
+numDischarges    15;
+
+timeBetweenDischarges  1.27551e-06;
+
+functions
+{
+    probes
+    {
+        libs            ( fieldFunctionObjects );
+        type            probes;
+        name            probes;
+        writeControl    writeTime;
+        fields          ( rhoq Fc );
+    	probeLocations  
+        ( 
+        ( 0 0.035e-3 0.025 ) ( 0.5e-3 0.035e-3 0.025 ) ( 1.0e-3 0.035e-3 0.025 ) ( 1.5e-3 0.035e-3 0.025 ) ( 2.0e-3 0.035e-3 0.025 ) ( 3.0e-3 0.035e-3 0.025 ) ( 4.0e-3 0.035e-3 0.025 ) ( 5.0e-3 0.035e-3 0.025 ) ( 6.0e-3 0.035e-3 0.025 ) ( 7.0e-3 0.035e-3 0.025 ) ( 8.0e-3 0.035e-3 0.025 ) ( 9.0e-3 0.035e-3 0.025 ) ( 10.0e-3 0.035e-3 0.025 ) 
+        );
+    }
+    
+    #include "probes"
+    
+    fieldAverage1
+    {
+        type            fieldAverage;
+        libs            ( "libfieldFunctionObjects.so" );
+        writeControl    writeTime;
+        fields          ( Fc { mean on ; prime2Mean off ; base time ; } );
+        log             false;
+    }
+}
+
+
+// ************************************************************************* //
