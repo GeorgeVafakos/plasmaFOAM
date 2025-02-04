@@ -20,16 +20,16 @@ def read_and_plot(file_path):
 
     # Plot each y column against the x column
     for i, y in enumerate(y_columns):
-        plt.plot(x_values, y, '-o', label=f'Column {i+1}')
+        plt.plot(x_values, y, '-', label=f'Probe {i+1}')
 
-    plt.xlabel('Time')
-    plt.ylabel('Values')
-    plt.title('Plot of Numerical Data')
+    plt.xlabel('Time (s)')
+    plt.ylabel('rhoq (C/m3)')
+    plt.title('Charge density')
     plt.legend()
     plt.grid()
     plt.show()
 
 # Provide the file path
-file_path = 'rhoq'
+file_path = './postProcessing/probes/0/rhoq'
 read_and_plot(file_path)
 

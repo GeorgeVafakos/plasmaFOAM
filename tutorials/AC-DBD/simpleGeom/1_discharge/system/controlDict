@@ -44,7 +44,7 @@ timePrecision   6;
 
 runTimeModifiable true;
 
-writeRegionLoop   600;
+writeRegionLoop   1000;
 
 
 // ************************************************************************* //

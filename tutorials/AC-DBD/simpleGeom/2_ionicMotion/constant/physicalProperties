@@ -20,7 +20,7 @@ Dc                      2.3e-6;
 
 numDischarges           5;
 
-timeBetweenDischarges   4.464286e-06;
+timeBetweenDischarges   6.25e-06;
 
 
 // ************************************************************************* //

@@ -1,0 +1,23 @@
+#!/bin/bash
+cd "${0%/*}" || exit                                # Run from this directory
+. $WM_PROJECT_DIR/bin/tools/RunFunctions            # Tutorial run functions
+#------------------------------------------------------------------------------
+
+# Convert the 0 directory into 0.org
+cp -R 0.org 0
+
+# Copy geometry and mesh from streamer case
+cp -R ../1_discharge/constant/polyMesh ../1_discharge/constant/dielectric ../1_discharge/constant/encapsulator constant/
+
+# Run mapFields
+mapFieldsPar ../1_discharge -mapMethod direct -consistent -sourceTime latestTime
+mapFieldsPar ../1_discharge -mapMethod direct -sourceRegion dielectric -consistent -sourceTime latestTime -targetRegion dielectric
+mapFieldsPar ../1_discharge -mapMethod direct -sourceRegion encapsulator  -consistent -sourceTime latestTime -targetRegion encapsulator
+
+# Output message
+echo
+echo Case created.
+
+
+
+#------------------------------------------------------------------------------
