@@ -20,4 +20,4 @@ More information of the usage of the three-stage model and the solution procedur
 
 ## References
 
-1. G. P. Vafakos, P. K. Papadopoulos, P. Svarnas; A three-stage plasma model based on one-way coupling of plasma dynamics, ionic motion, and fluid flow: Application to DBD plasma actuators. *J. Appl. Phys.* 28 January 2025; 137 (4): 043302. https://doi.org/10.1063/5.0242676
+1. Vafakos, G.P., Papadopoulos, P.K., Svarnas, P. A three-stage plasma model based on one-way coupling of plasma dynamics, ionic motion, and fluid flow: Application to DBD plasma actuators. *J Appl Phys 137*, 043302 , (2025). https://doi.org/10.1063/5.0242676

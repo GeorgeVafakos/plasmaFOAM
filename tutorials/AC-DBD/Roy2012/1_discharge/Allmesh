@@ -10,7 +10,7 @@ rm -r 0
 blockMesh
 
 # Refine mesh
-for index in {1..1}
+for index in {2..1}
 do
     topoSet -dict system/topoSetDictRegion$index
     refineMesh -dict system/refineMeshDictRegion -overwrite 

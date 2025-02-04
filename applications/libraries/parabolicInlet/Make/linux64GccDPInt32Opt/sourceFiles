@@ -1,4 +1,0 @@
-SOURCE = \
-parabolicInletFvPatchVectorField.C \
-
-# sources
