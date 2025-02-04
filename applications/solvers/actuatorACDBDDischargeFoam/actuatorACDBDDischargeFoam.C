@@ -34,143 +34,28 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
+#include "regionProperties.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 int main(int argc, char *argv[])
 {
-    #include "setRootCaseLists.H"
+    argList::addNote
+    (
+        "Solver for electrostatic field."
+    );
 
+    #include "addCheckCaseOptions.H"
+    #include "setRootCaseLists.H"
     #include "createTime.H"
-    #include "createMesh.H"
-    #include "createMeshD.H"
-    #include "createMeshE.H"
+    #include "createMeshes.H"
     #include "createFields.H"
-    #include "createFieldsSolid.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
     Info<< "\nStarting iteration loop\n" << endl;
 
-    while (runTime.loop() && (convVoltAextMag>0 || convVoltArho>0 || convVoltDextMag>0 || convVoltDrho>0 || convVoltEextMag>0 || convVoltErho>0) )
-    {
-        Info<< "Iteration = " << runTime.timeIndex() << nl << endl;
-
-        // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-        // Equations for the External Electric Field
-        // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-        // Reset counters
-        counter = 0;
-        solverPerformance::debug = 1;
-
-        while ((convVoltAextMag>0 || convVoltDextMag>0 || convVoltEextMag>0) && counter<30000)
-        {
-            // Air
-            Foam::solverPerformance solvPerfVoltAextMag = solve 
-            (
-                fvm::laplacian(voltAextMag)
-            );
-            convVoltAextMag = solvPerfVoltAextMag.nIterations();
-
-            // Dielectric
-            Foam::solverPerformance solvPerfVoltDextMag = solve
-            (
-                fvm::laplacian(voltDextMag)
-            );
-            convVoltDextMag = solvPerfVoltDextMag.nIterations();
-
-            // Encapsulator
-            Foam::solverPerformance solvPerfVoltEextMag = solve
-            (
-                fvm::laplacian(voltEextMag)
-            );
-            convVoltEextMag = solvPerfVoltEextMag.nIterations();
-
-            counter++;
-            solverPerformance::debug = 0;
-            if (counter % 5000 == 0)
-            {
-                Info<< "Current Loop = " << counter << endl;
-                solverPerformance::debug = 1;
-            }
-        }
-        Info<< "External Field: Region Inner Loops = " << counter << endl;
-
-
-
-        // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-        // Equations for the Induced Electric Field
-        // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-        // Reset counters
-        counter = 0;
-        solverPerformance::debug = 1;
-
-        while ((convVoltArho>0 || convVoltDrho>0 || convVoltErho>0) && counter<30000)
-        {
-            // Air
-            Foam::solverPerformance solvPerfVoltArho = solve 
-            (
-                fvm::laplacian(voltArho) + rhoq/e0
-            );
-            convVoltArho = solvPerfVoltArho.nIterations();
-
-            // Dielectric
-            Foam::solverPerformance solvPerfVoltDrho = solve
-            (
-                fvm::laplacian(voltDrho)
-            );
-            convVoltDrho = solvPerfVoltDrho.nIterations();
-
-            // Encapsulator
-            Foam::solverPerformance solvPerfVoltErho = solve
-            (
-                fvm::laplacian(voltErho)
-            );
-            convVoltErho = solvPerfVoltErho.nIterations();
-
-            counter++;            
-            solverPerformance::debug = 0;
-            if (counter % 5000 == 0)
-            {
-                Info<< "Current Loop = " << counter << endl;
-                solverPerformance::debug = 1;
-            }
-        }
-        Info<< "Induced Field: Region Inner Loops = " << counter << endl;
-        solverPerformance::debug = 1;
-
-
-        // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-        // Calculate Total Fields
-        // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-        
-        // Calculate total electric potential in all regions
-        voltA = voltAextMag*Foam::sin(2*3.14159*freq*dischargeTime) + voltArho;
-        voltD = voltDextMag*Foam::sin(2*3.14159*freq*dischargeTime) + voltDrho;
-        voltE = voltEextMag*Foam::sin(2*3.14159*freq*dischargeTime) + voltErho;
-        
-        // Calculate the electric field
-        EAextMag = -fvc::grad(voltAextMag);
-        EArho    = -fvc::grad(voltArho);
-        EA       = -fvc::grad(voltA);
-        EDextMag = -fvc::grad(voltDextMag);
-        EDrho    = -fvc::grad(voltDrho);
-        ED       = -fvc::grad(voltD);
-        EEextMag = -fvc::grad(voltEextMag);
-        EErho    = -fvc::grad(voltErho);
-        EE       = -fvc::grad(voltE);
-        Fc       = rhoq*EA;
-
-        // runTime.write();
-
-        // Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-        //     << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-        //     << nl << nl << endl;
-        runTime.printExecutionTime(Info);
-        runTime.write();
-    }
+    #include "EIndEqn.H"
 
     runTime.writeAndEnd();
 

@@ -1,11 +1,6 @@
-// ************************************************************************* //
-//
-// Create fields in the air region
-//
-// ************************************************************************* //
+#include "createDielectricFields.H"
 
 Info<< "Reading physicalProperties\n" << endl;
-
 IOdictionary physicalProperties
 (
     IOobject
@@ -23,7 +18,7 @@ dimensionedScalar e0
 (
     "e0",
     dimensionSet(-1, -3, 4, 0, 0, 2, 0),
-    physicalProperties
+    scalar(8.85419e-12)
 );
 
 // Ion mobility
@@ -43,47 +38,23 @@ dimensionedScalar Dc
 );
 
 // Convergence variables
-int convVoltArho=1;
-int convVoltDrho=1;
-int convVoltErho=1;
-int convRhoq=1;
-int counter=0;
+int regionLoopCounter=0;
+std::vector<int> voltEqnIter = {1};
 
-Info<< "Reading field voltAextMag\n" << endl;
-volScalarField voltAextMag
+// Number of occuring discharge events
+int numDischarges =
+    physicalProperties.lookupOrDefault("numDischarges", 2);
+
+// Time between every discharge event
+scalar timeBetweenDischarges =
+    physicalProperties.lookupOrDefault<scalar>("timeBetweenDischarges", 0.5e-5);
+
+Info<< "Reading field voltExtAmp\n" << endl;
+volScalarField voltExtAmp
 (
     IOobject
     (
-        "voltAextMag",
-        runTime.timeName(),
-        mesh,
-        IOobject::MUST_READ,
-        IOobject::NO_WRITE
-    ),
-    mesh
-);
-
-Info<< "Reading field voltAext\n" << endl;
-volScalarField voltAext
-(
-    IOobject
-    (
-        "voltAext",
-        runTime.timeName(),
-        mesh,
-        IOobject::NO_READ,
-        IOobject::AUTO_WRITE
-    ),
-    //mesh
-    voltAextMag*Foam::sin(2*M_PI*(1.0/endTime)*runTime.value())
-);
-
-Info<< "Reading field voltArho\n" << endl;
-volScalarField voltArho
-(
-    IOobject
-    (
-        "voltArho",
+        "voltExtAmp",
         runTime.timeName(),
         mesh,
         IOobject::MUST_READ,
@@ -92,47 +63,75 @@ volScalarField voltArho
     mesh
 );
 
-Info<< "Reading field voltArho_strm\n" << endl;
-volScalarField voltArho_strm
+Info<< "Reading field voltExt\n" << endl;
+volScalarField voltExt
 (
     IOobject
     (
-        "voltArho_strm",
+        "voltExt",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    voltExtAmp*Foam::sin(2.0*constant::mathematical::pi*(1.0/endTime)*runTime.value())
+);
+
+Info<< "Reading field voltInd\n" << endl;
+volScalarField voltInd
+(
+    IOobject
+    (
+        "voltInd",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
+
+Info<< "Reading field voltIndDischarge\n" << endl;
+volScalarField voltIndDischarge
+(
+    IOobject
+    (
+        "voltIndDischarge",
         runTime.timeName(),
         mesh,
         IOobject::NO_READ,
         IOobject::NO_WRITE
     ),
-    voltArho
+    voltInd
 );
 
-Info<< "Reading field voltA\n" << endl;
-volScalarField voltA
+Info<< "Reading field volt\n" << endl;
+volScalarField volt
 (
     IOobject
     (
-        "voltA",
+        "volt",
         runTime.timeName(),
         mesh,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
     mesh,
-    dimensionedScalar("temp",dimensionSet(1,2,-3,0,0,-1,0),scalar(0))
+    dimensionedScalar("temp", dimensionSet(1,2,-3,0,0,-1,0), scalar(0))
 );
 
-volScalarField epsilonA
+volScalarField epsilon
 (
     IOobject
     (
-        "epsilonA",
+        "epsilon",
         runTime.timeName(),
         mesh,
         IOobject::NO_READ,
-        IOobject::AUTO_WRITE
+        IOobject::NO_WRITE
     ),
     mesh,
-    dimensionedScalar("temp",dimless,scalar(1))
+    dimensionedScalar("temp", dimless, scalar(1))
 );
 
 Info<< "Reading field rhoq\n" << endl;
@@ -149,12 +148,12 @@ volScalarField rhoq
     mesh
 );
 
-Info<< "Reading field rhoq_strm\n" << endl;
-volScalarField rhoq_strm
+Info<< "Reading field rhoqDischarge\n" << endl;
+volScalarField rhoqDischarge
 (
     IOobject
     (
-        "rhoq_strm",
+        "rhoqDischarge",
         runTime.timeName(),
         mesh,
         IOobject::NO_READ,
@@ -174,49 +173,63 @@ surfaceScalarField rhoqFlux
         IOobject::NO_READ,
         IOobject::NO_WRITE
     ),
-    -sign(linearInterpolate(rhoq))*muc*mesh.magSf()*fvc::snGrad(voltA)
+    -sign(linearInterpolate(rhoq))*muc*mesh.magSf()*fvc::snGrad(volt)
 );
 
-Info<< "Calculating field EAext\n" << endl;
-volVectorField EAext
+Info<< "Calculating field EExtAmp\n" << endl;
+volVectorField EExtAmp
 (
     IOobject
     (
-        "EAext",
+        "EExtAmp",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::NO_WRITE
+    ),
+    -fvc::grad(voltExtAmp)
+);
+
+Info<< "Calculating field EExt\n" << endl;
+volVectorField EExt
+(
+    IOobject
+    (
+        "EExt",
         runTime.timeName(),
         mesh,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    -fvc::grad(voltAext)
+    -fvc::grad(voltExt)
 );
 
-Info<< "Calculating field EArho\n" << endl;
-volVectorField EArho
+Info<< "Calculating field EInd\n" << endl;
+volVectorField EInd
 (
     IOobject
     (
-        "EArho",
+        "EInd",
         runTime.timeName(),
         mesh,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    -fvc::grad(voltArho)
+    -fvc::grad(voltInd)
 );
 
-Info<< "Calculating field EA\n" << endl;
-volVectorField EA
+Info<< "Calculating field E\n" << endl;
+volVectorField E
 (
     IOobject
     (
-        "EA",
+        "E",
         runTime.timeName(),
         mesh,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    -fvc::grad(voltA)
+    -fvc::grad(volt)
 );
 
 Info<< "Calculating field Fc\n" << endl;
@@ -230,7 +243,7 @@ volVectorField Fc
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    rhoq*EA
+    rhoq*E
 );
 
 

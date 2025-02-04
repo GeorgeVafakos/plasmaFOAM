@@ -1,0 +1,15 @@
+#!/bin/bash
+cd "${0%/*}" || exit                                # Run from this directory
+. $WM_PROJECT_DIR/bin/tools/RunFunctions            # Tutorial run functions
+#------------------------------------------------------------------------------
+
+# Copy geometry and mesh from streamer case
+cp -R ../1_discharge/constant/polyMesh constant/
+
+# Output message
+echo
+echo Case created.
+
+
+
+#------------------------------------------------------------------------------

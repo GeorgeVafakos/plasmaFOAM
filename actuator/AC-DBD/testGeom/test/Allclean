@@ -1,0 +1,30 @@
+#!/bin/bash
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial clean functions
+. $WM_PROJECT_DIR/bin/tools/CleanFunctions
+
+# Delete cellToRegion file
+rm -f ./constant/cellToRegion
+
+# Delete all subdirectories into the system and constant directories
+find ./system/*   -type d 2>/dev/null -exec rm -v -r {} \;
+find ./constant/*/polyMesh -type d 2>/dev/null -exec rm -v -r {} \;
+
+# Reset fields
+if [ -d ./0.org ]; then 
+    rm -v -r 0 ;
+    mv -v 0.org 0 ; 
+fi
+
+# Delete all time steps and logs
+rm -f log.*
+rm -f ./0/cellToRegion
+find ./0/* -type d 2>/dev/null -exec rm -r {}/cellToRegion \;
+cleanCase
+
+# Output message
+echo
+echo Cleaning Completed
+
+#------------------------------------------------------------------------------

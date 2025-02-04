@@ -1,4 +1,4 @@
-if (!pimple.simpleRho())
+if (!pimple.SIMPLErho())
 {
     rho = thermo.rho();
 }
@@ -11,7 +11,7 @@ volScalarField rAU(1.0/UEqn.A());
 surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho*rAU));
 volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
 
-if (pimple.nCorrPiso() <= 1)
+if (pimple.nCorrPISO() <= 1)
 {
     tUEqn.clear();
 }
@@ -54,7 +54,7 @@ if (pimple.transonic())
         // Relax the pressure equation to ensure diagonal-dominance
         pEqn.relax();
 
-        pEqn.solve();
+        pEqn.solve(p.select(pimple.finalInnerIter()));
 
         if (pimple.finalNonOrthogonalIter())
         {
@@ -76,7 +76,7 @@ else
     {
         fvScalarMatrix pEqn(pDDtEqn - fvm::laplacian(rhorAUf, p));
 
-        pEqn.solve();
+        pEqn.solve(p.select(pimple.finalInnerIter()));
 
         if (pimple.finalNonOrthogonalIter())
         {
@@ -85,18 +85,6 @@ else
     }
 }
 
-bool limitedp = pressureControl.limit(p);
-
-// Thermodynamic density update
-thermo.correctRho(psi*p - psip0);
-
-if (limitedp)
-{
-    rho = thermo.rho();
-}
-
-#include "rhoEqn.H"
-#include "compressibleContinuityErrs.H"
 
 // Explicitly relax pressure for momentum corrector
 p.relax();
@@ -106,10 +94,17 @@ U.correctBoundaryConditions();
 fvOptions.correct(U);
 K = 0.5*magSqr(U);
 
-if (pimple.simpleRho())
+if (pressureControl.limit(p))
 {
-    rho = thermo.rho();
+    p.correctBoundaryConditions();
 }
+
+thermo.correctRho(psi*p - psip0, rhoMin, rhoMax) ;
+
+#include "rhoEqn.H"
+#include "compressibleContinuityErrs.H"
+
+rho = thermo.rho();
 
 // Correct rhoUf if the mesh is moving
 fvc::correctRhoUf(rhoUf, rho, U, phi);

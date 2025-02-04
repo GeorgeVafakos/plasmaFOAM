@@ -1,0 +1,12 @@
+#!/bin/bash
+cd "${0%/*}" || exit                                # Run from this directory
+. $WM_PROJECT_DIR/bin/tools/RunFunctions            # Tutorial run functions
+#------------------------------------------------------------------------------
+
+./1_discharge/Allrun
+
+./2_ionicMotion/Allrun
+
+./3_flow/Allrun
+
+#------------------------------------------------------------------------------

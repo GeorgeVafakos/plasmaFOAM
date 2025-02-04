@@ -1,99 +1,51 @@
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-// Create fields in the air region
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+#include "createDielectricFields.H"
 
-Info<< "Reading physicalProperties\n" << endl;
-
-IOdictionary physicalProperties
-(
-    IOobject
-    (
-        "physicalProperties",
-        runTime.constant(),
-        mesh,
-        IOobject::MUST_READ_IF_MODIFIED,
-        IOobject::NO_WRITE
-    )
-);
-
+// Vacuum permittivity
 dimensionedScalar e0
 (
     "e0",
     dimensionSet(-1, -3, 4, 0, 0, 2, 0),
-    physicalProperties
+    scalar(8.85419e-12)
 );
 
-// Read streamer time and frequency
-scalar dischargeTime =
-    runTime.controlDict().lookupOrDefault<scalar>("dischargeTime", 0.5e-05);
+// Region convergence variables
+int regionLoopCounter=0;
+std::vector<int> voltEqnIter = {1};
 
-scalar freq =
-    runTime.controlDict().lookupOrDefault<scalar>("freq", 1.0e04);
+// Read controlDict for maximum region loops
+int maxRegionLoops =
+    runTime.controlDict().lookupOrDefault("maxRegionLoops", 30000);
 
-// Convergence variables
-int convVoltAextMag=1;
-int convVoltArho=1;
-int convVoltDextMag=1;
-int convVoltDrho=1;
-int convVoltEextMag=1;
-int convVoltErho=1;
-int counter=0;
+// Read controlDict for writing current solution
+int writeRegionLoop =
+    runTime.controlDict().lookupOrDefault("writeRegionLoop", 5000);
 
-Info<< "Reading field voltAextMag\n" << endl;
-volScalarField voltAextMag
+volScalarField epsilon
 (
     IOobject
     (
-        "voltAextMag",
+        "epsilon",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::NO_WRITE
+    ),
+    mesh,
+    dimensionedScalar("temp", dimless, scalar(1))
+);
+
+Info<< "Reading field voltInd\n" << endl;
+volScalarField voltInd
+(
+    IOobject
+    (
+        "voltInd",
         runTime.timeName(),
         mesh,
         IOobject::MUST_READ,
         IOobject::AUTO_WRITE
     ),
     mesh
-);
-
-Info<< "Reading field voltArho\n" << endl;
-volScalarField voltArho
-(
-    IOobject
-    (
-        "voltArho",
-        runTime.timeName(),
-        mesh,
-        IOobject::MUST_READ,
-        IOobject::AUTO_WRITE
-    ),
-    mesh
-);
-
-Info<< "Reading field voltA\n" << endl;
-volScalarField voltA
-(
-    IOobject
-    (
-        "voltA",
-        runTime.timeName(),
-        mesh,
-        IOobject::NO_READ,
-        IOobject::AUTO_WRITE
-    ),
-    mesh,
-    dimensionedScalar("temp",dimensionSet(1,2,-3,0,0,-1,0),scalar(0))
-);
-
-volScalarField epsilonA
-(
-    IOobject
-    (
-        "epsilonA",
-        runTime.timeName(),
-        mesh,
-        IOobject::NO_READ,
-        IOobject::AUTO_WRITE
-    ),
-    mesh,
-    dimensionedScalar("temp",dimless,scalar(1))
 );
 
 Info<< "Reading field rhoq\n" << endl;
@@ -110,59 +62,16 @@ volScalarField rhoq
     mesh
 );
 
-
-Info<< "Calculating field EAextMag\n" << endl;
-volVectorField EAextMag
+Info<< "Calculating field EInd\n" << endl;
+volVectorField EInd
 (
     IOobject
     (
-        "EAextMag",
+        "EInd",
         runTime.timeName(),
         mesh,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    -fvc::grad(voltAextMag)
-);
-
-Info<< "Calculating field EArho\n" << endl;
-volVectorField EArho
-(
-    IOobject
-    (
-        "EArho",
-        runTime.timeName(),
-        mesh,
-        IOobject::NO_READ,
-        IOobject::AUTO_WRITE
-    ),
-    -fvc::grad(voltArho)
-);
-
-Info<< "Calculating field EA\n" << endl;
-volVectorField EA
-(
-    IOobject
-    (
-        "EA",
-        runTime.timeName(),
-        mesh,
-        IOobject::NO_READ,
-        IOobject::AUTO_WRITE
-    ),
-    -fvc::grad(voltA)
-);
-
-Info<< "Calculating field Fc\n" << endl;
-volVectorField Fc
-(
-    IOobject
-    (
-        "Fc",
-        runTime.timeName(),
-        mesh,
-        IOobject::NO_READ,
-        IOobject::AUTO_WRITE
-    ),
-    rhoq*EA
+    -fvc::grad(voltInd)
 );

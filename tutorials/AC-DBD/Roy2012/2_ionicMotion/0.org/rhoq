@@ -1,0 +1,62 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2406                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      rhoq;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 -3 1 0 0 1 0];
+
+internalField   uniform 0;
+
+boundaryField
+{
+    upperBoundary
+    {
+        type            fixedValue;
+        value           uniform 0;
+    }
+
+    leftBoundary
+    {
+        type            fixedValue;
+        value           uniform 0;
+    }
+
+    rightBoundary
+    {
+        type            fixedValue;
+        value           uniform 0;
+    }
+
+    region0_to_dielectric
+    {
+        type            zeroGradient;
+    }
+
+    highVoltage
+    {
+        type            zeroGradient;
+    }
+
+    front
+    {
+        type            empty;
+    }
+
+    back
+    {
+        type            empty;
+    }
+}
+
+// ************************************************************************* //

@@ -1,0 +1,76 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  7  
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      voltInd;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [1 2 -3 0 0 -1 0];
+
+internalField   uniform 0;
+
+boundaryField
+{
+    electrode
+    {
+        type            fixedValue;
+        value           uniform 0;
+    }
+
+    gasInlet
+    {
+        type            zeroGradient;
+    }
+
+    airInlet
+    {
+        type            zeroGradient;
+    }
+
+    outlet
+    {
+        type            fixedValue;
+        value           uniform 0;
+    }
+
+    topBoundary
+    {
+        type            fixedValue;
+        value           uniform 0;
+    }
+
+    region0_to_dielectric
+    {
+        type            compressible::turbulentTemperatureRadCoupledMixed;
+        value           $internalField;
+        Tnbr            voltInd;
+        kappaMethod     lookup;
+        kappa           epsilon;
+    }
+
+    axis
+    {
+        type            empty;
+    }
+
+    frontWedge
+    {
+        type            wedge;
+    }
+
+    backWedge
+    {
+        type            wedge;
+    }
+}
+
+// ************************************************************************* //

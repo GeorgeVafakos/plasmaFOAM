@@ -1,0 +1,26 @@
+#!/bin/bash
+cd "${0%/*}" || exit                                # Run from this directory
+. $WM_PROJECT_DIR/bin/tools/RunFunctions            # Tutorial run functions
+#------------------------------------------------------------------------------
+
+# Get the solver name from the controlDict file
+application=$(getApplication)
+nProcs=$(getNumberOfProcessors)
+
+# Copy fvSchemes, fvSolution and decomposeParDict into Zone folders
+find ./system/* -type d 2>/dev/null -exec cp -v ./system/fvSchemes {} \;
+find ./system/* -type d 2>/dev/null -exec cp -v ./system/fvSolution {} \;
+find ./system/* -type d 2>/dev/null -exec cp -v ./system/decomposeParDict {} \;
+
+# Replace 0 directory contents with 0.org
+rm -r 0
+cp -r 0.org 0
+
+# Decompose
+decomposePar -allRegions -force
+
+# Run solver
+mpirun -oversubscribe -np $nProcs $application -parallel
+
+
+#------------------------------------------------------------------------------

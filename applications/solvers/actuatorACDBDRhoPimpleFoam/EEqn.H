@@ -1,7 +1,5 @@
 {
     volScalarField& he = thermo.he();
-    
-    volScalarField jouleHeat = Fc[(runTime.timeIndex())%numSteps] & U;
 
     fvScalarMatrix EEqn
     (
@@ -18,10 +16,14 @@
           : -dpdt
         )
       - fvm::laplacian(turbulence->alphaEff(), he)
-      + jouleHeat
      ==
         fvOptions(rho, he)
     );
+
+    if (MRF.active())
+    {
+        EEqn += fvc::div(MRF.phi(), p);
+    }
 
     EEqn.relax();
 

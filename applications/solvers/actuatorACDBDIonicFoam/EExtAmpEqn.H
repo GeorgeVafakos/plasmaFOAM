@@ -1,0 +1,55 @@
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// Equations for the External Electric Field
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+//- Calculate the amplitude field value across all regions.
+//- volFields fields ending in <Amp> denote the amplitude.
+
+Info<< "\nStarting external electric field loop\n" << endl;
+
+// Reset counters
+regionLoopCounter = 0;
+solverPerformance::debug = 1;
+Info<< "Current Iteration = " << 1 << endl;
+
+// Loop through different regions to solve the Laplace equations for voltExtAmp
+while (*std::max_element(voltEqnIter.begin(), voltEqnIter.end()) && regionLoopCounter<30000)
+{
+    voltEqnIter.clear();
+
+    // Solve gas region
+    Foam::solverPerformance solvPerfVolt = solve
+    (
+        fvm::laplacian(voltExtAmp)
+    );
+    voltEqnIter.push_back(solvPerfVolt.nIterations());
+
+    // Solve dielectric regions
+    forAll(solidRegions, i)
+    {
+        #include "setRegionDielectricFields.H"
+        Foam::solverPerformance solvPerfVolt = solve 
+        (
+            fvm::laplacian(voltExtAmp)
+        );
+        voltEqnIter.push_back(solvPerfVolt.nIterations());
+    }
+
+    // Print performance at custom iteration intervals
+    regionLoopCounter++;
+    solverPerformance::debug = 0;
+    int printPerformance = 500;
+    if (regionLoopCounter % printPerformance == 0 && (runTime.timeIndex() % printScreenResults == 0 || runTime.timeIndex() == 1))
+    {
+        Info<< "Current Iteration = " << regionLoopCounter << endl;
+        solverPerformance::debug = 1;
+    }
+}
+Info<< "External Field Region Inner Loops = " << regionLoopCounter << endl;
+
+// Calculate the electric field EExtAmp
+EExtAmp = -fvc::grad(voltExtAmp);
+forAll(solidRegions, i)
+{
+    #include "setRegionDielectricFields.H"
+    EExtAmp = -fvc::grad(voltExtAmp);
+}

@@ -1,17 +1,16 @@
 #!/bin/bash
-cd ${0%/*} || exit 1    # Run from this directory
-
-# Source tutorial clean functions
-. $WM_PROJECT_DIR/bin/tools/CleanFunctions
+cd "${0%/*}" || exit                                # Run from this directory
+. $WM_PROJECT_DIR/bin/tools/CleanFunctions          # Tutorial clean functions
+#------------------------------------------------------------------------------
 
 # Delete cellToRegion file
-rm -f ./constant/cellToRegion
+rm -rf constant/cellToRegion
 
 # Delete all subdirectories into the system and constant directories
-find ./system/*   -type d 2>/dev/null -exec rm -v -r {} \;
-find ./constant/* -type d 2>/dev/null -exec rm -v -r {} \;
+rm -rf constant/*/polyMesh  # region meshes
+rm -rf system/*/
 
-# Reset fields
+# Reset fields if there is a 0.org directory
 if [ -d ./0.org ]; then 
     rm -v -r 0 ;
     mv -v 0.org 0 ; 
@@ -19,8 +18,9 @@ fi
 
 # Delete all time steps and logs
 rm -f log.*
-rm -f ./0/cellToRegion
-find ./0/* -type d 2>/dev/null -exec rm -r {}/cellToRegion \;
+rm -f 0/cellToRegion
+rm -rf system/*/
+rm -rf 0/*/cellToRegion
 cleanCase
 
 # Output message
@@ -28,3 +28,4 @@ echo
 echo Cleaning Completed
 
 #------------------------------------------------------------------------------
+

@@ -1,0 +1,78 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2406                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    arch        "LSB;label=32;scalar=64";
+    class       polyBoundaryMesh;
+    location    "constant/dielectric/polyMesh";
+    object      boundary;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+7
+(
+    leftBoundary
+    {
+        type            wall;
+        inGroups        1(wall);
+        nFaces          34;
+        startFace       253675;
+    }
+    rightBoundary
+    {
+        type            wall;
+        inGroups        1(wall);
+        nFaces          34;
+        startFace       253709;
+    }
+    highVoltage
+    {
+        type            wall;
+        inGroups        1(wall);
+        nFaces          98;
+        startFace       253743;
+    }
+    ground
+    {
+        type            wall;
+        inGroups        1(wall);
+        nFaces          645;
+        startFace       253841;
+    }
+    frontAndBack
+    {
+        type            empty;
+        inGroups        1(empty);
+        nFaces          255272;
+        startFace       254486;
+    }
+    dielectric_to_encapsulator
+    {
+        type            mappedWall;
+        inGroups        1(wall);
+        nFaces          1020;
+        startFace       509758;
+        sampleMode      nearestPatchFace;
+        sampleRegion    encapsulator;
+        samplePatch     encapsulator_to_dielectric;
+    }
+    dielectric_to_region0
+    {
+        type            mappedWall;
+        inGroups        1(wall);
+        nFaces          1567;
+        startFace       510778;
+        sampleMode      nearestPatchFace;
+        sampleRegion    region0;
+        samplePatch     region0_to_dielectric;
+    }
+)
+
+// ************************************************************************* //

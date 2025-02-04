@@ -1,8 +1,7 @@
 #!/bin/bash
-cd ${0%/*} || exit 1    # Run from this directory
-
-# Source tutorial run functions
-. $WM_PROJECT_DIR/bin/tools/RunFunctions
+cd "${0%/*}" || exit                                # Run from this directory
+. $WM_PROJECT_DIR/bin/tools/RunFunctions            # Tutorial run functions
+#------------------------------------------------------------------------------
 
 # Convert the 0 directory into 0.org
 mv 0 0.org
@@ -20,25 +19,27 @@ done
 # Run topoSet and Split regions
 splitMeshRegions -cellZones -overwrite
 
-# # # Make the region1 (the air) into the polyMesh
-# rm -vr ./constant/polyMesh
-# mv -v ./constant/region1/polyMesh ./constant/polyMesh
-# rm -vr ./constant/region1
-# rm -vr ./system/region1
-# sed -i 's|constant/region1/polyMesh|constant/polyMesh|g' ./constant/polyMesh/boundary
-# sed -i 's/region1/region0/g' ./constant/polyMesh/boundary
-# sed -i 's/region1/region0/g' ./constant/dielectric/polyMesh/boundary
+# Find all the domain# directories
+DOMAIN_DIR=($(find ./system -type d -regex '.*/domain[0-9]+' -exec basename {} \;))
 
-# Make the domain1 (the air) into the polyMesh
-rm -vr ./constant/polyMesh
-mv -v ./constant/domain0/polyMesh ./constant/polyMesh
-rm -vr ./constant/domain0
-rm -vr ./system/domain0
-sed -i 's|constant/domain1/polyMesh|constant/polyMesh|g' ./constant/polyMesh/boundary
-sed -i 's/domain1/region0/g' ./constant/polyMesh/boundary
-sed -i 's/domain1/region0/g' ./constant/dielectric/polyMesh/boundary
-sed -i 's/domain0/region0/g' ./constant/polyMesh/boundary
-sed -i 's/domain0/region0/g' ./constant/dielectric/polyMesh/boundary
+# Check the number of domain# directories
+if [ ${#DOMAIN_DIR[@]} -gt 1 ]; then
+    echo "Error: More than one polyMesh region found: ${DOMAIN_DIR[*]}"
+    echo "A dielectric region might have been undefined or there are cells left out of the polyMesh region."
+    exit 1
+elif [ ${#DOMAIN_DIR[@]} -eq 0 ]; then
+    echo "Error: No matching domain directory found."
+    exit 1
+else
+    # Make the domain# region (the gas) into the polyMesh
+    rm -vr ./constant/polyMesh
+    mv -v ./constant/$DOMAIN_DIR/polyMesh ./constant/polyMesh
+    rm -vr ./constant/$DOMAIN_DIR
+    rm -vr ./system/$DOMAIN_DIR
+    sed -i "s|constant/$DOMAIN_DIR/polyMesh|constant/polyMesh|g" ./constant/polyMesh/boundary
+    sed -i "s/${DOMAIN_DIR}/region0/g" ./constant/polyMesh/boundary
+    sed -i "s/${DOMAIN_DIR}/region0/g" ./constant/*/polyMesh/boundary
+fi
 
 # Replace 0 directory contents with 0.org
 rm -v -r 0

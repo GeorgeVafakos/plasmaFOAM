@@ -1,9 +1,12 @@
 /*---------------------------------------------------------------------------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
-   \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+   \\    /   O peration     |
+    \\  /    A nd           | www.openfoam.com
      \\/     M anipulation  |
+-------------------------------------------------------------------------------
+    Copyright (C) 2011-2017 OpenFOAM Foundation
+    Copyright (C) 2019 OpenCFD Ltd.
 -------------------------------------------------------------------------------
 License
     This file is part of OpenFOAM.
@@ -31,12 +34,17 @@ Description
     Uses the flexible PIMPLE (PISO-SIMPLE) solution for time-resolved and
     pseudo-transient simulations.
 
+Note
+   The motion frequency of this solver can be influenced by the presence
+   of "updateControl" and "updateInterval" in the dynamicMeshDict.
+
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
 #include "dynamicFvMesh.H"
 #include "fluidThermo.H"
 #include "turbulentFluidThermoModel.H"
+#include "bound.H"
 #include "pimpleControl.H"
 #include "pressureControl.H"
 #include "CorrectPhi.H"
@@ -48,8 +56,15 @@ Description
 
 int main(int argc, char *argv[])
 {
+    argList::addNote
+    (
+        "Transient solver for compressible turbulent plasma driven flow.\n"
+        "With optional mesh motion and mesh topology changes."
+    );
+
     #include "postProcess.H"
 
+    #include "addCheckCaseOptions.H"
     #include "setRootCaseLists.H"
     #include "createTime.H"
     #include "createDynamicFvMesh.H"
@@ -72,13 +87,9 @@ int main(int argc, char *argv[])
 
     Info<< "\nStarting time loop\n" << endl;
 
-    solverPerformance::debug = 1;
     while (runTime.run())
     {
         #include "readDyMControls.H"
-
-        // #include "CourantNo.H"
-        // #include "setDeltaT.H" 
 
         // Store divrhoU from the previous mesh so that it can be mapped
         // and used in correctPhi to ensure the corrected phi has the
@@ -86,16 +97,19 @@ int main(int argc, char *argv[])
         autoPtr<volScalarField> divrhoU;
         if (correctPhi)
         {
-            divrhoU = new volScalarField
+            divrhoU.reset
             (
-                "divrhoU",
-                fvc::div(fvc::absolute(phi, rho, U))
+                new volScalarField
+                (
+                    "divrhoU",
+                    fvc::div(fvc::absolute(phi, rho, U))
+                )
             );
         }
 
         // if (LTS)
         // {
-        //     #include "setDeltaT.H"
+        //     #include "setRDeltaT.H"
         // }
         // else
         // {
@@ -103,52 +117,28 @@ int main(int argc, char *argv[])
         //     #include "setDeltaT.H"
         // }
 
-
         #include "compressibleCourantNo.H"
         #include "setDeltaT.H" 
-        runTime++;
-
-        // runTime.value() = 2.0;
+        ++runTime;
 
         Info<< "Time = " << runTime.timeName() << nl << endl;
-
-
-        // // Set forceSwitch on/off
-        // numPeriods = floor(runTime.value()/Tp);
-        // if ( runTime.value()>=(numPeriods*Tp+startForcePerc*Tp) && runTime.value()<=(numPeriods*Tp+stopForcePerc*Tp) )
-        //     forceSwitch = 1.0;
-        // else
-        //     forceSwitch = 0.0;
-
-
-        // Set deltaT according to writen forces times
-        // runTime.deltaT().value() = forceTimes[(runTime.timeIndex()-1)%numSteps+1] - forceTimes[(runTime.timeIndex()-1)%numSteps];
-
-        // runTime.setDeltaT(forceTimes[(runTime.timeIndex()-1)%numSteps+1] - forceTimes[(runTime.timeIndex()-1)%numSteps]);
-        // runTime.setDeltaT(0.001)
-        
         Info<< "Run Time Info: \tDt = " << runTime.deltaTValue() << "\tPeriod: " << int(runTime.value()/forceTimes[forceTimes.size()-1])+1 << "\tPeriod's Time Step: " << (runTime.timeIndex())%(numSteps) << " of " << numSteps-1 << endl; 
-        
-        // Info<< "run time = " << runTime.deltaTValue() << endl;
-        // Info<< "run time = " << runTime.deltaT().value() << endl;
-        // Info<< "This is the Time step = " << (runTime.timeIndex()-1)%numSteps+1 << "         " << (runTime.timeIndex()-1)%numSteps << endl;
-        // Info<< "This is the Time step = " << forceTimes[(runTime.timeIndex()-1)%numSteps+1] - forceTimes[(runTime.timeIndex()-1)%numSteps] << nl << endl;
 
 
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
-            if (pimple.firstPimpleIter() || moveMeshOuterCorrectors)
+            if (pimple.firstIter() || moveMeshOuterCorrectors)
             {
                 // Store momentum to set rhoUf for introduced faces.
                 autoPtr<volVectorField> rhoU;
                 if (rhoUf.valid())
                 {
-                    rhoU = new volVectorField("rhoU", rho*U);
+                    rhoU.reset(new volVectorField("rhoU", rho*U));
                 }
 
                 // Do any mesh changes
-                mesh.update();
+                mesh.controlledUpdate();
 
                 if (mesh.changing())
                 {
@@ -173,7 +163,7 @@ int main(int argc, char *argv[])
                 }
             }
 
-            if (pimple.firstPimpleIter() && !pimple.simpleRho())
+            if (pimple.firstIter() && !pimple.SIMPLErho())
             {
                 #include "rhoEqn.H"
             }
@@ -205,15 +195,7 @@ int main(int argc, char *argv[])
         runTime.write();
         Info<< "Max U = " << max(U.component(0)) << endl;
 
-        Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-            << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-            << nl << endl;
-
-        solverPerformance::debug = 0;
-        if (runTime.timeIndex() % 100 == 0)
-        {
-            solverPerformance::debug = 1;
-        }
+        runTime.printExecutionTime(Info);
     }
 
     Info<< "End\n" << endl;
