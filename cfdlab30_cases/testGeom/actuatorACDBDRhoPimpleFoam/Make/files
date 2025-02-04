@@ -1,3 +1,0 @@
-actuatorACDBDRhoPimpleFoam.C
-
-EXE = $(FOAM_USER_APPBIN)/actuatorACDBDRhoPimpleFoam
