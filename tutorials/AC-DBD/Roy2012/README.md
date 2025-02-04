@@ -1,4 +1,4 @@
-# AC-DBD Demo Case
+# AC-DBD Case - Roy 2012
 
 This tutorial simulates the AC-driven sDBD asymmetric actuator, using the geometry of Durcher and Roy [1]. The plasma actuator is placed in quiescent air and is powered by a sinusoidal high voltage $V_{p-p}=20~ kV$ and frequency $f=14~ kHz$. 
 
