@@ -1,0 +1,16 @@
+EXCITATION
+O2 -> O2(v3)
+ 5.700000e-1
+SPECIES: e / O2
+PROCESS: E + O2 -> E + O2(v3), Excitation
+PARAM.:  E = 0.57 eV
+DATABASE: Itikawa
+COMMENT: Vibrational Excitations v#039=3.
+UPDATED: 2012-10-17 14:27:42
+COLUMNS: Energy (eV) | Cross section (m2)
+-----------------------------
+ 5.700000e-1	0.000000e+0
+ 7.000000e+0	4.500000e-22
+ 1.000000e+1	7.500000e-22
+ 1.500000e+1	6.500000e-23
+-----------------------------

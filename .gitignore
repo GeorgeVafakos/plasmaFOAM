@@ -1,3 +1,8 @@
 linux64GccDPInt32Opt/
 .vscode
 dynamicCode/
+lnInclude/
+test/
+polyMesh/
+__pycache__/
+bolsigExe/

@@ -1,0 +1,38 @@
+EXCITATION
+N2 -> N2 (v=0 - v=9)
+ 2.500000e+0
+SPECIES: e / N2
+PROCESS: E + N2 -> E + N2 (v=0 - v=9), Excitation
+PARAM.:  E = 2.5 eV, complete set
+DATABASE: IST-Lisbon
+COMMENT: [e + N2(X,v=0) <-> e + N2(X,v=9), Vibrational] Pitchford L C and Phelps A V 1982
+COMMENT: Bull. Am. Phys. Soc. 27 109 Tachibana K and Phelps A V 1979 JCP 71 3544 Schulz G J 1962
+COMMENT: Phys. Rev. 125 229 Schulz G J 1964 Phys. Rev. 135 A988 Boness M J W and Schulz G J 1973
+COMMENT: Phys. Rev. A 8 2883.
+UPDATED: 2017-09-03 11:06:09
+COLUMNS: Energy (eV) | Cross section (m2)
+-----------------------------
+ 2.500000e+0	0.000000e+0
+ 2.600000e+0	0.000000e+0
+ 2.700000e+0	1.400000e-22
+ 2.800000e+0	3.900000e-22
+ 2.900000e+0	7.800000e-22
+ 3.000000e+0	4.300000e-22
+ 3.100000e+0	5.000000e-23
+ 3.200000e+0	1.400000e-22
+ 3.300000e+0	6.200000e-22
+ 3.400000e+0	3.700000e-22
+ 3.500000e+0	3.000000e-23
+ 3.600000e+0	1.100000e-22
+ 3.700000e+0	2.300000e-22
+ 3.800000e+0	9.000000e-23
+ 3.900000e+0	2.000000e-23
+ 4.000000e+0	1.200000e-22
+ 4.100000e+0	9.000000e-23
+ 4.200000e+0	5.000000e-23
+ 4.300000e+0	3.000000e-23
+ 4.400000e+0	3.000000e-23
+ 4.500000e+0	2.000000e-23
+ 4.600000e+0	0.000000e+0
+ 1.000000e+3	0.000000e+0
+-----------------------------

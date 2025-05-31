@@ -1,0 +1,39 @@
+EXCITATION
+He <-> He(4P1)
+ 2.374000e+1  3.000000e+0
+SPECIES: e / He
+PROCESS: E + He <-> E + He(4P1), Excitation
+PARAM.:  E = 23.74 eV, g1/g0 = 3, complete set
+DATABASE: IST-Lisbon
+COMMENT: [e + He(1S1) -> e + He(4P1), Excitation] de Heer 1998 INDC(NDS)âˆ’385, Critically
+COMMENT: Assessed Electronâˆ’Impact Excitation Cross Sections for He (11 S), FOMâˆ’Institute for
+COMMENT: Atomic and Molecular Physics Amsterdam 1 (multiplied by 1.66).
+UPDATED: 2017-05-12 12:55:37
+COLUMNS: Energy (eV) | Cross section (m2)
+-----------------------------
+ 2.374000e+1	0.000000e+0
+ 2.380000e+1	2.470000e-24
+ 2.390000e+1	4.050000e-24
+ 2.400000e+1	5.560000e-24
+ 2.450000e+1	1.230000e-23
+ 2.500000e+1	1.780000e-23
+ 2.600000e+1	2.620000e-23
+ 2.700000e+1	3.250000e-23
+ 2.800000e+1	3.780000e-23
+ 3.000000e+1	4.660000e-23
+ 4.000000e+1	9.180000e-23
+ 5.000000e+1	1.310000e-22
+ 6.000000e+1	1.570000e-22
+ 7.000000e+1	1.710000e-22
+ 8.000000e+1	1.790000e-22
+ 9.000000e+1	1.830000e-22
+ 1.000000e+2	1.830000e-22
+ 1.200000e+2	1.780000e-22
+ 1.500000e+2	1.680000e-22
+ 2.000000e+2	1.490000e-22
+ 3.000000e+2	1.200000e-22
+ 4.000000e+2	1.000000e-22
+ 5.000000e+2	8.670000e-23
+ 7.000000e+2	6.870000e-23
+ 1.000000e+3	5.310000e-23
+-----------------------------

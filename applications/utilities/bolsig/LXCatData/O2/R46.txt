@@ -1,0 +1,17 @@
+EXCITATION
+O2 -> O2(2B)
+ 6.120000e+0
+SPECIES: e / O2
+PROCESS: E + O2 -> E + O2(2B), Excitation
+PARAM.:  E = 6.12 eV
+DATABASE: Itikawa
+COMMENT: 2B.
+UPDATED: 2012-10-17 14:29:57
+COLUMNS: Energy (eV) | Cross section (m2)
+-----------------------------
+ 6.120000e+0	0.000000e+0
+ 1.500000e+1	7.200000e-23
+ 2.000000e+1	9.150000e-23
+ 3.000000e+1	8.710000e-23
+ 5.000000e+1	4.720000e-23
+-----------------------------

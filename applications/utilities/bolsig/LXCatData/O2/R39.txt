@@ -1,0 +1,21 @@
+EXCITATION
+O2 -> O2(v2res)
+ 3.800000e-1
+SPECIES: e / O2
+PROCESS: E + O2 -> E + O2(v2res), Excitation
+PARAM.:  E = 0.38 eV
+DATABASE: Itikawa
+COMMENT: Resonance cross section for vibrational excitations v=0->2.
+UPDATED: 2012-10-17 14:29:24
+COLUMNS: Energy (eV) | Cross section (m2)
+-----------------------------
+ 4.570000e-1	0.000000e+0
+ 4.600000e-1	5.000000e-22
+ 4.630000e-1	0.000000e+0
+ 5.740000e-1	0.000000e+0
+ 5.790000e-1	8.000000e-21
+ 5.840000e-1	0.000000e+0
+ 6.890000e-1	0.000000e+0
+ 6.960000e-1	1.300000e-20
+ 7.030000e-1	0.000000e+0
+-----------------------------
