@@ -199,6 +199,7 @@ int main(int argc, char *argv[])
         ne = max(ne,ne0);
         np = max(np,0*ne0);
         nn = max(nn,0*ne0);
+        // T.clamp_min(dimensionedScalar("Tmin", dimTemperature, 300.0));
         
         rhoq = e*(np-ne-nn);
         Fc = rhoq*EA;

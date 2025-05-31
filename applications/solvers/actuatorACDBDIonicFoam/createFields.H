@@ -13,14 +13,6 @@ IOdictionary physicalProperties
     )
 );
 
-// Vacuum permittivity
-dimensionedScalar e0
-(
-    "e0",
-    dimensionSet(-1, -3, 4, 0, 0, 2, 0),
-    scalar(8.85419e-12)
-);
-
 // Ion mobility
 dimensionedScalar muc
 (

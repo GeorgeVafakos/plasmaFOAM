@@ -14,7 +14,7 @@ while (*std::max_element(voltEqnIter.begin(), voltEqnIter.end()) && regionLoopCo
     // Solve gas region
     Foam::solverPerformance solvPerfVolt = solve
     (
-        fvm::laplacian(voltInd) + rhoq/e0
+        fvm::laplacian(voltInd) + rhoq/constant::electromagnetic::epsilon0
     );
     voltEqnIter.push_back(solvPerfVolt.nIterations());
 
