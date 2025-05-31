@@ -23,17 +23,13 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         1.0e-7;
+endTime         3.571428e-05;
 
-deltaT          1.0e-15;
+deltaT          1.0e-12;
 
-writeControl    adjustableRunTime;
+writeControl    runTime;
 
-<<<<<<< HEAD
-writeInterval   5.0e-12;
-=======
-writeInterval   5.0e-13;
->>>>>>> 3294375e0bb63e374141e1c9a0ec01cf5409e8c3
+writeInterval   1.e-6;
 
 purgeWrite      0;
 
@@ -51,8 +47,7 @@ runTimeModifiable true;
 
 adjustTimeStep  yes;
 
-<<<<<<< HEAD
-maxCo           0.4;
+maxCo           0.8;
 
 maxDeltaT       0.00001;
 
@@ -65,12 +60,20 @@ functions
         name            probes;
         writeControl    timeStep;
         writeInterval   1;
-        fields          ( ni ne );
-        probeLocations  ( ( 0 10.0e-6 5.0e-6 ) ( 150.0e-6 10.0e-6 5.0e-6 ) ( 200.0e-6 10.0e-6 5.0e-6 ) );
+        fields          ( rhoq Fc ne np nn );
+        probeLocations  
+        ( 
+        ( 0 0.035e-3 0.025 ) ( 0.5e-3 0.035e-3 0.025 ) ( 1.0e-3 0.035e-3 0.025 ) ( 1.5e-3 0.035e-3 0.025 ) ( 2.0e-3 0.035e-3 0.025 ) ( 3.0e-3 0.035e-3 0.025 ) ( 4.0e-3 0.035e-3 0.025 ) ( 5.0e-3 0.035e-3 0.025 ) ( 6.0e-3 0.035e-3 0.025 ) ( 7.0e-3 0.035e-3 0.025 ) ( 8.0e-3 0.035e-3 0.025 ) ( 9.0e-3 0.035e-3 0.025 ) ( 10.0e-3 0.035e-3 0.025 ) 
+        );
+    }
+    fieldAverage1
+    {
+        type            fieldAverage;
+        libs            ( "libfieldFunctionObjects.so" );
+        writeControl    writeTime;
+        fields          ( Fc { mean on ; prime2Mean off ; base time ; } );
+        log             false;
     }
 }
 
-
-=======
->>>>>>> 3294375e0bb63e374141e1c9a0ec01cf5409e8c3
 // ************************************************************************* //
