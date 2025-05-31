@@ -1,0 +1,17 @@
+EXCITATION
+O2 -> O2(B3)
+ 6.120000e+0
+SPECIES: e / O2
+PROCESS: E + O2 -> E + O2(B3), Excitation
+PARAM.:  E = 6.12 eV
+DATABASE: Itikawa
+COMMENT: b3SIGMA.
+UPDATED: 2012-10-17 14:29:40
+COLUMNS: Energy (eV) | Cross section (m2)
+-----------------------------
+ 6.120000e+0	0.000000e+0
+ 1.500000e+1	6.870000e-21
+ 2.000000e+1	7.900000e-21
+ 3.000000e+1	5.980000e-21
+ 5.000000e+1	2.764000e-21
+-----------------------------

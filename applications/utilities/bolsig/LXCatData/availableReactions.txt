@@ -1,0 +1,139 @@
+ID     Reaction                                            Energy       Database        File      
+==     ========                                            ======       ========        ====      
+1      E + He -> E + He, Elastic                           --           IST-Lisbon      ./LXCatData/He/R1.txt
+2      E + He <-> E + He(2S3), Excitation                  19.82        IST-Lisbon      ./LXCatData/He/R2.txt
+3      E + He <-> E + He(2S1), Excitation                  20.62        IST-Lisbon      ./LXCatData/He/R3.txt
+4      E + He <-> E + He(2P3), Excitation                  20.96        IST-Lisbon      ./LXCatData/He/R4.txt
+5      E + He <-> E + He(2P1), Excitation                  21.218       IST-Lisbon      ./LXCatData/He/R5.txt
+6      E + He <-> E + He(3S3), Excitation                  22.719       IST-Lisbon      ./LXCatData/He/R6.txt
+7      E + He <-> E + He(3S1), Excitation                  22.919       IST-Lisbon      ./LXCatData/He/R7.txt
+8      E + He <-> E + He(3P3), Excitation                  23.009       IST-Lisbon      ./LXCatData/He/R8.txt
+9      E + He <-> E + He(3D1), Excitation                  23.069       IST-Lisbon      ./LXCatData/He/R9.txt
+10     E + He <-> E + He(3D3), Excitation                  23.069       IST-Lisbon      ./LXCatData/He/R10.txt
+11     E + He <-> E + He(3P1), Excitation                  23.09        IST-Lisbon      ./LXCatData/He/R11.txt
+12     E + He <-> E + He(4S3), Excitation                  23.589       IST-Lisbon      ./LXCatData/He/R12.txt
+13     E + He <-> E + He(4S1), Excitation                  23.669       IST-Lisbon      ./LXCatData/He/R13.txt
+14     E + He <-> E + He(4P3), Excitation                  23.709       IST-Lisbon      ./LXCatData/He/R14.txt
+15     E + He <-> E + He(4D1), Excitation                  23.739       IST-Lisbon      ./LXCatData/He/R15.txt
+16     E + He <-> E + He(4D3), Excitation                  23.739       IST-Lisbon      ./LXCatData/He/R16.txt
+17     E + He <-> E + He(4F1), Excitation                  23.739       IST-Lisbon      ./LXCatData/He/R17.txt
+18     E + He <-> E + He(4F3), Excitation                  23.739       IST-Lisbon      ./LXCatData/He/R18.txt
+19     E + He <-> E + He(4P1), Excitation                  23.74        IST-Lisbon      ./LXCatData/He/R19.txt
+20     E + He <-> E + He(5S3), Excitation                  23.972       IST-Lisbon      ./LXCatData/He/R20.txt
+21     E + He <-> E + He(5S1), Excitation                  24.011       IST-Lisbon      ./LXCatData/He/R21.txt
+22     E + He <-> E + He(5P3), Excitation                  24.028       IST-Lisbon      ./LXCatData/He/R22.txt
+23     E + He <-> E + He(5D1), Excitation                  24.043       IST-Lisbon      ./LXCatData/He/R23.txt
+24     E + He <-> E + He(5D3), Excitation                  24.043       IST-Lisbon      ./LXCatData/He/R24.txt
+25     E + He <-> E + He(5FG1), Excitation                 24.043       IST-Lisbon      ./LXCatData/He/R25.txt
+26     E + He <-> E + He(5FG3), Excitation                 24.043       IST-Lisbon      ./LXCatData/He/R26.txt
+27     E + He <-> E + He(5P1), Excitation                  24.046       IST-Lisbon      ./LXCatData/He/R27.txt
+28     E + He <-> E + He(6S3), Excitation                  24.169       IST-Lisbon      ./LXCatData/He/R28.txt
+29     E + He <-> E + He(6S1), Excitation                  24.191       IST-Lisbon      ./LXCatData/He/R29.txt
+30     E + He <-> E + He(6P3), Excitation                  24.201       IST-Lisbon      ./LXCatData/He/R30.txt
+31     E + He <-> E + He(6D1), Excitation                  24.209       IST-Lisbon      ./LXCatData/He/R31.txt
+32     E + He <-> E + He(6D3), Excitation                  24.209       IST-Lisbon      ./LXCatData/He/R32.txt
+33     E + He <-> E + He(6FGH1), Excitation                24.21        IST-Lisbon      ./LXCatData/He/R33.txt
+34     E + He <-> E + He(6FGH3), Excitation                24.21        IST-Lisbon      ./LXCatData/He/R34.txt
+35     E + He <-> E + He(6P1), Excitation                  24.211       IST-Lisbon      ./LXCatData/He/R35.txt
+36     E + He <-> E + He(7S3), Excitation                  24.285       IST-Lisbon      ./LXCatData/He/R36.txt
+37     E + He <-> E + He(7S1), Excitation                  24.298       IST-Lisbon      ./LXCatData/He/R37.txt
+38     E + He <-> E + He(7P3), Excitation                  24.304       IST-Lisbon      ./LXCatData/He/R38.txt
+39     E + He <-> E + He(7D1), Excitation                  24.31        IST-Lisbon      ./LXCatData/He/R39.txt
+40     E + He <-> E + He(7D3), Excitation                  24.31        IST-Lisbon      ./LXCatData/He/R40.txt
+41     E + He <-> E + He(7FGHI1), Excitation               24.31        IST-Lisbon      ./LXCatData/He/R41.txt
+42     E + He <-> E + He(7FGHI3), Excitation               24.31        IST-Lisbon      ./LXCatData/He/R42.txt
+43     E + He <-> E + He(7P1), Excitation                  24.311       IST-Lisbon      ./LXCatData/He/R43.txt
+44     E + He -> E + E + He+, Ionization                   24.5873      IST-Lisbon      ./LXCatData/He/R44.txt
+
+1      E + N2 -> E + N2, Effective                         --           IST-Lisbon      ./LXCatData/N2/R1.txt
+2      E + N2 -> E + N2 (v=0 - v=1), Excitation            0.3          IST-Lisbon      ./LXCatData/N2/R2.txt
+3      E + N2 -> E + N2 (v=0 - v=2), Excitation            0.6          IST-Lisbon      ./LXCatData/N2/R3.txt
+4      E + N2 -> E + N2 (v=0 - v=3), Excitation            0.9          IST-Lisbon      ./LXCatData/N2/R4.txt
+5      E + N2 -> E + N2 (v=0 - v=4), Excitation            1.1          IST-Lisbon      ./LXCatData/N2/R5.txt
+6      E + N2 -> E + N2 (v=0 - v=5), Excitation            1.4          IST-Lisbon      ./LXCatData/N2/R6.txt
+7      E + N2 -> E + N2 (v=0 - v=6), Excitation            1.7          IST-Lisbon      ./LXCatData/N2/R7.txt
+8      E + N2 -> E + N2 (v=0 - v=7), Excitation            2            IST-Lisbon      ./LXCatData/N2/R8.txt
+9      E + N2 -> E + N2 (v=0 - v=8), Excitation            2.2          IST-Lisbon      ./LXCatData/N2/R9.txt
+10     E + N2 -> E + N2 (v=0 - v=9), Excitation            2.5          IST-Lisbon      ./LXCatData/N2/R10.txt
+11     E + N2 -> E + N2 (v=0 - v=10), Excitation           2.7          IST-Lisbon      ./LXCatData/N2/R11.txt
+12     E + N2 -> E + N2[A3Su+(v=0-4)], Excitation          6.2          IST-Lisbon      ./LXCatData/N2/R12.txt
+13     E + N2 -> E + N2 [A3Su+(v=5-9)], Excitation         7            IST-Lisbon      ./LXCatData/N2/R13.txt
+14     E + N2 -> E + N2(B3Pg), Excitation                  7.4          IST-Lisbon      ./LXCatData/N2/R14.txt
+15     E + N2 -> E + N2(W3Du), Excitation                  7.4          IST-Lisbon      ./LXCatData/N2/R15.txt
+16     E + N2 -> E + N2 [A3Su+(v=10+)], Excitation         7.8          IST-Lisbon      ./LXCatData/N2/R16.txt
+17     E + N2 -> E + N2(B3Su-), Excitation                 8.2          IST-Lisbon      ./LXCatData/N2/R17.txt
+18     E + N2 -> E + N2(a1Su-), Excitation                 8.4          IST-Lisbon      ./LXCatData/N2/R18.txt
+19     E + N2 -> E + N2(a1Pg), Excitation                  8.6          IST-Lisbon      ./LXCatData/N2/R19.txt
+20     E + N2 -> E + N2(w1Du), Excitation                  8.9          IST-Lisbon      ./LXCatData/N2/R20.txt
+21     E + N2 -> E + N2(C3Pu), Excitation                  11           IST-Lisbon      ./LXCatData/N2/R21.txt
+22     E + N2 -> E + N2(E3Sg+), Excitation                 11.8         IST-Lisbon      ./LXCatData/N2/R22.txt
+23     E + N2 -> E + N2(a1Sg+), Excitation                 12.2         IST-Lisbon      ./LXCatData/N2/R23.txt
+24     E + N2 -> E + N2(sing-sup), Excitation              13           IST-Lisbon      ./LXCatData/N2/R24.txt
+25     E + N2 -> E + E + N2+(X), Ionization                15.6         IST-Lisbon      ./LXCatData/N2/R25.txt
+26     E + N2 -> E + E + N2+(B), Ionization                18.8         IST-Lisbon      ./LXCatData/N2/R26.txt
+
+1      E + O2 -> O- + O, Attachment                        0            IST-Lisbon      ./LXCatData/O2/R1.txt
+2      E + O2 -> E + O2, Effective                         --           IST-Lisbon      ./LXCatData/O2/R2.txt
+3      E + O2 -> E + O2(v=0 - v=1), Excitation             0.19         IST-Lisbon      ./LXCatData/O2/R3.txt
+4      E + O2 -> E + O2(v=0 - v=2), Excitation             0.38         IST-Lisbon      ./LXCatData/O2/R4.txt
+5      E + O2 -> E + O2(v=0 - v=3), Excitation             0.6          IST-Lisbon      ./LXCatData/O2/R5.txt
+6      E + O2 -> E + O2(v=0 - v=4), Excitation             0.8          IST-Lisbon      ./LXCatData/O2/R6.txt
+7      E + O2 -> E + O2(a1Dg), Excitation                  0.977        IST-Lisbon      ./LXCatData/O2/R7.txt
+8      E + O2 -> E + O2(b1Sg+), Excitation                 1.627        IST-Lisbon      ./LXCatData/O2/R8.txt
+9      E + O2 -> E + O2(A3Su+,C3Du,c1Su-), Excitation      4.5          IST-Lisbon      ./LXCatData/O2/R9.txt
+10     E + O2 -> E + O(3P)+O(3P), Excitation               6            IST-Lisbon      ./LXCatData/O2/R10.txt
+11     E + O2 -> E + O(3P)+O(1D), Excitation               8.4          IST-Lisbon      ./LXCatData/O2/R11.txt
+12     E + O2 -> E + O2(9.97eV), Excitation                9.97         IST-Lisbon      ./LXCatData/O2/R12.txt
+13     E + O2 -> E + O2(14.7eV), Excitation                14.7         IST-Lisbon      ./LXCatData/O2/R13.txt
+14     E + O2 -> E + E + O2+, Ionization                   12.1         IST-Lisbon      ./LXCatData/O2/R14.txt
+15     E + O2, Attachment                                  0            Phelps          ./LXCatData/O2/R15.txt
+16     E + O2 -> O-+O, Attachment                          0            Phelps          ./LXCatData/O2/R16.txt
+17     E + O2 -> E + O2, Effective                         --           Phelps          ./LXCatData/O2/R17.txt
+18     E + O2 -> E + O2(rot), Excitation                   0.02         Phelps          ./LXCatData/O2/R18.txt
+19     E + O2 -> E + O2(v1), Excitation                    0.19         Phelps          ./LXCatData/O2/R19.txt
+20     E + O2 -> E + O2(v1res), Excitation                 0.19         Phelps          ./LXCatData/O2/R20.txt
+21     E + O2 -> E + O2(v2), Excitation                    0.38         Phelps          ./LXCatData/O2/R21.txt
+22     E + O2 -> E + O2(v2res), Excitation                 0.38         Phelps          ./LXCatData/O2/R22.txt
+23     E + O2 -> E + O2(v3), Excitation                    0.57         Phelps          ./LXCatData/O2/R23.txt
+24     E + O2 -> E + O2(v4), Excitation                    0.75         Phelps          ./LXCatData/O2/R24.txt
+25     E + O2 -> E + O2(a1), Excitation                    0.977        Phelps          ./LXCatData/O2/R25.txt
+26     E + O2 -> E + O2(b1), Excitation                    1.627        Phelps          ./LXCatData/O2/R26.txt
+27     E + O2 -> E + O2(4.5eV), Excitation                 4.5          Phelps          ./LXCatData/O2/R27.txt
+28     E + O2 -> E + O2(6.0eV), Excitation                 6            Phelps          ./LXCatData/O2/R28.txt
+29     E + O2 -> E + O2(8.4eV), Excitation                 8.4          Phelps          ./LXCatData/O2/R29.txt
+30     E + O2 -> E + O2(9.97eV), Excitation                9.97         Phelps          ./LXCatData/O2/R30.txt
+31     E + O2 -> E + E + O2+, Ionization                   12.06        Phelps          ./LXCatData/O2/R31.txt
+32     E + O2 -> O-+O, Attachment                          0            Itikawa         ./LXCatData/O2/R32.txt
+33     E + O2 -> E + O2, Elastic                           --           Itikawa         ./LXCatData/O2/R33.txt
+34     E + O2 -> E + O2, Elastic                           --           Itikawa         ./LXCatData/O2/R34.txt
+35     E + O2 -> E + O2, Elastic                           --           Itikawa         ./LXCatData/O2/R35.txt
+36     E + O2 -> E + O2(v1), Excitation                    0.19         Itikawa         ./LXCatData/O2/R36.txt
+37     E + O2 -> E + O2(v1res), Excitation                 0.19         Itikawa         ./LXCatData/O2/R37.txt
+38     E + O2 -> E + O2(v2), Excitation                    0.38         Itikawa         ./LXCatData/O2/R38.txt
+39     E + O2 -> E + O2(v2res), Excitation                 0.38         Itikawa         ./LXCatData/O2/R39.txt
+40     E + O2 -> E + O2(v3), Excitation                    0.57         Itikawa         ./LXCatData/O2/R40.txt
+41     E + O2 -> E + O2(v3res), Excitation                 0.57         Itikawa         ./LXCatData/O2/R41.txt
+42     E + O2 -> E + O2(A1), Excitation                    0.977        Itikawa         ./LXCatData/O2/R42.txt
+43     E + O2 -> E + O2(B1), Excitation                    1.627        Itikawa         ./LXCatData/O2/R43.txt
+44     E + O2 -> E + O2(A3+A'3+c1), Excitation             4.05         Itikawa         ./LXCatData/O2/R44.txt
+45     E + O2 -> E + O+O, Excitation                       6.12         Itikawa         ./LXCatData/O2/R45.txt
+46     E + O2 -> E + O2(2B), Excitation                    6.12         Itikawa         ./LXCatData/O2/R46.txt
+47     E + O2 -> E + O2(B3), Excitation                    6.12         Itikawa         ./LXCatData/O2/R47.txt
+48     E + O2 -> E + O2(LB), Excitation                    6.12         Itikawa         ./LXCatData/O2/R48.txt
+49     E + O2 -> E + E + ionization, Ionization            12.06        Itikawa         ./LXCatData/O2/R49.txt
+50     E + O2 -> E + E + O2+, Ionization                   12.06        Itikawa         ./LXCatData/O2/R50.txt
+51     E + O2 -> E + E + O+, Ionization                    23           Itikawa         ./LXCatData/O2/R51.txt
+52     E + O2 -> E + E + O++, Ionization                   73           Itikawa         ./LXCatData/O2/R52.txt
+
+1      E + O2 -> E + O2, Effective                         --           --              ./LXCatData/O2_old/R1.txt
+2      E + O2 -> E + E + O2+, Ionization                   12.1         --              ./LXCatData/O2_old/R2.txt
+3      E + O2 -> O- + O, Attachment                        0            --              ./LXCatData/O2_old/R3.txt
+4      E + O2 -> O- + O, Attachment                        0            --              ./LXCatData/O2_old/R4.txt
+5      E + O2 -> E + O2(v=0 - v=3), Excitation             0.6          --              ./LXCatData/O2_old/R5.txt
+6      E + O2 -> E + O2(v=0 - v=4), Excitation             0.8          --              ./LXCatData/O2_old/R6.txt
+7      E + O2 -> E + O2(a1Dg), Excitation                  0.977        --              ./LXCatData/O2_old/R7.txt
+8      E + O2 -> E + O2(b1Sg+), Excitation                 1.627        --              ./LXCatData/O2_old/R8.txt
+9      E + O2 -> E + O2(A3Su+,C3Du,c1Su-), Excitation      4.5          --              ./LXCatData/O2_old/R9.txt
+10     E + O2 -> E + O + O, Excitation                     5.58         --              ./LXCatData/O2_old/R10.txt
+11     E + O2 -> E + O + O(1D), Excitation                 8.4          --              ./LXCatData/O2_old/R11.txt
+
