@@ -11,7 +11,7 @@ echo ========================================
 wmake libso parabolicInlet
 wmake libso potentialTools
 wmake libso transportTools
-wmake libso plasmaChemistryTools
+wmake libso plasmaChemistry
 
 #------------------------------------------------------------------------------
 

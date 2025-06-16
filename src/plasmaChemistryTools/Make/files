@@ -1,4 +1,0 @@
-laminar2/laminars2.C
-reaction/reactions/makeReactions.C
-
-LIB = $(FOAM_USER_LIBBIN)/libplasmaChemistryTools
