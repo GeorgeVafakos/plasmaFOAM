@@ -1,0 +1,4 @@
+dummyThermo/dummyThermo.C
+plasmaChemistryModel/plasmaChemistryModel.C
+
+LIB = $(FOAM_USER_LIBBIN)/libplasmaChemistry
