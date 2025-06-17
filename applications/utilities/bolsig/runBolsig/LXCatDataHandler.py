@@ -236,7 +236,7 @@ class reactionSelector:
             for lineNumber, line in enumerate(lines):
                 # Remove white spaces at begging and end of line
                 line = line.strip()
-
+                
                 # Ignore commented lines and empty lines
                 if line.startswith('#') or not line.strip():
                     continue
@@ -265,6 +265,7 @@ class reactionSelector:
                                     self._selectedReactions[sp]['reaction'] = [file for i, file in zip(self._availableReactions[sp]['ID'], self._availableReactions[sp]['reaction']) if i in self._selectedReactions[sp]['ID']]
                                     self._selectedReactions[sp]['energy'] = [file for i, file in zip(self._availableReactions[sp]['ID'], self._availableReactions[sp]['energy']) if i in self._selectedReactions[sp]['ID']]
                                     self._selectedReactions[sp]['database'] = [file for i, file in zip(self._availableReactions[sp]['ID'], self._availableReactions[sp]['database']) if i in self._selectedReactions[sp]['ID']]
+                                    
                                 # Uncomment the else statement if you want to stop skipping empty lines between the reactions in the input file
                                 # else: 
                                 #     break
@@ -285,6 +286,12 @@ class reactionSelector:
                             self._selectedReactions = self.__extractReactionsFromLiterature(os.path.join(self._dataPath,literatureDataFile), literaturePaperKeyword)
                         else:
                             raise Exception(f'File:"{self._inputFileName}". Unknown input "{selectionMethod}". Available options are "allAvailable", "literature" or "custom"')
+                    
+                    # If the selectReactionMethod is found, break the loop
+                    break
+                else:
+                    raise Exception(f'File:"{self._inputFileName}". The selectReactionMethod entry not found.')
+    
 
     # Create cross sections file
     # --------------------------

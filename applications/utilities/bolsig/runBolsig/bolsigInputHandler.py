@@ -277,7 +277,7 @@ class bolsigExecutor:
     # ----------------------
     def runBolsigCode(self):
         # Find BOLSIG+ executable path
-        bolsigExecutablePath = os.path.join(os.path.dirname(__file__),'BOLSIG','bolsigminus')
+        bolsigExecutablePath = os.path.join(os.path.dirname(__file__),'bolsigExe','bolsigminus')
 
         # Execute BOLSIG+ code according to current OS
         try:
