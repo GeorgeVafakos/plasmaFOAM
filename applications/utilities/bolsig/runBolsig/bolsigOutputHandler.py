@@ -170,27 +170,145 @@ class bolsigOutputReader:
         for row in table:
             print(' '.join(map(str, row)))
 
-    # Write BOLSIG+ data table
-    # ------------------------
-    def writeCoeffsTable(self, filename, fileFormat='csv', headers=True):
+    # # Write BOLSIG+ data table
+    # # ------------------------
+    # def writeResults(self, filename, fileFormat='csv', headers=True):
+    #     self._coeffsTableFileName = filename
+    #     self._bolsigCoeffsDirName = 'bolsigGeneratedCoeffs'
+
+    #     # Create directory to store coefficients table
+    #     os.makedirs(os.path.join(self._inputDirPath, self._bolsigCoeffsDirName), exist_ok=True)
+
+    #     # Check if the fileFormat argument is correct
+    #     if fileFormat not in ["csv", "dat"]:
+    #         raise ValueError('File format must be "csv" or "dat".')
+
+    #     separator = ',' if fileFormat == 'csv' else ' '
+    #     self._coeffsTableFileName = f'{self._coeffsTableFileName}.{fileFormat}'
+    #     self._coeffsTableFilePath = os.path.join(self._inputDirPath, self._bolsigCoeffsDirName, self._coeffsTableFileName)
+
+    #     with open(self._coeffsTableFilePath, mode='w', newline='') as file:
+    #         writer = csv.writer(file, delimiter=separator)
+    #         if headers:
+    #             writer.writerow(self.bolsigCoeffsTableColumnNames)
+    #         writer.writerows(self.bolsigCoeffsTable)
+
+    #     print(f'Data written to {self._coeffsTableFileName}')
+
+
+
+    def writeResults(self, fileFormat, filename):
+        """
+        Write the BOLSIG+ coefficients table to a file.
+        
+        Args:
+            filename (str): The name of the output file.
+            fileFormat (str): The format of the output file ('csv', 'dat', or 'openfoam').
+            headers (bool): Whether to include headers in the output file.
+        """
+
         self._coeffsTableFileName = filename
-        self._bolsigCoeffsDirName = 'bolsigGeneratedCoeffs'
 
-        # Create directory to store coefficients table
-        os.makedirs(os.path.join(self._inputDirPath, self._bolsigCoeffsDirName), exist_ok=True)
+        # Create directory to store BOLSIG+ results
+        self._bolsigOuputDirName = os.path.join(self._inputDirPath, 'bolsigOutput')
+        os.makedirs(self._bolsigOuputDirName, exist_ok=True)
 
-        # Check if the fileFormat argument is correct
-        if fileFormat not in ["csv", "dat"]:
-            raise ValueError('File format must be "csv" or "dat".')
+        # Dispatch based on format
+        writers = {
+            "csv": self._writeCsv,
+            "dat": self._writeDat,
+            "openfoam": self._writeOpenFoamDict
+        }
 
-        separator = ',' if fileFormat == 'csv' else ' '
-        self._coeffsTableFileName = f'{self._coeffsTableFileName}.{fileFormat}'
-        self._coeffsTableFilePath = os.path.join(self._inputDirPath, self._bolsigCoeffsDirName, self._coeffsTableFileName)
+        if fileFormat not in writers:
+            raise ValueError('File format must be "csv", "dat", or "openfoam".')
 
-        with open(self._coeffsTableFilePath, mode='w', newline='') as file:
-            writer = csv.writer(file, delimiter=separator)
-            if headers:
-                writer.writerow(self.bolsigCoeffsTableColumnNames)
+        # Call the appropriate writer method
+        writers[fileFormat]()
+
+
+    def _writeCsv(self):
+        """
+        Write the BOLSIG+ coefficients table to a CSV file.
+        """
+        # Define the path for the CSV file
+        path = os.path.join(self._bolsigOuputDirName, self._coeffsTableFileName + '.csv')
+
+        # Write the coefficients table to the CSV file
+        with open(path, mode='w', newline='') as file:
+            writer = csv.writer(file, delimiter=',')
+            writer.writerow(self.bolsigCoeffsTableColumnNames)
             writer.writerows(self.bolsigCoeffsTable)
+        print(f'Data written to {path}')
 
-        print(f'Data written to {self._coeffsTableFileName}')
+
+    def _writeDat(self):
+        """
+        Write the BOLSIG+ coefficients table to a .dat file using fixed-width columns.
+        """
+        path = os.path.join(self._bolsigOuputDirName, self._coeffsTableFileName + '.dat')
+
+        with open(path, mode='w') as file:
+            # Write header with fixed width
+            header_line = ''.join(f"{col:>26}" for col in self.bolsigCoeffsTableColumnNames)
+            file.write(header_line + '\n')
+
+            # Write rows with scientific notation (e.g., 1.23e+04) and fixed width
+            for row in self.bolsigCoeffsTable:
+                line = ''.join(f"{float(val):26.10e}" for val in row)
+                file.write(line + '\n')
+
+        print(f'Data written to {path}')
+
+
+    def _writeOpenFoamDict(self):
+        """
+        Write the BOLSIG+ coefficients table to an OpenFOAM dictionary file.
+        """
+        path = os.path.join(self._bolsigOuputDirName, 'bolsigProperties')
+
+        with open(path, mode='w') as file:
+            file.write(r'/*--------------------------------*- C++ -*----------------------------------*\ ' + '\n')
+            file.write(r'| =========                 |                                                 |' + '\n')
+            file.write(r'| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |' + '\n')
+            file.write(r'|  \\    /   O peration     | Version:  2406                                  |' + '\n')
+            file.write(r'|   \\  /    A nd           | Website:  www.openfoam.com                      |' + '\n')
+            file.write(r'|    \\/     M anipulation  |                                                 |' + '\n')
+            file.write(r'\*---------------------------------------------------------------------------*/' + '\n')
+            file.write(r'FoamFile' + '\n')
+            file.write(r'{' + '\n')
+            file.write(r'    version     2.0;' + '\n')
+            file.write(r'    format      ascii;' + '\n')
+            file.write(r'    class       dictionary;' + '\n')
+            file.write(r'    object      bolsigProperties;' + '\n')
+            file.write(r'}' + '\n')
+            file.write(r'// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //' + '\n\n')
+
+            # Write EN block
+            self.__writeENBlock(file)
+
+            print(type(file))
+
+            print(f'Data written to {path}')
+
+
+    def __writeENBlock(self, file):
+        """
+        Write the unique E/N values from the coefficients table to an OpenFOAM-style dictionary block.
+
+        Args:
+            file : File object to write the E/N values to.
+        """
+        uniqueEN_values = set()
+        EN_values = []
+
+        for row in self.bolsigCoeffsTable:
+            val = float(row[0])
+            if val not in uniqueEN_values:
+                uniqueEN_values.add(val)
+                EN_values.append(val)
+
+        file.write('EN\n(\n')
+        for val in EN_values:
+            file.write(f'    {val:.6f}\n')
+        file.write(');\n\n')

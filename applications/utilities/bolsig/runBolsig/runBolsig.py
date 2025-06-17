@@ -18,6 +18,7 @@ def runBolsigMain(projectPath, inputFilePath):
     LXCatData.writeAvailableReactions('availableReactions.txt')
 
 
+
     # ---------------------------------------------------------------
     # --- Select the desired reactions 
     # ---------------------------------------------------------------
@@ -60,7 +61,7 @@ def runBolsigMain(projectPath, inputFilePath):
     #- 1st input: file name
     #- 2nd input (optional): choose between csv (default) and dat file formats
     #- 3rd input (optional): write the column header - true (default) or false 
-    bolsigData.writeCoeffsTable('coeffsTable')
+    bolsigData.writeResults('openfoam', 'bolsigDict')
 
 
     print('\nEND')

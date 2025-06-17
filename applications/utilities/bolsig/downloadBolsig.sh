@@ -18,11 +18,11 @@ cd "${0%/*}" || exit
 bolsigLinkAdress=https://www.bolsig.laplace.univ-tlse.fr/wp-content/uploads/2024/07/bolsigplus072024-linux.zip
 
 # Download and extract the files
-mkdir -p ./src/runBolsig/BOLSIG
-wget -O ./src/runBolsig/BOLSIG/bolsigFiles.zip $bolsigLinkAdress
-unzip -j -o ./src/runBolsig/BOLSIG/bolsigFiles.zip bolsigminus -d ./src/runBolsig/BOLSIG
-chmod +x ./src/runBolsig/BOLSIG/bolsigminus
-rm ./src/runBolsig/BOLSIG/bolsigFiles.zip
+mkdir -p ./runBolsig/bolsigExe
+wget -O ./runBolsig/bolsigExe/bolsigFiles.zip $bolsigLinkAdress
+unzip -j -o ./runBolsig/bolsigExe/bolsigFiles.zip bolsigminus -d ./runBolsig/bolsigExe
+chmod +x ./runBolsig/bolsigExe/bolsigminus
+rm ./runBolsig/bolsigExe/bolsigFiles.zip
 
 # Print final message
 echo

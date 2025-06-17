@@ -125,15 +125,3 @@ ID     Reaction                                            Energy       Database
 51     E + O2 -> E + E + O+, Ionization                    23           Itikawa         ./LXCatData/O2/R51.txt
 52     E + O2 -> E + E + O++, Ionization                   73           Itikawa         ./LXCatData/O2/R52.txt
 
-1      E + O2 -> E + O2, Effective                         --           --              ./LXCatData/O2_old/R1.txt
-2      E + O2 -> E + E + O2+, Ionization                   12.1         --              ./LXCatData/O2_old/R2.txt
-3      E + O2 -> O- + O, Attachment                        0            --              ./LXCatData/O2_old/R3.txt
-4      E + O2 -> O- + O, Attachment                        0            --              ./LXCatData/O2_old/R4.txt
-5      E + O2 -> E + O2(v=0 - v=3), Excitation             0.6          --              ./LXCatData/O2_old/R5.txt
-6      E + O2 -> E + O2(v=0 - v=4), Excitation             0.8          --              ./LXCatData/O2_old/R6.txt
-7      E + O2 -> E + O2(a1Dg), Excitation                  0.977        --              ./LXCatData/O2_old/R7.txt
-8      E + O2 -> E + O2(b1Sg+), Excitation                 1.627        --              ./LXCatData/O2_old/R8.txt
-9      E + O2 -> E + O2(A3Su+,C3Du,c1Su-), Excitation      4.5          --              ./LXCatData/O2_old/R9.txt
-10     E + O2 -> E + O + O, Excitation                     5.58         --              ./LXCatData/O2_old/R10.txt
-11     E + O2 -> E + O + O(1D), Excitation                 8.4          --              ./LXCatData/O2_old/R11.txt
-

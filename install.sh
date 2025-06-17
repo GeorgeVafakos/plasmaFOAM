@@ -2,10 +2,6 @@
 cd "${0%/*}" || exit                                # Run from this directory
 #------------------------------------------------------------------------------
 
-# Download BOLSIG+ if not preset
-chmod u+x applications/utilities/bolsig/downloadBolsig.sh
-bash applications/utilities/bolsig/downloadBolsig.sh
-
 # Define the default symlink location
 SYMLINK_PATH="$WM_PROJECT_USER_DIR/src/simlinks"
 LIB_USER_SRC="$PWD/src"
