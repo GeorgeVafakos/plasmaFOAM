@@ -18,7 +18,6 @@ def runBolsigMain(projectPath, inputFilePath):
     LXCatData.writeAvailableReactions('availableReactions.txt')
 
 
-
     # ---------------------------------------------------------------
     # --- Select the desired reactions 
     # ---------------------------------------------------------------
