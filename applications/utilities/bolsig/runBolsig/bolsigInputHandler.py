@@ -106,7 +106,7 @@ class bolsigExecutor:
                 if moleFractions[sp][3] not in ['linear', 'quadratic', 'exponential']:
                     raise Exception(f'gasComposition grid spacing of {sp} entry must be: "linear", "quadratic" or "exponential". Found "{moleFractions[sp][3]}". File: {self._inputFileName}')
                 self.__bolsigRunType += 1
-                speciesRUN2D = sp
+                self._speciesRUN2D = sp
                 file.write(f'VAR ')
             else:
                 raise Exception(f'gasComposition keyword must be followed by 1 or 4 values. Found {len(moleFractions[sp])} entries for {sp}. File: {self._inputFileName}')
@@ -163,10 +163,10 @@ class bolsigExecutor:
             file.write('{:g}{}/ Ionization degree\n'.format(0, self.__tabs()))
 
             # Gas particle density
-            gasDensity = self.__readInputFile('gasDensity')
-            if len(gasDensity) > 1:
+            self._gasDensity = self.__readInputFile('gasDensity')
+            if len(self._gasDensity) > 1:
                 raise Exception(f'The gas density entries are more than one. File: {self._inputFileName}')
-            file.write('{:g}{}/ Gas particle density (1/m3)\n'.format(float(gasDensity[0]), self.__tabs(4)))
+            file.write('{:g}{}/ Gas particle density (1/m3)\n'.format(float(self._gasDensity[0]), self.__tabs(4)))
 
             file.write('{:g}{}/ Ion charge parameter\n'.format(-1, self.__tabs()))
             file.write('{:g}{}/ Ion/neutral mass ratio\n'.format(1, self.__tabs()))
@@ -214,7 +214,7 @@ class bolsigExecutor:
                     if moleFractions[sp][3] not in ['linear', 'quadratic', 'exponential']:
                         raise Exception(f'gasComposition grid spacing of {sp} entry must be: "linear", "quadratic" or "exponential". Found "{moleFractions[sp][3]}". File: {self._inputFileName}')
                     self.__bolsigRunType += 1
-                    speciesRUN2D = sp
+                    self._speciesRUN2D = sp
                     file.write(f'VAR ')
                 else:
                     raise Exception(f'gasComposition keyword must be followed by 1 or 4 values. Found {len(moleFractions[sp])} entries for {sp}. File: {self._inputFileName}')
@@ -237,13 +237,13 @@ class bolsigExecutor:
             elif self.__bolsigRunType == 2:
                 file.write(f'RUN2D\n')
                 file.write('{:d}{}/ First variable: 1=E/N; 2=Mean energy; 3=Maxwellian energy \n'.format(1, self.__tabs()))
-                file.write('{:g} {:g} {:g} {:g}{}/ Min1 Max1 Min2 Max2\n'.format(self.__redElecField[0][0], self.__redElecField[0][1], moleFractions[speciesRUN2D][0], moleFractions[speciesRUN2D][1], self.__tabs(4)))
-                file.write('{:d} {:d}{}/ Num1 Num2\n'.format(self.__redElecField[0][2], moleFractions[speciesRUN2D][2], self.__tabs(5)))
+                file.write('{:g} {:g} {:g} {:g}{}/ Min1 Max1 Min2 Max2\n'.format(self.__redElecField[0][0], self.__redElecField[0][1], moleFractions[self._speciesRUN2D][0], moleFractions[self._speciesRUN2D][1], self.__tabs(4)))
+                file.write('{:d} {:d}{}/ Num1 Num2\n'.format(self.__redElecField[0][2], moleFractions[self._speciesRUN2D][2], self.__tabs(5)))
                 for i, gridType in enumerate(['linear','quadratic','exponential']):
                     if self.__redElecField[0][3] == gridType:
                         file.write(f'{i+1} ')
                 for i, gridType in enumerate(['linear','quadratic','exponential']):
-                    if moleFractions[speciesRUN2D][3] == gridType:
+                    if moleFractions[self._speciesRUN2D][3] == gridType:
                         file.write(f'{i+1} ')
                 file.write(f'{self.__tabs(5)}/ Type1 Type2: 1=Linear; 2=Quadratic; 3=Exponential\n')
                 file.write(f'bolsigOutRun2D.dat{self.__tabs(2)}/ Output file of RUN2D\n\n') # A secondary output file, for additional info

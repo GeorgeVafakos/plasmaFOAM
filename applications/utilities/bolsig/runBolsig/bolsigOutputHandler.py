@@ -15,6 +15,8 @@ class bolsigOutputReader:
         self._coeffsTableFileName = str()
         self._bolsigOuputFileName = bolsigExecutorObj._bolsigOuputFileName 
         self._inputDirPath = bolsigExecutorObj._inputDirPath 
+        self._speciesWithVaryingMoleFraction = getattr(bolsigExecutorObj, "_speciesRUN2D", None)
+        self._gasDensity = float(bolsigExecutorObj._gasDensity[0])
 
     # Method to check if string is a number
     # -------------------------------------
@@ -170,31 +172,6 @@ class bolsigOutputReader:
         for row in table:
             print(' '.join(map(str, row)))
 
-    # # Write BOLSIG+ data table
-    # # ------------------------
-    # def writeResults(self, filename, fileFormat='csv', headers=True):
-    #     self._coeffsTableFileName = filename
-    #     self._bolsigCoeffsDirName = 'bolsigGeneratedCoeffs'
-
-    #     # Create directory to store coefficients table
-    #     os.makedirs(os.path.join(self._inputDirPath, self._bolsigCoeffsDirName), exist_ok=True)
-
-    #     # Check if the fileFormat argument is correct
-    #     if fileFormat not in ["csv", "dat"]:
-    #         raise ValueError('File format must be "csv" or "dat".')
-
-    #     separator = ',' if fileFormat == 'csv' else ' '
-    #     self._coeffsTableFileName = f'{self._coeffsTableFileName}.{fileFormat}'
-    #     self._coeffsTableFilePath = os.path.join(self._inputDirPath, self._bolsigCoeffsDirName, self._coeffsTableFileName)
-
-    #     with open(self._coeffsTableFilePath, mode='w', newline='') as file:
-    #         writer = csv.writer(file, delimiter=separator)
-    #         if headers:
-    #             writer.writerow(self.bolsigCoeffsTableColumnNames)
-    #         writer.writerows(self.bolsigCoeffsTable)
-
-    #     print(f'Data written to {self._coeffsTableFileName}')
-
 
 
     def writeResults(self, fileFormat, filename):
@@ -284,31 +261,100 @@ class bolsigOutputReader:
             file.write(r'}' + '\n')
             file.write(r'// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //' + '\n\n')
 
-            # Write EN block
-            self.__writeENBlock(file)
+            # Write E/N
+            self.__writeEN(file)
 
-            print(type(file))
+            # Write the number densities of main species
+            self.__writeNumberDensity(file)
+
+            # Write mobility and diffusion coefficients
+            self.__writeTransportCoeff(file, 'Mobility*N_((1/m/V/s))', 'mobility')
+            self.__writeTransportCoeff(file, 'Diffusion*N_(1/m/s)', 'diffusion')
+
 
             print(f'Data written to {path}')
 
 
-    def __writeENBlock(self, file):
+    def __writeEN(self, file):
         """
         Write the unique E/N values from the coefficients table to an OpenFOAM-style dictionary block.
 
         Args:
             file : File object to write the E/N values to.
         """
-        uniqueEN_values = set()
-        EN_values = []
-
+        # Find unique E/N values
+        uniqueVlues = set()
+        EN = list()
         for row in self.bolsigCoeffsTable:
             val = float(row[0])
-            if val not in uniqueEN_values:
-                uniqueEN_values.add(val)
-                EN_values.append(val)
+            if val not in uniqueVlues:
+                uniqueVlues.add(val)
+                EN.append(val)
 
-        file.write('EN\n(\n')
-        for val in EN_values:
-            file.write(f'    {val:.6f}\n')
-        file.write(');\n\n')
+        # Only write if E/N varies
+        if len(EN) > 1:
+            file.write('EN\n(\n')
+            for val in EN:
+                file.write(f'    {val:.6f}\n')
+            file.write(');\n\n')
+
+
+    def __writeNumberDensity(self, file):
+        """
+        Write the unique mole fraction values of the varying species to the OpenFOAM dictionary.
+        Species name is determined automatically from the input file.
+
+        Args:
+            file : File object to write the mole fraction values to.
+        """
+        species = self._speciesWithVaryingMoleFraction
+
+        if not species:
+            return  # No varying species defined; nothing to write
+
+        if species not in self.bolsigCoeffsTableColumnNames:
+            raise ValueError(f"Species '{species}' not found in BOLSIG+ output.")
+
+        index = self.bolsigCoeffsTableColumnNames.index(species)
+
+        # Find unique mole fraction values
+        uniqueValues = set()
+        moleFractions = list()
+        for row in self.bolsigCoeffsTable:
+            val = float(row[index])
+            if val not in uniqueValues:
+                uniqueValues.add(val)
+                moleFractions.append(val)
+
+        # Only write if the mole fraction varies
+        if len(moleFractions) > 1:
+            file.write(f"{species}\n(\n")
+            for val in moleFractions:
+                file.write(f"    {val:.6f}\n")
+            file.write(");\n\n")
+
+
+    def __writeTransportCoeff(self, file, coeffNameBolsig, coeffNameOpenFoam):
+        """
+        Write the mobility cofficient values.
+
+        Args:
+            file : File object to write the E/N values to.
+            coeffNameBolsig : Name of the coefficient to write (e.g., 'Mobility*N_((1/m/V/s))').
+            coeffNameOpenFoam : Name of the coefficient in OpenFOAM format (e.g., 'mobility').
+        """
+
+        index = self.bolsigCoeffsTableColumnNames.index(coeffNameBolsig)
+
+        # Calculate the transport coefficient values
+        transpCoeff = list()
+        for row in self.bolsigCoeffsTable:
+            val = float(row[index]/self._gasDensity)
+            transpCoeff.append(val)
+
+        # Write the transport coefficient to file
+        if len(transpCoeff) > 1:
+            file.write(f'{coeffNameOpenFoam}\n(\n')
+            for val in transpCoeff:
+                file.write(f'    {val:.6e}\n')
+            file.write(');\n\n')
