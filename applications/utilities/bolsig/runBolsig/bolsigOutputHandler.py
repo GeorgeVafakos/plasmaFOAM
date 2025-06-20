@@ -268,8 +268,11 @@ class bolsigOutputReader:
             self.__writeNumberDensity(file)
 
             # Write mobility and diffusion coefficients
-            self.__writeTransportCoeff(file, 'Mobility*N_((1/m/V/s))', 'mobility')
-            self.__writeTransportCoeff(file, 'Diffusion*N_(1/m/s)', 'diffusion')
+            self.__writeTransportCoefficient(file, 'Mobility*N_((1/m/V/s))', 'mobility')
+            self.__writeTransportCoefficient(file, 'Diffusion*N_(1/m/s)', 'diffusion')
+
+            # Write reaction rate constants
+            self.__writeReactionRateCoefficients(file)
 
 
             print(f'Data written to {path}')
@@ -334,7 +337,7 @@ class bolsigOutputReader:
             file.write(");\n\n")
 
 
-    def __writeTransportCoeff(self, file, coeffNameBolsig, coeffNameOpenFoam):
+    def __writeTransportCoefficient(self, file, coeffNameBolsig, coeffNameOpenFoam):
         """
         Write the mobility cofficient values.
 
@@ -358,3 +361,25 @@ class bolsigOutputReader:
             for val in transpCoeff:
                 file.write(f'    {val:.6e}\n')
             file.write(');\n\n')
+
+
+    def __writeReactionRateCoefficients(self, file):
+        """
+        Write the reaction rate constants to the OpenFOAM dictionary.
+
+        Args:
+            file : File object to write the reaction rate constants to.
+        """
+        # Get the index of the first reaction rate constant
+        try:
+            index = self.bolsigCoeffsTableColumnNames.index('C1')
+        except ValueError:
+            raise RuntimeError("Column 'C1' not found. Reaction rate coefficients are missing.")
+
+        file.write('rateCoefficients\n(\n')
+        for row in self.bolsigCoeffsTable:
+            # Extract only the reaction coefficients
+            coeffs = row[index:]
+            formatted = ' '.join(f'{float(c):.6e}' for c in coeffs)
+            file.write(f'    ({formatted})\n')
+        file.write(');\n\n')
