@@ -58,7 +58,8 @@ plasmaChemistryModel::plasmaChemistryModel(const fvMesh& mesh)
     ),
     species_(reactionsDict_.lookup("species")),
     reactions_(reactionsDict_.subDict("reactions").size()),
-    inertSpecie_(reactionsDict_.lookup("inertSpecie"))
+    inertSpecie_(reactionsDict_.lookup("inertSpecie")),
+    k_(reactions_.size())
 {
     // Check if inert specie exists
     if (!species_.found(inertSpecie_))
@@ -98,10 +99,57 @@ plasmaChemistryModel::plasmaChemistryModel(const fvMesh& mesh)
         ++i;
     }
 
-    Info<< "---------- HELlOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO 2----------" << endl;
-
     // Create stoichiometric matrices
     buildStoichiometricMatrices();
+
+    // Define the reaction rate coefficients
+    forAll(reactions_, j)
+    {
+        k_.set
+        (
+            j,
+            new volScalarField
+            (
+                IOobject
+                (
+                    "k" + name(j),
+                    mesh_.time().timeName(),
+                    mesh_,
+                    IOobject::NO_READ,
+                    IOobject::AUTO_WRITE
+                ),
+                mesh_,
+                dimensionedScalar("zero", dimensionSet(0, -3*(sumReactants(j)-1), -1, 0, 0, 0, 0), scalar(1.0e-10))
+            )
+        );
+    }
+
+
+
+    label i = 0;
+    forAllConstIter(dictionary, reactionsSubDict, iter)
+    {
+        const dictionary& d = iter().dict();
+        word type = d.lookup("type");
+
+        autoPtr<reactionRateCoeffsBase> rateModel;
+
+        if (type == "constantRate")
+        {
+            rateModel.reset(new constantRateCoeff());
+        }
+        else if (type == "ArrheniusLaw")
+        {
+            rateModel.reset(new ArrheniusRateCoeff());
+        }
+        else
+        {
+            FatalErrorIn("plasmaChemistryModel") << "Unknown reaction type: " << type << abort(FatalError);
+        }
+
+        rateModel().read(d);
+        rateCalculators_.set(i++, std::move(rateModel));
+}
 
 }
 
@@ -153,9 +201,18 @@ void plasmaChemistryModel::buildStoichiometricMatrices()
     forAll(stoichMatrix_, i)
     {
         stoichMatrix_[i] = aR_[i] - aL_[i];
-
     }
 
+}
+
+scalar plasmaChemistryModel::sumReactants(const label j) const
+{
+    scalar sum = 0.0;
+    forAll(aL_, i)
+    {
+        sum += aL_[i][j];
+    }
+    return sum;
 }
 
 void plasmaChemistryModel::printStoichiometricMatrices() const
@@ -192,39 +249,8 @@ void plasmaChemistryModel::printStoichiometricMatrices() const
 }
 
 
-
-// PtrList<volScalarField> plasmaChemistryModel::getSpeciesFields() const
-// {
-//     PtrList<volScalarField> n(species_.size());
-// 
-//     forAll(species_, i)
-//     {
-//         const word& name = species_[i];
-// 
-//         if (mesh_.foundObject<volScalarField>(name))
-//         {
-//             const volScalarField& field = mesh_.lookupObject<volScalarField>(name);
-//             n.set(i, const_cast<volScalarField*>(&field));
-//         }
-//         else
-//         {
-//             FatalErrorInFunction
-//                 << "Species field '" << name << "' not found in mesh registry."
-//                 << exit(FatalError);
-//         }
-//     }
-// 
-//     return n;
-// }
-
-
 volScalarField plasmaChemistryModel::R(const label i, const PtrList<volScalarField>& n) const
 {
-    // const fvMesh& mesh = mesh_;
-    const label nCells = mesh_.nCells();
-    const label nReactions = reactions_.size();
-    // const label nSpecies = species_.size();
-
     // Create result field (initialized to 0)
     volScalarField Ri
     (
@@ -240,12 +266,11 @@ volScalarField plasmaChemistryModel::R(const label i, const PtrList<volScalarFie
         dimensionedScalar("zero", dimensionSet(0,-3,-1,0,0,0,0), 0.0)
     );
 
-    const scalar kf = 1.0e-10;  // Example constant rate coefficient
-
-    for (label j = 0; j < nReactions; ++j)
+    forAll(reactions_, j)
     {
         // Initialize rate as the rate coefficient
-        scalarField rate(nCells, kf);
+        // scalarField rate(k_[j]); // this also works, must check why
+        scalarField rate(k_[j].internalField());
 
         // Get the non-zero reactants for reaction j
         const List<Tuple2<label, scalar>>& nonZeroReactants = reactantMap_[j];
@@ -278,95 +303,11 @@ volScalarField plasmaChemistryModel::R(const label i, const PtrList<volScalarFie
     }
 
     Ri.correctBoundaryConditions();
+
+    // TO DO: See if i can remove .correctBoundaryConditions() and .internalFieldRef().field()
+
     return Ri;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-// PtrList<volScalarField> plasmaChemistryModel::R
-// (
-//     const PtrList<volScalarField>& ni
-// ) const
-// {
-//     const label nSpecies = species_.size();
-//     const label nReactions = reactions_.size();
-//     const label nCells = mesh_.nCells();
-
-//     // Create result list for species source terms
-//     PtrList<volScalarField> Ri(nSpecies);
-
-//     // Placeholder constant rate coefficient
-//     const scalar kf = 1.0e-10;
-
-//     // Precompute forward rate term (product of reactants raised to stoich coeffs)
-//     List<scalarField> reactionRates(nReactions);
-
-//     for (label r = 0; r < nReactions; ++r)
-//     {
-//         scalarField Rr(nCells, kf);
-
-//         for (label j = 0; j < nSpecies; ++j)
-//         {
-//             const scalar nuL = aL_[j][r];
-//             if (nuL > SMALL)
-//             {
-//                 const scalarField& nj = ni[j].internalField();
-//                 Rr *= Foam::pow(nj, nuL);
-//             }
-//         }
-
-//         reactionRates[r] = Rr;
-//     }
-
-//     // Build total source term per species using stoichiometry
-//     for (label i = 0; i < nSpecies; ++i)
-//     {
-//         scalarField RiField(nCells, 0.0);
-
-//         for (label r = 0; r < nReactions; ++r)
-//         {
-//             const scalar S_ir = stoichMatrix_[i][r];
-//             if (mag(S_ir) > SMALL)
-//             {
-//                 RiField += S_ir * reactionRates[r];
-//             }
-//         }
-
-//         // Construct volScalarField with appropriate dimensions and patch types
-//         Ri.set(i, new volScalarField
-//         (
-//             IOobject
-//             (
-//                 "R_" + species_[i],
-//                 mesh_.time().timeName(),
-//                 mesh_,
-//                 IOobject::NO_READ,
-//                 IOobject::NO_WRITE
-//             ),
-//             mesh_,
-//             dimensionedScalar("zero", dimMass/dimTime, 0.0),  // Adjust if needed
-//             ni[i].boundaryField().types()
-//         ));
-
-//         Ri[i].internalFieldRef().field() = RiField;
-//         Ri[i].correctBoundaryConditions();
-//     }
-
-//     return Ri;
-// }
-
-
-
 
 
 

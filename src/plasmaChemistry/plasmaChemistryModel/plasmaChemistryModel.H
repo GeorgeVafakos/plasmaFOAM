@@ -43,6 +43,7 @@ SourceFiles
 #include "dummyThermo.H"
 #include "volFieldsFwd.H"
 #include "Tuple2.H"
+#include "reactionRateCoeffsBase.H" 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -64,14 +65,15 @@ protected:
     word inertSpecie_;
     List<scalarField> aL_, aR_, stoichMatrix_;
     List<List<Tuple2<label, scalar>>> reactantMap_;
+    PtrList<volScalarField> k_;
+
+    autoPtr<reactionRateCoeffsBase> rateCalculator_;
 
 public:
-
     // Constructor
     plasmaChemistryModel(const fvMesh& mesh);
 
-    // Member operators
-
+    // Member functions
     //- inline - get the species 
     const wordList& species() const
     {
@@ -93,17 +95,40 @@ public:
         }
     }
 
+    //- inline - give public access
+    PtrList<volScalarField>& k() { return k_; }
+    const IOdictionary& reactionsDict() const { return reactionsDict_; }
+    const fvMesh& mesh() const { return mesh_; }
+
+
     //- print stoichiometric matrices
     void printStoichiometricMatrices() const;
 
     //- create the stoichiometric matrix
     void buildStoichiometricMatrices();
 
-    // //- Reconstruct list of species fields from the mesh
-    // PtrList<volScalarField> getSpeciesFields() const;
+    //- sum the stoichiometric coeffs of the reactants for a reaction j
+    scalar sumReactants(const label j) const;
 
-    // Return total reaction source term for species with index iSpecie
+    //- Return total reaction source term for species with index iSpecie
     volScalarField R(const label iSpecie, const PtrList<volScalarField>& n) const;
+
+    //- inline - get the rate calculator
+    void updateReactionRateCoeffs()
+    {
+        if (rateCalculator_.valid())
+        {
+            forAll(rateCalculators_, j)
+            {
+                rateCalculators_[j]().calculate(*this, j);
+            }
+        }
+    }
+
+    void setRateCalculator(autoPtr<reactionRateCoeffsBase> p)
+    {
+        rateCalculator_ = std::move(p);
+    }
     
 };
 

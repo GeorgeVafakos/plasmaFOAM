@@ -15,7 +15,7 @@ IOdictionary physicalProperties
     )
 );
 
-// Gas Pressure
+// Gas pressure
 const dimensionedScalar pGas
 (
     "pGas",
@@ -23,10 +23,18 @@ const dimensionedScalar pGas
     physicalProperties
 );
 
-// Gas Temperature
+// Gas temperature
 const dimensionedScalar TGas
 (
     "TGas",
+    dimensionSet(0, 0, 0, 1, 0, 0, 0),
+    physicalProperties
+);
+
+// Electron temperature
+const dimensionedScalar TEle
+(
+    "TEle",
     dimensionSet(0, 0, 0, 1, 0, 0, 0),
     physicalProperties
 );
@@ -67,6 +75,21 @@ volScalarField P
     ),
     mesh,
     pGas
+);
+
+// Electron temperature
+volScalarField Te
+(
+    IOobject
+    (
+        "Te",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::NO_WRITE
+    ),
+    mesh,
+    TEle
 );
 
 volScalarField ones
@@ -243,10 +266,27 @@ volScalarField EN
 // Create species
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // Instantiate plasma chemistry model
-Info<< "---------- HELlOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO 1----------" << endl;
 plasmaChemistryModel composition(mesh);
-Info<< "---------- HELlOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO 3----------" << endl;
 composition.printStoichiometricMatrices();
+
+
+
+// composition.setRateCalculator
+// (
+//     autoPtr<reactionRateCoeffsBase>(new Foam::constantRateCoeff())
+// );
+
+
+composition.setRateCalculator
+(
+    autoPtr<reactionRateCoeffsBase>(new Foam::ArrheniusRateCoeff())
+);
+
+
+composition.updateReactionRateCoeffs();
+
+
+Info<< "----------------------------- Reading field mobilityCoeffSpecies\n" << endl;
 
 int inertIndex = composition.inertIndex();
 

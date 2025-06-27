@@ -1,4 +1,6 @@
 dummyThermo/dummyThermo.C
 plasmaChemistryModel/plasmaChemistryModel.C
+reactionRateCoeffs/constantRateCoeff.C
+reactionRateCoeffs/ArrheniusRateCoeff.C
 
 LIB = $(FOAM_USER_LIBBIN)/libplasmaChemistry
