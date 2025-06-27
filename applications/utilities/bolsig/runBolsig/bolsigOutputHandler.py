@@ -275,9 +275,6 @@ class bolsigOutputReader:
             self.__writeReactionRateCoefficients(file)
 
 
-            print(f'Data written to {path}')
-
-
     def __writeEN(self, file):
         """
         Write the unique E/N values from the coefficients table to an OpenFOAM-style dictionary block.
