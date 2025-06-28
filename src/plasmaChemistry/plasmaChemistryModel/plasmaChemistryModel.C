@@ -42,6 +42,8 @@ template<>
     const word Reaction<dummyThermo>::typeName("Reaction<dummyThermo>");
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+/*
 plasmaChemistryModel::plasmaChemistryModel(const fvMesh& mesh)
 :
     mesh_(mesh),
@@ -124,16 +126,17 @@ plasmaChemistryModel::plasmaChemistryModel(const fvMesh& mesh)
         );
     }
 
-
-
-    label i = 0;
+    rateCalculators_.setSize(reactions_.size());
+    
+    label j = 0;
     forAllConstIter(dictionary, reactionsSubDict, iter)
     {
         const dictionary& d = iter().dict();
-        word type = d.lookup("type");
-
+        // word type = d.lookup("type");
+        word type(d.lookup("type"));
+        
         autoPtr<reactionRateCoeffsBase> rateModel;
-
+        
         if (type == "constantRate")
         {
             rateModel.reset(new constantRateCoeff());
@@ -146,12 +149,162 @@ plasmaChemistryModel::plasmaChemistryModel(const fvMesh& mesh)
         {
             FatalErrorIn("plasmaChemistryModel") << "Unknown reaction type: " << type << abort(FatalError);
         }
-
+        
         rateModel().read(d);
-        rateCalculators_.set(i++, std::move(rateModel));
+        // rateCalculators_.set(j++, std::move(rateModel));
+        
+        // Info<< "----------------------------- Reading field mobilityCoeffSpecies\n" << endl;
+        rateCalculators_.set(j, rateModel.release());
+    }
+
+
+    Info << "Parsing reactions. reactions_.size() = "
+        << reactions_.size() << ", reactionsSubDict.size() = "
+        << reactionsSubDict.size() << nl;
+
+
+
+    forAll(rateCalculators_, j)
+    {
+        if (rateCalculators_.set(j) == nullptr)
+        {
+            FatalErrorInFunction
+                << "Reaction rate model at index " << j << " was not initialized." << nl
+                << abort(FatalError);
+        }
+    }
+    
+}
+*/
+
+
+plasmaChemistryModel::plasmaChemistryModel(const fvMesh& mesh)
+:
+    mesh_(mesh),
+    reactionsDict_
+    (
+        IOobject
+        (
+            "reactionsDict",
+            mesh.time().constant(),
+            mesh,
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE
+        )
+    ),
+    species_(reactionsDict_.lookup("species")),
+    inertSpecie_(reactionsDict_.lookup("inertSpecie")),
+    reactions_(reactionsDict_.subDict("reactions").size()),
+    rateCalculators_(reactions_.size()),
+    k_(reactions_.size())
+{
+    // Check if inert specie exists
+    if (!species_.found(inertSpecie_))
+    {
+        FatalIOErrorIn("plasmaChemistryModel", reactionsDict_)
+            << "Inert specie '" << inertSpecie_ << "' not found in available species: " 
+            << species_ << exit(FatalIOError);
+    }
+
+    // Read the reactions from the dictionary
+    Info << "Reading reactionsDict" << endl;
+    const dictionary& reactionsSubDict = reactionsDict_.subDict("reactions");
+    speciesHash_ = hashedWordList(species_, true);
+    const label nReactions = reactionsSubDict.size();
+
+    label j = 0;
+    forAllConstIter(dictionary, reactionsSubDict, iter)
+    {
+        const dictionary& dict = iter().dict();
+        word reactionName = iter().keyword();
+        word type(dict.lookup("type"));
+
+        Info << "    Calculate rate of reaction " << reactionName << " using: " << type << nl;
+
+        // Create dummy thermo table
+        HashPtrTable<dummyThermo> dummyTable;
+        forAll(species_, i)
+        {
+            dummyTable.insert(species_[i], autoPtr<dummyThermo>(new dummyThermo(species_[i])));
+        }
+
+        // Create reaction
+        reactions_.set
+        (
+            j,
+            new Reaction<dummyThermo>
+            (
+                speciesHash_,
+                dummyTable,
+                iter().dict(),
+                false,
+                false
+            )
+        );
+
+        // Create rate coefficient field
+        k_.set
+        (
+            j,
+            new volScalarField
+            (
+                IOobject
+                (
+                    "k" + Foam::name(j),
+                    mesh_.time().timeName(),
+                    mesh_,
+                    IOobject::NO_READ,
+                    IOobject::AUTO_WRITE
+                ),
+                mesh_,
+                dimensionedScalar("zero", dimensionSet(0, -3*(sumReactants(j)-1), -1, 0, 0, 0, 0), scalar(1.0e-10))
+            )
+        );
+
+        // Create rate model
+        autoPtr<reactionRateCoeffsBase> rateModel;
+
+        if (type == "constantRate")
+        {
+            rateModel.reset(new constantRateCoeff());
+        }
+        else if (type == "ArrheniusLaw")
+        {
+            rateModel.reset(new ArrheniusRateCoeff());
+        }
+        else
+        {
+            FatalErrorInFunction << "Unknown reaction type: " << type << " in reaction: " << reactionName << abort(FatalError);
+        }
+
+        rateModel().read(dict);
+        rateCalculators_.set
+        (
+            j, 
+            rateModel.release()
+        );
+
+        ++j;
+    }
+
+    Info << "Finished reading " << nReactions << " reactions." << nl;
+
+    // Build stoichiometric matrices after reactions_ are built
+    buildStoichiometricMatrices();
+
+    // Final null check
+    forAll(rateCalculators_, i)
+    {
+        if (rateCalculators_.set(i) == nullptr)
+        {
+            FatalErrorInFunction
+                << "Reaction rate model at index " << i << " was not initialized." << nl
+                << abort(FatalError);
+        }
+    }
 }
 
-}
+
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 void plasmaChemistryModel::buildStoichiometricMatrices()
