@@ -36,47 +36,22 @@ License
 namespace Foam
 {
 
-void ArrheniusRateCoeff::calculate(plasmaChemistryModel& chemistry) const
+void ArrheniusRateCoeff::read(const dictionary& d)
 {
-    PtrList<volScalarField>& k = chemistry.k();
-    const IOdictionary& reactionsDict = chemistry.reactionsDict();
-    const dictionary& reactionsList(reactionsDict.subDict("reactions"));
-
-    label j = 0;
-    for (const entry& e : reactionsList)
-    {
-        const dictionary& reaction = e.dict();
-        
-        word type = word(reaction.lookup("type"));
-        if (type != "ArrheniusLaw")
-        {
-            ++j;
-            continue;  // Skip if not this type
-        }
-
-        // Get the field variable name
-        word Tword = word(reaction.lookup("field"));
-
-        // Get temperature from the mesh
-        const volScalarField& T = chemistry.mesh().lookupObjectRef<volScalarField>(Tword);
-
-        // Read the constant value or use default
-        scalar A = reaction.lookupOrDefault<scalar>("A", 1e-10);
-        scalar B = reaction.lookupOrDefault<scalar>("B", 1e-10);
-        scalar C = reaction.lookupOrDefault<scalar>("C", 1e-10);
-
-        // Assign value to internalField of k[j]
-        k[j] = dim(k[j]) * A*pow(T/dim(T), B)*exp(-C / (T/dim(T)));
-
-        // Info<< "DIM T = " << dim(T) << endl;
-        // k[j].correctBoundaryConditions();
-
-        // Info<< "Set constant k[" << j << "] = " << coeffValue
-        //     << " for reaction " << e.keyword() << " " << k[j].dimensions() << nl;
-
-        ++j;
-    }
+    A_ = d.lookupOrDefault<scalar>("A", 1.0);
+    B_ = d.lookupOrDefault<scalar>("B", 0.0);
+    C_ = d.lookupOrDefault<scalar>("C", 0.0);
+    fieldName_ = d.lookupOrDefault<word>("field", "Te");
 }
+
+void ArrheniusRateCoeff::calculate(plasmaChemistryModel& chemistry, const label reactionIndex) const
+{
+    volScalarField& kj = chemistry.k()[reactionIndex];
+    const volScalarField& T = chemistry.mesh().lookupObject<volScalarField>("Te");
+
+    kj = dim(kj) * A_*pow(T/dim(T),B_)*exp(-C_/(T/dim(T)));
+}
+
 
 
 

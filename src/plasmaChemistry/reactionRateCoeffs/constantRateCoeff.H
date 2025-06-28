@@ -60,7 +60,10 @@ public:
     constantRateCoeff() = default;
 
     // Member functions
-    virtual void calculate(plasmaChemistryModel& chemistry, label reactionIndex) const override;
+    virtual void read(const dictionary& d) override;
+    virtual void calculate(plasmaChemistryModel& chemistry, const label reactionIndex) const override;
+
+    
     
     // Virtual destructor
     virtual ~constantRateCoeff() {}

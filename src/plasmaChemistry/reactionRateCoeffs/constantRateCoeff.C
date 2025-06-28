@@ -36,38 +36,16 @@ License
 namespace Foam
 {
 
-void constantRateCoeff::calculate(plasmaChemistryModel& chemistry) const
+void constantRateCoeff::read(const dictionary& d)
 {
-    PtrList<volScalarField>& k = chemistry.k();
-    const IOdictionary& reactionsDict = chemistry.reactionsDict();
-    const dictionary& reactions(reactionsDict.subDict("reactions"));
+    constantValue_ = d.lookupOrDefault<scalar>("value", 1e-10);
+}
 
-    label j = 0;
-    for (const entry& e : reactions)
-    {
-        const dictionary& reacDict = e.dict();
-        // const dictionary& reacDict = iter().dict();
-
-        word type = word(reacDict.lookup("type"));
-
-        if (type != "constantRate")
-        {
-            ++j;
-            continue;  // Skip if not this type
-        }
-
-        // Read the constant value or use default
-        scalar coeffValue = reacDict.lookupOrDefault<scalar>("value", 1e-10);
-
-        // Assign value to internalField of k[j]
-        k[j] = dim(k[j]) * coeffValue;
-        // k[j].correctBoundaryConditions();
-
-        Info<< "Set constant k[" << j << "] = " << coeffValue
-            << " for reaction " << e.keyword() << " " << k[j].dimensions() << nl;
-
-        ++j;
-    }
+void constantRateCoeff::calculate(plasmaChemistryModel& chemistry, const label reactionIndex) const
+{
+    volScalarField& k = chemistry.k()[reactionIndex];
+    k = dim(k) * constantValue_;
+    k.correctBoundaryConditions(); // Optional
 }
 
 

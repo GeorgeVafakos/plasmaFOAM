@@ -273,20 +273,20 @@ composition.printStoichiometricMatrices();
 
 // composition.setRateCalculator
 // (
-//     autoPtr<reactionRateCoeffsBase>(new Foam::constantRateCoeff())
-// );
-
-
-composition.setRateCalculator
-(
-    autoPtr<reactionRateCoeffsBase>(new Foam::ArrheniusRateCoeff())
-);
-
-
+    //     autoPtr<reactionRateCoeffsBase>(new Foam::constantRateCoeff())
+    // );
+    
+    
+    // composition.setRateCalculator
+    // (
+        //     autoPtr<reactionRateCoeffsBase>(new Foam::ArrheniusRateCoeff())
+        // );
+        
+        
 composition.updateReactionRateCoeffs();
-
-
 Info<< "----------------------------- Reading field mobilityCoeffSpecies\n" << endl;
+
+
 
 int inertIndex = composition.inertIndex();
 

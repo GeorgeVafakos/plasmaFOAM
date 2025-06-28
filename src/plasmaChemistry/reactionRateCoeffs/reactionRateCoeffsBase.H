@@ -65,7 +65,7 @@ public:
     virtual void read(const dictionary& reactionsSubDict) = 0;
 
     //- calculate the reaction rate coefficients
-    virtual void calculate(plasmaChemistryModel& chemistry) const = 0;
+    virtual void calculate(plasmaChemistryModel& chemistry, const label reactionIndex) const = 0;
 
     // Destructor
     virtual ~reactionRateCoeffsBase() {}

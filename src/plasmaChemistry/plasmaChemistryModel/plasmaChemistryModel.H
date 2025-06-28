@@ -44,6 +44,8 @@ SourceFiles
 #include "volFieldsFwd.H"
 #include "Tuple2.H"
 #include "reactionRateCoeffsBase.H" 
+#include "constantRateCoeff.H"
+#include "ArrheniusRateCoeff.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -67,7 +69,7 @@ protected:
     List<List<Tuple2<label, scalar>>> reactantMap_;
     PtrList<volScalarField> k_;
 
-    autoPtr<reactionRateCoeffsBase> rateCalculator_;
+    PtrList<reactionRateCoeffsBase> rateCalculators_;
 
 public:
     // Constructor
@@ -100,7 +102,6 @@ public:
     const IOdictionary& reactionsDict() const { return reactionsDict_; }
     const fvMesh& mesh() const { return mesh_; }
 
-
     //- print stoichiometric matrices
     void printStoichiometricMatrices() const;
 
@@ -116,19 +117,15 @@ public:
     //- inline - get the rate calculator
     void updateReactionRateCoeffs()
     {
-        if (rateCalculator_.valid())
-        {
+        // if (rateCalculator_.valid())
+        // {
             forAll(rateCalculators_, j)
             {
-                rateCalculators_[j]().calculate(*this, j);
+                rateCalculators_[j].calculate(*this, j);
             }
-        }
+        // }
     }
 
-    void setRateCalculator(autoPtr<reactionRateCoeffsBase> p)
-    {
-        rateCalculator_ = std::move(p);
-    }
     
 };
 
