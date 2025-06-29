@@ -57,8 +57,13 @@ protected:
     word fieldName_;
 
 public:
-    // Default constructor
-    ArrheniusRateCoeff() = default;
+    TypeName("ArrheniusLaw");
+
+    // Constructor
+    ArrheniusRateCoeff(const dictionary& dict, const word& name)
+    {
+        read(dict);
+    }
 
     // Member functions
     virtual void read(const dictionary& reactionsSubDict) override;

@@ -59,7 +59,29 @@ protected:
         return dimensionedScalar("field", field.dimensions(), scalar(1.0));
     }
 
-public: 
+
+public:
+    //- Runtime type information
+    TypeName("reactionRateCoeffsBase");
+
+    //- Declare run-time constructor selection table
+    declareRunTimeSelectionTable
+    (
+        autoPtr,
+        reactionRateCoeffsBase,
+        dictionary,
+        (
+            const dictionary& dict,
+            const word& modelName
+        ),
+        (dict, modelName)
+    );
+
+    // Selectors
+        //- Return a reference to the selected rate model 
+        static autoPtr<reactionRateCoeffsBase> New(const dictionary& dict);
+
+
     // Member functions
     //- read the reaction rate parameters from the dictionary
     virtual void read(const dictionary& reactionsSubDict) = 0;

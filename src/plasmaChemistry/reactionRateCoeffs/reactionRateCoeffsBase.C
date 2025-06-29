@@ -26,33 +26,48 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "constantRateCoeff.H"
-#include "plasmaChemistryModel.H"
-#include "volFields.H"
-#include "dictionary.H"
+#include "reactionRateCoeffsBase.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+    defineTypeNameAndDebug(reactionRateCoeffsBase, 0);
+    defineRunTimeSelectionTable(reactionRateCoeffsBase, dictionary);
 
-    defineTypeNameAndDebug(constantRateCoeff, 0);
-    addToRunTimeSelectionTable(reactionRateCoeffsBase, constantRateCoeff, dictionary);
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-void constantRateCoeff::read(const dictionary& d)
+autoPtr<reactionRateCoeffsBase> reactionRateCoeffsBase::New
+(
+    const dictionary& dict
+)
 {
-    constantValue_ = d.lookupOrDefault<scalar>("value", 1e-10);
+    const word modelName = dict.dictName();
+    const word modelType = dict.get<word>("type");
+
+    Info << "    Creating reactionRateCoeffs model of type " << modelType
+         << " for " << modelName << endl;
+
+    auto* ctorPtr = dictionaryConstructorTable(modelType);
+
+    if (!ctorPtr)
+    {
+        FatalIOErrorInLookup
+        (
+            dict,
+            "reactionRateCoeffsBase",
+            modelType,
+            *dictionaryConstructorTablePtr_
+        ) << exit(FatalIOError);
+    }
+
+    return autoPtr<reactionRateCoeffsBase>(ctorPtr(dict, modelName));
 }
 
-void constantRateCoeff::calculate(plasmaChemistryModel& chemistry, const label reactionIndex) const
-{
-    volScalarField& k = chemistry.k()[reactionIndex];
-    k = dim(k) * constantValue_;
-    k.correctBoundaryConditions(); // Optional
-}
+
+
 
 
 

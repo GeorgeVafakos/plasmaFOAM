@@ -39,8 +39,8 @@ Description
 #include "transportCoeffsHandler.H"
 #include "transportCoeffsBolsig.H"
 #include "plasmaChemistryModel.H"
-#include "constantRateCoeff.H"
-#include "ArrheniusRateCoeff.H"
+// #include "constantRateCoeff.H"
+// #include "ArrheniusRateCoeff.H"
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
