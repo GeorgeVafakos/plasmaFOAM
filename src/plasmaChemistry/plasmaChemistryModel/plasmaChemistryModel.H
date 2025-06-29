@@ -59,17 +59,29 @@ namespace Foam
 class plasmaChemistryModel
 {
 protected:
-    const fvMesh& mesh_;
-    IOdictionary reactionsDict_;
-    wordList species_;
-    hashedWordList speciesHash_;
-    PtrList<Reaction<dummyThermo>> reactions_;
-    word inertSpecie_;
-    List<scalarField> aL_, aR_, stoichMatrix_;
-    List<List<Tuple2<label, scalar>>> reactantMap_;
-    PtrList<volScalarField> k_;
+    // const fvMesh& mesh_;
+    // IOdictionary reactionsDict_;
+    // wordList species_;
+    // hashedWordList speciesHash_;
+    // PtrList<Reaction<dummyThermo>> reactions_;
+    // word inertSpecie_;
+    // List<scalarField> aL_, aR_, stoichMatrix_;
+    // List<List<Tuple2<label, scalar>>> reactantMap_;
+    // PtrList<volScalarField> k_;
 
-    PtrList<reactionRateCoeffsBase> rateCalculators_;
+    // PtrList<reactionRateCoeffsBase> rateCalculators_;
+
+    const fvMesh& mesh_;                          // 1
+    IOdictionary reactionsDict_;                  // 2
+    wordList species_;                            // 3
+    word inertSpecie_;                            // 4
+    PtrList<Reaction<dummyThermo>> reactions_;    // 5
+    PtrList<reactionRateCoeffsBase> rateCalculators_; // 6
+    PtrList<volScalarField> k_;                   // 7
+
+    hashedWordList speciesHash_;                  // 8
+    List<scalarField> aL_, aR_, stoichMatrix_;    // 9
+    List<List<Tuple2<label, scalar>>> reactantMap_; // 10
 
 public:
     // Constructor
@@ -117,13 +129,10 @@ public:
     //- inline - get the rate calculator
     void updateReactionRateCoeffs()
     {
-        // if (rateCalculator_.valid())
-        // {
-            forAll(rateCalculators_, j)
-            {
-                rateCalculators_[j].calculate(*this, j);
-            }
-        // }
+        forAll(rateCalculators_, j)
+        {
+            rateCalculators_[j].calculate(*this, j);
+        }
     }
 
     

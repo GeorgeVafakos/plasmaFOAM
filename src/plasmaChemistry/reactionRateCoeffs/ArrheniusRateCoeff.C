@@ -30,12 +30,17 @@ License
 #include "plasmaChemistryModel.H"
 #include "volFields.H"
 #include "dictionary.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+    defineTypeNameAndDebug(ArrheniusRateCoeff, 0);
+    addToRunTimeSelectionTable(reactionRateCoeffsBase, ArrheniusRateCoeff, dictionary);
 
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 void ArrheniusRateCoeff::read(const dictionary& d)
 {
     A_ = d.lookupOrDefault<scalar>("A", 1.0);
@@ -49,7 +54,7 @@ void ArrheniusRateCoeff::calculate(plasmaChemistryModel& chemistry, const label 
     volScalarField& kj = chemistry.k()[reactionIndex];
     const volScalarField& T = chemistry.mesh().lookupObject<volScalarField>("Te");
 
-    kj = dim(kj) * A_*pow(T/dim(T),B_)*exp(-C_/(T/dim(T)));
+    kj = dim(kj) * A_*pow(T/dim(T),B_)*exp(C_/(T/dim(T)));
 }
 
 

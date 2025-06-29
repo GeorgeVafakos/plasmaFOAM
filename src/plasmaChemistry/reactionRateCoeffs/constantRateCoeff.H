@@ -56,8 +56,13 @@ protected:
     scalar constantValue_;
 
 public:
-    // Default constructor
-    constantRateCoeff() = default;
+    TypeName("constantRate");
+
+    // Constructor
+    constantRateCoeff(const dictionary& dict, const word& name)
+    {
+        read(dict);
+    }
 
     // Member functions
     virtual void read(const dictionary& d) override;
