@@ -257,7 +257,7 @@ class bolsigExecutor:
             file.write('{:d}{}/ Conditions: 0=No; 1=Yes\n'.format(1, self.__tabs()))
             file.write('{:d}{}/ Transport coefficients: 0=No; 1=Yes\n'.format(1, self.__tabs()))
             file.write('{:d}{}/ Rate coefficients: 0=No; 1=Yes\n'.format(1, self.__tabs()))
-            file.write('{:d}{}/ Reverse rate coefficients: 0=No; 1=Yes\n'.format(1, self.__tabs()))
+            file.write('{:d}{}/ Reverse rate coefficients: 0=No; 1=Yes\n'.format(0, self.__tabs()))
             file.write('{:d}{}/ Energy loss coefficients: 0=No; 1=Yes\n'.format(0, self.__tabs()))
             file.write('{:d}{}/ Distribution function: 0=No; 1=Yes \n'.format(0, self.__tabs()))
             file.write('{:d}{}/ Skip failed runs: 0=No; 1=Yes\n'.format(0, self.__tabs()))

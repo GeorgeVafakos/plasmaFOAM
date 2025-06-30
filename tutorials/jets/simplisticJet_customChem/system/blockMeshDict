@@ -1,0 +1,202 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2312                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMetres 1;
+
+// Geometric parameters
+L 5.0e-3;
+td 1.0e-3;
+H 5.0e-3;
+Le 1.0e-3;
+
+// Cell count
+cellsXgas 60;
+cellsXdiel 20;
+cellsY 30;
+expRatioX 5;
+expRatioY 5;
+
+expRatioYinv #calc "1.0/$expRatioY";
+expRatioXinv #calc "1.0/$expRatioX";
+
+// Calculate vertices' coordinates
+X0 #calc "0.0";
+X1 #calc "$L - $td";
+X2 #calc "$L";
+
+Y0 #calc "0.0";
+Y1 #calc "0.5 * ($H - $Le)";
+Y2 #calc "0.5 * ($H + $Le)";
+Y3 #calc "$H";
+
+Z 1.0e-4;
+
+// Calculate uniform cells
+Dyn (#codeStream {
+    code #{
+        scalar suma = 0;
+        int i = 0;
+        for (i=0 ; i<$cellsY ; i++)
+            suma += pow($expRatioY , (i/($cellsY - 1.0)) );
+        os << (0.5*($H-$Le))/suma << endl;
+    #};
+} ); 
+cellsYhighVoltage #calc "int(1.0*$Le /$Dyn + 0.5)";
+
+Dxn (#codeStream {
+    code #{
+        scalar suma = 0;
+        int i = 0;
+        for (i=0 ; i<$cellsXgas ; i++)
+            suma += pow($expRatioX , (i/($cellsXgas - 1.0)) );
+        os << ($L-$td)/suma << endl;
+    #};
+} ); 
+cellsXdiel #calc "int(1.0*$td /$Dxn + 0.5)";
+
+vertices
+(
+    ($X0 $Y0 0)            // 0
+    ($X1 $Y0 0)            // 1
+    ($X2 $Y0 0)            // 2
+    ($X0 $Y1 0)            // 3
+    ($X1 $Y1 0)            // 4
+    ($X2 $Y1 0)            // 5
+    ($X0 $Y2 0)            // 6
+    ($X1 $Y2 0)            // 7
+    ($X2 $Y2 0)            // 8
+    ($X0 $Y3 0)            // 9
+    ($X1 $Y3 0)            // 10
+    ($X2 $Y3 0)            // 11
+    ($X0 $Y0 $Z)           // 12
+    ($X1 $Y0 $Z)           // 13
+    ($X2 $Y0 $Z)           // 14
+    ($X0 $Y1 $Z)           // 15
+    ($X1 $Y1 $Z)           // 16
+    ($X2 $Y1 $Z)           // 17
+    ($X0 $Y2 $Z)           // 18
+    ($X1 $Y2 $Z)           // 19
+    ($X2 $Y2 $Z)           // 20
+    ($X0 $Y3 $Z)           // 21
+    ($X1 $Y3 $Z)           // 22
+    ($X2 $Y3 $Z)           // 23
+);
+
+blocks
+(
+    hex (0 1 4 3 12 13 16 15) ($cellsXgas $cellsY 1) 
+    simpleGrading 
+    (
+        (
+            (0.5 0.5 $expRatioX)
+            (0.5 0.5 $expRatioXinv)
+        ) 
+        $expRatioYinv 
+        1
+    )      // Block 0
+    hex (1 2 5 4 13 14 17 16) dielectric ($cellsXdiel $cellsY 1) simpleGrading (1 $expRatioYinv 1)      // Block 1
+    hex (3 4 7 6 15 16 19 18) ($cellsXgas $cellsYhighVoltage 1) 
+    simpleGrading 
+    (
+        (
+            (0.5 0.5 $expRatioX)
+            (0.5 0.5 $expRatioXinv)
+        ) 
+        1 
+        1
+    )      // Block 2
+    hex (4 5 8 7 16 17 20 19) dielectric ($cellsXdiel $cellsYhighVoltage 1) simpleGrading (1 1 1)      // Block 3
+    hex (6 7 10 9 18 19 22 21) ($cellsXgas $cellsY 1) 
+    simpleGrading 
+    (
+        (
+            (0.5 0.5 $expRatioX)
+            (0.5 0.5 $expRatioXinv)
+        ) 
+        $expRatioY 
+        1
+    )      // Block 4
+    hex (7 8 11 10 19 20 23 22) dielectric ($cellsXdiel $cellsY 1) simpleGrading (1 $expRatioY 1)      // Block 5
+);
+
+boundary
+(
+    highVoltage
+    {
+        type patch;
+        faces
+        (
+            (6 18 15 3)   // From Block 2
+        );
+    }
+
+    ground
+    {
+        type patch;
+        faces
+        (
+            (14 17 5 2)   // From Block 1
+            (17 20 8 5)   // From Block 3
+            (20 23 11 8)   // From Block 5
+        );
+    }
+
+    topBotBoundaries
+    {
+        type patch;
+        faces
+        (
+            (0 12 13 1)   // From Block 0
+            (1 13 14 2)   // From Block 1
+            (9 10 22 21)   // From Block 4
+            (10 11 23 22)   // From Block 5
+        );
+    }
+
+    inletBoundary
+    {
+        type patch;
+        faces
+        (
+            (0 3 15 12)   // From Block 0
+            (6 9 21 18)   // From Block 4
+        );
+    }
+
+    frontBack
+    {
+        type empty;
+        faces
+        (
+            (1 4 3 0)   // From Block 0
+            (2 5 4 1)   // From Block 1
+            (4 7 6 3)   // From Block 2
+            (5 8 7 4)   // From Block 3
+            (7 10 9 6)   // From Block 4
+            (8 11 10 7)   // From Block 5
+
+            (12 15 16 13)   // From Block 0
+            (13 16 17 14)   // From Block 1
+            (15 18 19 16)   // From Block 2
+            (16 19 20 17)   // From Block 3
+            (18 21 22 19)   // From Block 4
+            (19 22 23 20)   // From Block 5
+        );
+    }
+
+    
+
+);

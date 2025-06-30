@@ -17,6 +17,7 @@ class bolsigOutputReader:
         self._inputDirPath = bolsigExecutorObj._inputDirPath 
         self._speciesWithVaryingMoleFraction = getattr(bolsigExecutorObj, "_speciesRUN2D", None)
         self._gasDensity = float(bolsigExecutorObj._gasDensity[0])
+        self._selectedReactions = bolsigExecutorObj._selectedReactions
 
     # Method to check if string is a number
     # -------------------------------------
@@ -372,11 +373,31 @@ class bolsigOutputReader:
             index = self.bolsigCoeffsTableColumnNames.index('C1')
         except ValueError:
             raise RuntimeError("Column 'C1' not found. Reaction rate coefficients are missing.")
+        
+        # Skip the elestic and effective collisions
+        count = 0
+        excludeTableHeads = list()
+        for sp in self._selectedReactions:tableHeads
+            for r, react in enumerate(self._selectedReactions[sp]["reaction"]):
+                if self._selectedReactions[sp]["reaction"][r].split()[-1].strip() in ["Elastic", "Effective"]:
+                    excludeTableHeads.append(count)
+                count += 1
 
+        for i, entry in enumerate(excludeTableHeads):
+            excludeTableHeads[i] = entry + index
+
+        indices = list()
+        for i in range(index, len(self.bolsigCoeffsTableColumnNames)):
+            if i<index:
+                continue
+            if i not in excludeTableHeads:
+                indices.append(i)
+
+        # Write to file
         file.write('rateCoefficients\n(\n')
         for row in self.bolsigCoeffsTable:
             # Extract only the reaction coefficients
-            coeffs = row[index:]
+            coeffs = [row[i] for i in indices]
             formatted = ' '.join(f'{float(c):.6e}' for c in coeffs)
             file.write(f'    ({formatted})\n')
         file.write(');\n\n')

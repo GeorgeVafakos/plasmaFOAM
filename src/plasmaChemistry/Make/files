@@ -2,6 +2,7 @@ dummyThermo/dummyThermo.C
 plasmaChemistryModel/plasmaChemistryModel.C
 reactionRateCoeffs/constantRateCoeff.C
 reactionRateCoeffs/ArrheniusRateCoeff.C
+reactionRateCoeffs/bolsigRateCoeff.C
 reactionRateCoeffs/reactionRateCoeffsBase.C
 
 
