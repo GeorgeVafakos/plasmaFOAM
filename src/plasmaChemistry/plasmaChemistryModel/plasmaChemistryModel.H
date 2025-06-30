@@ -134,8 +134,6 @@ public:
             rateCalculators_[j].calculate(*this, j);
         }
     }
-
-    
 };
 
 

@@ -1,0 +1,58 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2406                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    arch        "LSB;label=32;scalar=64";
+    class       volScalarField;
+    location    "2e-07/dielectric";
+    object      voltInd;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [1 2 -3 0 0 -1 0];
+
+internalField   uniform 0;
+
+boundaryField
+{
+    ground
+    {
+        type            fixedValue;
+        value           uniform 0;
+    }
+    topBotBoundaries
+    {
+        type            zeroGradient;
+    }
+    frontBack
+    {
+        type            empty;
+    }
+    dielectric_to_region0
+    {
+        type            compressible::turbulentTemperatureRadCoupledMixed;
+        refValue        uniform 0;
+        refGradient     uniform 0;
+        valueFraction   uniform 1;
+        source          uniform 0;
+        value           uniform 0;
+        Tnbr            voltInd;
+        logInterval     -1;
+        writePrecision  6;
+        updateHeader    1;
+        writeToFile     0;
+        useUserTime     1;
+        kappaMethod     lookup;
+        kappa           epsilon;
+    }
+}
+
+
+// ************************************************************************* //

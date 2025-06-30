@@ -24,40 +24,54 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+Class
+    Foam::bolsigRateCoeff
+
+Description
+    This class provides the reads and defines the plasma chemistry.
+
+SourceFiles
+    bolsigRateCoeff.C
+
 \*---------------------------------------------------------------------------*/
 
-#include "ArrheniusRateCoeff.H"
-#include "plasmaChemistryModel.H"
-#include "volFields.H"
-#include "dictionary.H"
-#include "addToRunTimeSelectionTable.H"
+#ifndef bolsigRateCoeff_H
+#define bolsigRateCoeff_H
+
+#include "reactionRateCoeffsBase.H"
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(ArrheniusRateCoeff, 0);
-    addToRunTimeSelectionTable(reactionRateCoeffsBase, ArrheniusRateCoeff, dictionary);
 
+/*---------------------------------------------------------------------------*\
+                     class bolsigRateCoeff Declaration
+\*---------------------------------------------------------------------------*/
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-void ArrheniusRateCoeff::read(const dictionary& dict)
+class bolsigRateCoeff : public reactionRateCoeffsBase
 {
-    A_ = dict.lookupOrDefault<scalar>("A", 1.0);
-    B_ = dict.lookupOrDefault<scalar>("B", 0.0);
-    C_ = dict.lookupOrDefault<scalar>("C", 0.0);
-    fieldName_ = dict.lookupOrDefault<word>("field", "Te");
-}
+protected:
+    scalar A_, B_, C_; 
+    word fieldName_;
 
-void ArrheniusRateCoeff::calculate(plasmaChemistryModel& chemistry, const label j) const
-{
-    volScalarField& kj = chemistry.k()[j];
-    const volScalarField& T = chemistry.mesh().lookupObject<volScalarField>("Te");
+public:
+    TypeName("bolsig");
 
-    kj = dim(kj) * A_*pow(T/dim(T),B_)*exp(C_/(T/dim(T)));
-}
+    // Constructor
+    bolsigRateCoeff(const dictionary& dict, const word& name)
+    {
+        read(dict);
+    }
 
-
+    // Member functions
+    virtual void read(const dictionary& reactionsSubDict) override;
+    virtual void calculate(plasmaChemistryModel& chemistry, const label reactionIndex) const override;
+    
+    // Virtual destructor
+    virtual ~bolsigRateCoeff() {}
+};
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -66,3 +80,6 @@ void ArrheniusRateCoeff::calculate(plasmaChemistryModel& chemistry, const label 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+#endif
+
+// ************************************************************************* //

@@ -1,0 +1,47 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2312                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      voltExtAmp;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [1 2 -3 0 0 -1 0];
+
+internalField   uniform 0;
+
+boundaryField
+{
+    ground
+    {
+        type            fixedValue;
+        value           uniform 0;
+    }
+
+    dielectric_to_region0
+    {
+        type            coupledPotential;
+        value           $internalField;
+        Tnbr            voltExtAmp;
+    }
+
+    topBotBoundaries
+    {
+        type            zeroGradient;
+    }
+
+    frontBack
+    {
+        type            empty;
+    }
+}
+
+// ************************************************************************* //

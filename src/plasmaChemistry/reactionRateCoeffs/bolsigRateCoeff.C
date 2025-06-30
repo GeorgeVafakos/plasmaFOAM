@@ -26,7 +26,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "ArrheniusRateCoeff.H"
+#include "bolsigRateCoeff.H"
 #include "plasmaChemistryModel.H"
 #include "volFields.H"
 #include "dictionary.H"
@@ -36,12 +36,12 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(ArrheniusRateCoeff, 0);
-    addToRunTimeSelectionTable(reactionRateCoeffsBase, ArrheniusRateCoeff, dictionary);
+    defineTypeNameAndDebug(bolsigRateCoeff, 0);
+    addToRunTimeSelectionTable(reactionRateCoeffsBase, bolsigRateCoeff, dictionary);
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-void ArrheniusRateCoeff::read(const dictionary& dict)
+void bolsigRateCoeff::read(const dictionary& dict)
 {
     A_ = dict.lookupOrDefault<scalar>("A", 1.0);
     B_ = dict.lookupOrDefault<scalar>("B", 0.0);
@@ -49,7 +49,7 @@ void ArrheniusRateCoeff::read(const dictionary& dict)
     fieldName_ = dict.lookupOrDefault<word>("field", "Te");
 }
 
-void ArrheniusRateCoeff::calculate(plasmaChemistryModel& chemistry, const label j) const
+void bolsigRateCoeff::calculate(plasmaChemistryModel& chemistry, const label j) const
 {
     volScalarField& kj = chemistry.k()[j];
     const volScalarField& T = chemistry.mesh().lookupObject<volScalarField>("Te");
