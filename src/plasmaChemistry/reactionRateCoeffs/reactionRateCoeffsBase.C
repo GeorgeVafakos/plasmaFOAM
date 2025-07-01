@@ -41,7 +41,8 @@ namespace Foam
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 autoPtr<reactionRateCoeffsBase> reactionRateCoeffsBase::New
 (
-    const dictionary& dict
+    const dictionary& dict,
+    plasmaChemistryModel& chemistry
 )
 {
     const word modelName = dict.dictName();
@@ -63,7 +64,7 @@ autoPtr<reactionRateCoeffsBase> reactionRateCoeffsBase::New
         ) << exit(FatalIOError);
     }
 
-    return autoPtr<reactionRateCoeffsBase>(ctorPtr(dict, modelName));
+    return autoPtr<reactionRateCoeffsBase>(ctorPtr(dict, modelName, chemistry));
 }
 
 

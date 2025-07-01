@@ -18,24 +18,24 @@ FoamFile
 
 dimensions      [0 3 -1 0 0 0 0];
 
-internalField   uniform 9.99e-05;
+internalField   uniform 0.0001001;
 
 boundaryField
 {
     highVoltage
     {
         type            calculated;
-        value           uniform 9.99e-05;
+        value           uniform 0.0001001;
     }
     topBotBoundaries
     {
         type            calculated;
-        value           uniform 9.99e-05;
+        value           uniform 0.0001001;
     }
     inletBoundary
     {
         type            calculated;
-        value           uniform 9.99e-05;
+        value           uniform 0.0001001;
     }
     frontBack
     {
@@ -44,7 +44,7 @@ boundaryField
     region0_to_dielectric
     {
         type            calculated;
-        value           uniform 9.99e-05;
+        value           uniform 0.0001001;
     }
 }
 

@@ -72,14 +72,15 @@ public:
         dictionary,
         (
             const dictionary& dict,
-            const word& modelName
+            const word& modelName,
+            plasmaChemistryModel& chemistry
         ),
-        (dict, modelName)
+        (dict, modelName, chemistry)
     );
 
     // Selectors
         //- Return a reference to the selected rate model 
-        static autoPtr<reactionRateCoeffsBase> New(const dictionary& dict);
+        static autoPtr<reactionRateCoeffsBase> New(const dictionary& dict, plasmaChemistryModel& chemistry);
 
 
     // Member functions
