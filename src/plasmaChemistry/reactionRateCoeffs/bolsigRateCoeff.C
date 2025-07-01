@@ -39,6 +39,69 @@ namespace Foam
     defineTypeNameAndDebug(bolsigRateCoeff, 0);
     addToRunTimeSelectionTable(reactionRateCoeffsBase, bolsigRateCoeff, dictionary);
 
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+bolsigRateCoeff::bolsigRateCoeff(const dictionary& dict, const word& name, plasmaChemistryModel& chemistry)
+:
+    bolsigProperties_
+    (
+        IOobject
+        (
+            "bolsigProperties",
+            chemistry.mesh().time().constant(),
+            chemistry.mesh(),
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE
+        )
+    )
+{
+    scalarList ENList_
+    (
+        bolsigProperties_.lookup("EN")
+    );
+
+    scalarList HeList_
+    (
+        bolsigProperties_.lookup("He")
+    );
+
+    List<List<scalar>> rateCoefficientsList_
+    (
+        bolsigProperties_.lookup("rateCoefficients")
+    );
+    
+    // Initialise pointer list size
+    ratesTable_.setSize(rateCoefficientsList_[0].size());
+
+    forAll(rateCoefficientsList_[0], r)
+    {
+        // Create lookup table for each reaction
+        List<Tuple2<scalar, List<Tuple2<scalar, scalar>>>> rTable(HeList_.size());
+
+        forAll(HeList_, i)
+        {
+            List<Tuple2<scalar, scalar>> rRow(ENList_.size());
+
+            forAll(ENList_, j)
+            {
+                label index = i * ENList_.size() + j;
+                rRow[j]  = Tuple2<scalar, scalar>(ENList_[j], rateCoefficientsList_[index][r]);
+            }
+            rTable[i]  = Tuple2<scalar, List<Tuple2<scalar, scalar>>>(HeList_[i], rRow);
+        }
+
+        ratesTable_.set
+        (
+            r,
+            new interpolation2DTable<scalar>
+            (
+                rTable,
+                bounds::normalBounding(bounds::normalBounding::CLAMP),
+                fileName("ratesTable")
+            )
+        );
+    }
+}
+
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 void bolsigRateCoeff::read(const dictionary& dict)
@@ -51,12 +114,25 @@ void bolsigRateCoeff::read(const dictionary& dict)
 
 void bolsigRateCoeff::calculate(plasmaChemistryModel& chemistry, const label j) const
 {
+    const volScalarField& EN_ = chemistry.mesh().lookupObjectRef<volScalarField>("E_N");
+    const volScalarField& HeF_ = chemistry.mesh().lookupObjectRef<volScalarField>("HeF");
+
+
     volScalarField& kj = chemistry.k()[j];
-    const volScalarField& T = chemistry.mesh().lookupObject<volScalarField>("Te");
 
-    kj = dim(kj) * A_*pow(T/dim(T),B_)*exp(C_/(T/dim(T)));
+    // kj = dim(kj) * A_*pow(T/dim(T),B_)*exp(C_/(T/dim(T)));
+
+
+    
+
+    forAll(kj, celli)
+    {
+        kj[celli] = ratesTable_[j](HeF_[celli], EN_[celli]);
+    }
+
+
+
 }
-
 
 
 

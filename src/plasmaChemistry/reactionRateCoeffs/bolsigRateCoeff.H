@@ -39,7 +39,8 @@ SourceFiles
 #define bolsigRateCoeff_H
 
 #include "reactionRateCoeffsBase.H"
-
+#include "interpolation2DTable.H"
+#include "tableBounds.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -53,17 +54,20 @@ namespace Foam
 class bolsigRateCoeff : public reactionRateCoeffsBase
 {
 protected:
+    label reactionIndex_;
+    IOdictionary bolsigProperties_;
     scalar A_, B_, C_; 
     word fieldName_;
+
+    PtrList<interpolation2DTable<scalar>> ratesTable_;
+    // static interpolation2DTable<scalar>* bolsigTablePtr_;
+    // static bool initialized_;
 
 public:
     TypeName("bolsig");
 
     // Constructor
-    bolsigRateCoeff(const dictionary& dict, const word& name)
-    {
-        read(dict);
-    }
+    bolsigRateCoeff(const dictionary& dict, const word& name, plasmaChemistryModel& chemistry);
 
     // Member functions
     virtual void read(const dictionary& reactionsSubDict) override;

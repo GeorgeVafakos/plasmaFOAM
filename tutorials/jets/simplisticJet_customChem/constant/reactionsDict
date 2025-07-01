@@ -41,14 +41,17 @@ reactions
     R1
     {
         reaction    "e + He = e + He_m";
-        type        constantRate;
-        value       1e-9;
+        type        bolsig;
+        field       Te;
+        A           1.0e-6;
+        B           0.5;
+        C           10;
     }
 
     R2
     {
         reaction    "e + He = 2 e + He_plus";
-        type        ArrheniusLaw;
+        type        bolsig;
         field       Te;
         A           1.0e-6;
         B           0.5;
@@ -58,57 +61,78 @@ reactions
     R3
     {
         reaction    "e + N2 = e + N2_C3Pu";
-        type        constantRate;
-        value       1e-9;
+        type        bolsig;
+        field       Te;
+        A           1.0e-6;
+        B           0.5;
+        C           10;
     }
 
     R4
     {
         reaction    "e + N2 = e + N2_A3Su";
-        type        constantRate;
-        value       1e-9;
+        type        bolsig;
+        field       Te;
+        A           1.0e-6;
+        B           0.5;
+        C           10;
     }
 
     R5
     {
         reaction    "e + N2 = 2 e + N2_plus";
-        type        constantRate;
-        value       1e-9;
+        type        bolsig;
+        field       Te;
+        A           1.0e-6;
+        B           0.5;
+        C           10;
     }
 
     R6
     {
         reaction    "e + O2 = e + O2_a1";
-        type        constantRate;
-        value       1e-9;
+        type        bolsig;
+        field       Te;
+        A           1.0e-6;
+        B           0.5;
+        C           10;
     }
 
     R7
     {
         reaction    "e + O2 = e + 2 O";
-        type        constantRate;
+        type        bolsig;
         value       1e-9;
     }
 
     R8
     {
         reaction    "e + O2 = e + O + O_1D";
-        type        constantRate;
-        value       1e-9;
+        type        bolsig;
+        field       Te;
+        A           1.0e-6;
+        B           0.5;
+        C           10;
     }
 
     R9
     {
         reaction    "e + O2 = O2_minus";
-        type        constantRate;
-        value       1e-9;
+        type        bolsig;
+        field       Te;
+        A           1.0e-6;
+        B           0.5;
+        C           10;
     }
 
     R10
     {
         reaction    "e + O2 = 2 e + O2_plus";
-        type        constantRate;
-        value       1e-9;
+        type        bolsig;
+        field       Te;
+        A           1.0e-6;
+        B           0.5;
+        C           10;
     }
 
     R11

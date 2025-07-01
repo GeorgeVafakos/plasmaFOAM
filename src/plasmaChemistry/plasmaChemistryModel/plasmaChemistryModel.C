@@ -121,7 +121,8 @@ plasmaChemistryModel::plasmaChemistryModel(const fvMesh& mesh)
         );
 
         // Define reactionRateCoeffsBase model from runTimeSelectionTable
-        autoPtr<reactionRateCoeffsBase> rateModel = reactionRateCoeffsBase::New(reaction.dict());
+        // autoPtr<reactionRateCoeffsBase> rateModel = reactionRateCoeffsBase::New(reaction.dict());
+        autoPtr<reactionRateCoeffsBase> rateModel = reactionRateCoeffsBase::New(reaction.dict(), *this);
 
         rateCalculators_.set
         (

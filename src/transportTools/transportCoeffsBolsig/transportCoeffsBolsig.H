@@ -71,7 +71,7 @@ class transportCoeffsBolsig : public transportCoeffsHandler
         //     volScalarField& electronDiffusivityField   // if you only pass one, drop this argument
         // );
 
-        // // If your solver only passes one field, you can also add a 3-arg overload:
+        // // If solver only passes one field, also add a 3-arg overload:
         // transportCoeffsBolsig
         // (
         //     const fvMesh& mesh,

@@ -59,7 +59,7 @@ public:
     TypeName("constantRate");
 
     // Constructor
-    constantRateCoeff(const dictionary& dict, const word& name)
+    constantRateCoeff(const dictionary& dict, const word& name, plasmaChemistryModel& chemistry)
     {
         read(dict);
     }

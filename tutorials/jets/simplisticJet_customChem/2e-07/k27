@@ -12,30 +12,30 @@ FoamFile
     arch        "LSB;label=32;scalar=64";
     class       volScalarField;
     location    "2e-07";
-    object      k3;
+    object      k27;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [0 3 -1 0 0 0 0];
 
-internalField   uniform 0.0001001;
+internalField   uniform 7e-17;
 
 boundaryField
 {
     highVoltage
     {
         type            calculated;
-        value           uniform 0.0001001;
+        value           uniform 7e-17;
     }
     topBotBoundaries
     {
         type            calculated;
-        value           uniform 0.0001001;
+        value           uniform 7e-17;
     }
     inletBoundary
     {
         type            calculated;
-        value           uniform 0.0001001;
+        value           uniform 7e-17;
     }
     frontBack
     {
@@ -44,7 +44,7 @@ boundaryField
     region0_to_dielectric
     {
         type            calculated;
-        value           uniform 0.0001001;
+        value           uniform 7e-17;
     }
 }
 

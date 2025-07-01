@@ -60,7 +60,7 @@ public:
     TypeName("ArrheniusLaw");
 
     // Constructor
-    ArrheniusRateCoeff(const dictionary& dict, const word& name)
+    ArrheniusRateCoeff(const dictionary& dict, const word& name, plasmaChemistryModel& chemistry)
     {
         read(dict);
     }
