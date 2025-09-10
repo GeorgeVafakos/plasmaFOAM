@@ -12,7 +12,7 @@ if [[ ! -d "$LIB_USER_SRC" ]]; then
     exit 1
 fi
 
-# Create the symlink directory if it doesn't exist
+# Create the symlink directory (if it doesn't exist)
 mkdir -p "$SYMLINK_PATH"
 
 # Search for all lnInclude directories under LIB_USER_SRC
