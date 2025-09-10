@@ -3,6 +3,7 @@ linux64GccDPInt32Opt/
 dynamicCode/
 lnInclude/
 test/
+src/
 polyMesh/
 __pycache__/
 bolsigExe/
