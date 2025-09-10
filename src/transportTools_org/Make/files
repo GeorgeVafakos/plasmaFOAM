@@ -1,4 +1,0 @@
-transportCoeffsHandler/transportCoeffsHandler.C
-transportCoeffsBolsig/transportCoeffsBolsig.C
-
-LIB = $(FOAM_USER_LIBBIN)/libtransportTools

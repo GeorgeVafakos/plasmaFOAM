@@ -1,6 +1,0 @@
-voltageHandler/voltageHandler.C
-potentialCoupledBase/potentialCoupledBase.C
-coupledPotentialFvPatchScalarField/coupledPotentialFvPatchScalarField.C
-coupledPotentialSurfaceChargeFvPatchScalarField/coupledPotentialSurfaceChargeFvPatchScalarField.C
-
-LIB = $(FOAM_USER_LIBBIN)/libpotentialTools

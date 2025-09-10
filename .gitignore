@@ -4,6 +4,7 @@ dynamicCode/
 lnInclude/
 test/
 src/
+ignore/
 polyMesh/
 __pycache__/
 bolsigExe/
