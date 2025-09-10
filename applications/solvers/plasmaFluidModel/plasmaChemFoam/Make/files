@@ -1,3 +1,0 @@
-plasmaChemFoam.C
-
-EXE = $(FOAM_USER_APPBIN)/plasmaChemFoam
