@@ -1,7 +1,6 @@
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // Create general fields
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 Info<< "Reading physicalProperties\n" << endl;
 IOdictionary physicalProperties
 (
@@ -15,81 +14,96 @@ IOdictionary physicalProperties
     )
 );
 
-// Gas pressure
-const dimensionedScalar pGas
+// Gas pressure value
+const dimensionedScalar pGasValue
 (
-    "pGas",
+    "pGasValue",
     dimensionSet(1, -1, -2, 0, 0, 0, 0),
     physicalProperties
 );
 
-// Gas temperature
-const dimensionedScalar TGas
+// Gas temperature value
+const dimensionedScalar TGasValue
 (
-    "TGas",
+    "TGasValue",
     dimensionSet(0, 0, 0, 1, 0, 0, 0),
     physicalProperties
 );
 
-// Electron temperature
-const dimensionedScalar TEle
+// Electron temperature value
+const dimensionedScalar TEleValue
 (
-    "TEle",
+    "TEleValue",
     dimensionSet(0, 0, 0, 1, 0, 0, 0),
     physicalProperties
 );
 
-// Gas Density
-const dimensionedScalar rhoGas
+// Gas density value
+const dimensionedScalar rhoGasValue
 (
-    "rhoGas",
+    "rhoGasValue",
     dimDensity,
     physicalProperties
 );
 
-// Gas number density
-volScalarField N
+// Gas number density field
+volScalarField NGas
 (
     IOobject
     (
-        "N",
+        "NGas",
         runTime.timeName(),
         mesh,
         IOobject::NO_READ,
         IOobject::NO_WRITE
     ),
     mesh,
-    pGas/(constant::physicoChemical::k * TGas)
+    pGasValue/(constant::physicoChemical::k * TGasValue)
 );
 
 // Ambient pressure field
-volScalarField P
+volScalarField pGas
 (
     IOobject
     (
-        "P",
+        "pGas",
         runTime.timeName(),
         mesh,
         IOobject::NO_READ,
         IOobject::NO_WRITE
     ),
     mesh,
-    pGas
+    pGasValue
 );
 
-// Electron temperature
-volScalarField Te
+// Electron temperature field
+volScalarField TEle
 (
     IOobject
     (
-        "Te",
+        "TEle",
         runTime.timeName(),
         mesh,
         IOobject::NO_READ,
         IOobject::NO_WRITE
     ),
     mesh,
-    TEle
+    TEleValue
+);
+
+// Gas temperature field
+volScalarField TGas
+(
+    IOobject
+    (
+        "TGas",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::NO_WRITE
+    ),
+    mesh,
+    TGasValue
 );
 
 volScalarField ones
@@ -124,14 +138,6 @@ volScalarField epsilon
     mesh,
     dimensionedScalar("temp",dimless,scalar(1))
 );
-
-// Region convergence variables
-int regionLoopCounter=0;
-std::vector<int> voltEqnIter = {1};
-
-// Read controlDict for maximum region loops
-int maxRegionLoops =
-    runTime.controlDict().lookupOrDefault("maxRegionLoops", 10000);
 
 Info<< "Reading field voltExtAmp\n" << endl;
 volScalarField voltExtAmp
@@ -258,68 +264,31 @@ volScalarField EN
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    1.0e21*mag(E/N)
+    1.0e21*mag(E/NGas)
 );
 
+dimensionedScalar maxVal("maxVal", EInd.dimensions(), 5.0e6);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // Create species
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 // Instantiate plasma chemistry model
 plasmaChemistryModel composition(mesh);
-composition.printStoichiometricMatrices();
-
-
-
-// composition.setRateCalculator
-// (
-    //     autoPtr<reactionRateCoeffsBase>(new Foam::constantRateCoeff())
-    // );
-    
-    
-    // composition.setRateCalculator
-    // (
-        //     autoPtr<reactionRateCoeffsBase>(new Foam::ArrheniusRateCoeff())
-        // );
-        
-        
-composition.updateReactionRateCoeffs();
-Info<< "----------------------------- Reading field mobilityCoeffSpecies\n" << endl;
-
-
-
 int inertIndex = composition.inertIndex();
 
-#include "createTransportCoeffs.H"
-
-Info<< "Reading field rhoq\n" << endl;
-volScalarField rhoq
-(
-    IOobject
-    (
-        "rhoq",
-        runTime.timeName(),
-        mesh,
-        IOobject::NO_READ,
-        IOobject::AUTO_WRITE
-    ),
-    mesh,
-    dimensionedScalar("temp", dimensionSet(0,-3,1,0,0,1,0), scalar(0))
-);
-
-PtrList<surfaceScalarField> YFlux(composition.species().size());
-PtrList<volScalarField> n(composition.species().size());
+PtrList<volScalarField> N(composition.species().size());
 
 // Create a temporary fallback field
-tmp<volScalarField> tnDefault;
+tmp<volScalarField> tNdefault;
 
 // Define name for default field
-word nDefaultName("nDefault");
+word NdefaultName("Ndefault");
 
 // Create an IOobject to check if "nDefault" exists in the case
-IOobject nDefaultIO
+IOobject NdefaultIO
 (
-    nDefaultName,
+    NdefaultName,
     runTime.timeName(),
     mesh,
     IOobject::MUST_READ,
@@ -327,22 +296,22 @@ IOobject nDefaultIO
 );
 
 // Check if nDefault exists
-if (nDefaultIO.typeHeaderOk<volScalarField>(true))
+if (NdefaultIO.typeHeaderOk<volScalarField>(true))
 {    
-    tnDefault = new volScalarField
+    tNdefault = new volScalarField
     (
-        nDefaultIO, 
+        NdefaultIO, 
         mesh
     );
 }
 else
 {
     // If not found, create a default empty field
-    tnDefault = new volScalarField
+    tNdefault = new volScalarField
     (
         IOobject
         (
-            nDefaultName, 
+            NdefaultName, 
             runTime.timeName(), 
             mesh, 
             IOobject::NO_READ, 
@@ -355,9 +324,6 @@ else
 
 forAll(composition.species(), i)
 {
-    // // Define name for species
-    // const word& nName("n"+composition.species()[i]);
-
     IOobject header
     (
         composition.species()[i],
@@ -368,7 +334,7 @@ forAll(composition.species(), i)
     
     if (header.typeHeaderOk<volScalarField>(true))
     {
-        n.set
+        N.set
         (
             i,
             new volScalarField
@@ -387,7 +353,7 @@ forAll(composition.species(), i)
     }
     else
     {
-        n.set
+        N.set
         (
             i,
             new volScalarField
@@ -400,23 +366,31 @@ forAll(composition.species(), i)
                     IOobject::NO_READ, 
                     IOobject::AUTO_WRITE
                 ),
-                tnDefault()
+                tNdefault()
             )
         );
     }
 }
 
+// Initalise all reaction rate coefficients
+composition.defineReactionRateCoeffs();
+
+// Define and initialize species transport coefficients
+#include "createTransportCoeffs.H"
+
+PtrList<surfaceScalarField> NFlux(composition.species().size());
+
 // Define species flux
 forAll(composition.species(), i)
 {
-    YFlux.set
+    NFlux.set
     (
         i,
         new surfaceScalarField
         (
             IOobject
             (
-                "YFlux",
+                "NFlux",
                 runTime.timeName(),
                 mesh,
                 IOobject::NO_READ,
@@ -426,3 +400,66 @@ forAll(composition.species(), i)
         )
     );
 }
+
+// Read mass fractions
+Info<< "Reading field YHe\n" << endl;
+volScalarField YHe
+(
+    IOobject
+    (
+        "YHe",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::NO_WRITE
+    ),
+    mesh
+);
+N[composition.species().find("He")] = YHe*NGas;
+
+Info<< "Reading field YN2\n" << endl;
+volScalarField YN2
+(
+    IOobject
+    (
+        "YN2",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::NO_WRITE
+    ),
+    mesh
+);
+N[composition.species().find("N2")] = YN2*NGas;
+
+Info<< "Reading field YO2\n" << endl;
+volScalarField YO2
+(
+    IOobject
+    (
+        "YO2",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::NO_WRITE
+    ),
+    mesh
+);
+N[composition.species().find("O2")] = YO2*NGas;
+
+composition.updateReactionRateCoeffs();
+
+Info<< "Reading field rhoq\n" << endl;
+volScalarField rhoq
+(
+    IOobject
+    (
+        "rhoq",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh,
+    dimensionedScalar("temp", dimensionSet(0,-3,1,0,0,1,0), scalar(0))
+);

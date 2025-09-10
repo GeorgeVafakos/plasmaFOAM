@@ -59,13 +59,13 @@ public:
     TypeName("constantRate");
 
     // Constructor
-    constantRateCoeff(const dictionary& dict, const word& name, plasmaChemistryModel& chemistry)
-    {
-        read(dict);
-    }
+    constantRateCoeff(const dictionary& dict, const word& name, plasmaChemistryModel& chemistry);
+    // {
+    //     read(dict);
+    // }
 
     // Member functions
-    virtual void read(const dictionary& d) override;
+    // virtual void read(const dictionary& d) override;
     virtual void calculate(plasmaChemistryModel& chemistry, const label reactionIndex) const override;
 
     

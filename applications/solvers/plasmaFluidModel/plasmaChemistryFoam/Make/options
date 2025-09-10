@@ -44,7 +44,6 @@ EXE_LIBS = \
     -lregionFaModels \
     -lfiniteArea \
     -L$(FOAM_USER_LIBBIN) \
-    -L$(FOAM_USER_LIBBIN) \
     -lpotentialTools \
     -ltransportTools \
     -lplasmaChemistry

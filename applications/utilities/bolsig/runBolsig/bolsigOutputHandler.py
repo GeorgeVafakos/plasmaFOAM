@@ -269,8 +269,8 @@ class bolsigOutputReader:
             self.__writeNumberDensity(file)
 
             # Write mobility and diffusion coefficients
-            self.__writeTransportCoefficient(file, 'Mobility*N_((1/m/V/s))', 'mobility')
-            self.__writeTransportCoefficient(file, 'Diffusion*N_(1/m/s)', 'diffusion')
+            self.__writeTransportCoefficient(file, 'Mobility*N_((1/m/V/s))', 'electronMobility')
+            self.__writeTransportCoefficient(file, 'Diffusion*N_(1/m/s)', 'electronDiffusivity')
 
             # Write reaction rate constants
             self.__writeReactionRateCoefficients(file)
@@ -377,7 +377,7 @@ class bolsigOutputReader:
         # Skip the elestic and effective collisions
         count = 0
         excludeTableHeads = list()
-        for sp in self._selectedReactions:tableHeads
+        for sp in self._selectedReactions:
             for r, react in enumerate(self._selectedReactions[sp]["reaction"]):
                 if self._selectedReactions[sp]["reaction"][r].split()[-1].strip() in ["Elastic", "Effective"]:
                     excludeTableHeads.append(count)

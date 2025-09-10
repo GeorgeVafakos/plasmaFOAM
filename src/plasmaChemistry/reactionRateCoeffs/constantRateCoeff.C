@@ -37,21 +37,29 @@ License
 namespace Foam
 {
 
-    defineTypeNameAndDebug(constantRateCoeff, 0);
-    addToRunTimeSelectionTable(reactionRateCoeffsBase, constantRateCoeff, dictionary);
+defineTypeNameAndDebug(constantRateCoeff, 0);
+addToRunTimeSelectionTable(reactionRateCoeffsBase, constantRateCoeff, dictionary);
 
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+constantRateCoeff::constantRateCoeff(const dictionary& dict, const word& name, plasmaChemistryModel& chemistry)
+:
+    constantValue_(dict.lookupOrDefault<scalar>("value", 1e-10))
+{ 
+    isConstant_ = true;  // explicitly set for none value
+}
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-void constantRateCoeff::read(const dictionary& d)
-{
-    constantValue_ = d.lookupOrDefault<scalar>("value", 1e-10);
-}
+// void constantRateCoeff::read(const dictionary& d)
+// {
+//     // constantValue_ = d.lookupOrDefault<scalar>("value", 1e-10);
+// }
 
 void constantRateCoeff::calculate(plasmaChemistryModel& chemistry, const label reactionIndex) const
 {
     volScalarField& k = chemistry.k()[reactionIndex];
     k = dim(k) * constantValue_;
-    k.correctBoundaryConditions(); // Optional
+    // k.correctBoundaryConditions(); // Optional
 }
 
 

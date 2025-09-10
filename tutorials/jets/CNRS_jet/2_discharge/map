@@ -1,0 +1,28 @@
+#!/bin/bash
+cd "${0%/*}" || exit                                # Run from this directory
+. $WM_PROJECT_DIR/bin/tools/RunFunctions            # Tutorial run functions
+#------------------------------------------------------------------------------
+
+# Replace 0 directory contents with 0.org
+rm -v -r 0
+cp -r 0.org 0
+
+# Perform setFields to initialize background gas composition upstream of the jet
+setFields
+
+# Map background gas composition in mass fractions downstream of the jet
+mapFieldsPar ../flow_notTube/ -mapMethod cellVolumeWeight -patchMapMethod nearestFaceAMI -sourceTime latestTime  -fields '(He N2 O2)'
+
+# Rename mass fractions
+mv 0/He 0/YHe
+mv 0/N2 0/YN2
+mv 0/O2 0/YO2
+sed -i 's/He/YHe/g' ./0/YHe
+sed -i 's/N2/YN2/g' ./0/YN2
+sed -i 's/O2/YO2/g' ./0/YO2
+
+# Output message
+echo
+echo Case mapped.
+
+#------------------------------------------------------------------------------

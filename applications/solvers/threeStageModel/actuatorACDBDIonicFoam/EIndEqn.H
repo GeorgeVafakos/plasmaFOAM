@@ -3,8 +3,11 @@
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // Reset counters
 regionLoopCounter = 0;
-solverPerformance::debug = 1;
-Info<< "Current Iteration = " << 1 << endl;
+if (runTime.timeIndex() % printScreenResults == 0 || runTime.timeIndex() == 1)
+{
+    Info<< "Current Iteration = " << 1 << endl;
+    solverPerformance::debug = 1;
+}
 
 // Loop through different regions to solve equations for voltInd
 while (*std::max_element(voltEqnIter.begin(), voltEqnIter.end()) && regionLoopCounter<maxRegionLoopsIndEqn)

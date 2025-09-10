@@ -1,0 +1,17 @@
+#!/bin/bash
+cd "${0%/*}" || exit                                # Run from this directory
+. $WM_PROJECT_DIR/bin/tools/RunFunctions            # Tutorial run functions
+#------------------------------------------------------------------------------
+
+# Create mesh
+gmsh system/geometry.geo -3 -o system/geometry.msh -format msh2
+gmshToFoam system/geometry.msh 
+
+
+
+
+# Output message
+echo
+echo Case created.
+
+#------------------------------------------------------------------------------

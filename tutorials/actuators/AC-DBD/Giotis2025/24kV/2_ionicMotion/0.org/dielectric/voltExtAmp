@@ -1,0 +1,79 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2406                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      voltExtAmp;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include        "../../../inputData"
+
+dimensions      [1 2 -3 0 0 -1 0];
+
+internalField   uniform 0;
+
+voltage         uniform $peakVoltage;
+
+boundaryField
+{
+    leftBoundary
+    {
+        type            zeroGradient;
+    }
+
+    rightBoundary
+    {
+        type            zeroGradient;
+    }
+
+    highVoltage
+    {
+        type            fixedValue;
+        value           $voltage;
+    }
+    
+    ground
+    {
+        type            fixedValue;
+        value           uniform 0;
+    }
+
+    dielectric_to_region0
+    {
+        type            compressible::turbulentTemperatureRadCoupledMixed;
+        value           $internalField;
+        Tnbr            voltExtAmp;
+        kappaMethod     lookup;
+        kappa           epsilon;
+    }
+
+    dielectric_to_encapsulator
+    {
+        type            compressible::turbulentTemperatureRadCoupledMixed;
+        value           $internalField;
+        Tnbr            voltExtAmp;
+        kappaMethod     lookup;
+        kappa           epsilon;
+    }
+
+    front
+    {
+        type            wedge;
+    }
+
+    back
+    {
+        type            wedge;
+    }
+
+}
+
+// ************************************************************************* //

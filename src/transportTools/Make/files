@@ -1,4 +1,12 @@
-transportCoeffsHandler/transportCoeffsHandler.C
-transportCoeffsBolsig/transportCoeffsBolsig.C
+transportCoeffsBase.C
+
+mobilityCoeffNone/mobilityCoeffNone.C
+mobilityCoeffUniformValue/mobilityCoeffUniformValue.C
+mobilityCoeffBolsig/mobilityCoeffBolsig.C
+
+diffusionCoeffNone/diffusionCoeffNone.C
+diffusionCoeffUniformValue/diffusionCoeffUniformValue.C
+diffusionCoeffBolsig/diffusionCoeffBolsig.C
+diffusionCoeffEinsteinRelation/diffusionCoeffEinsteinRelation.C
 
 LIB = $(FOAM_USER_LIBBIN)/libtransportTools

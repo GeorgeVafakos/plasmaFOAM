@@ -40,21 +40,25 @@ namespace Foam
     addToRunTimeSelectionTable(reactionRateCoeffsBase, ArrheniusRateCoeff, dictionary);
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-void ArrheniusRateCoeff::read(const dictionary& dict)
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+ArrheniusRateCoeff::ArrheniusRateCoeff(const dictionary& dict, const word& name, plasmaChemistryModel& chemistry)
+:
+    // reactionRateCoeffsBase(dict, name, chemistry),
+    A_(dict.lookupOrDefault<scalar>("A", 1.0)),
+    B_(dict.lookupOrDefault<scalar>("B", 0.0)),
+    C_(dict.lookupOrDefault<scalar>("C", 0.0)),
+    fieldName_(dict.lookupOrDefault<word>("field", "TEle")),
+    T_(chemistry.mesh().lookupObjectRef<volScalarField>(fieldName_))
 {
-    A_ = dict.lookupOrDefault<scalar>("A", 1.0);
-    B_ = dict.lookupOrDefault<scalar>("B", 0.0);
-    C_ = dict.lookupOrDefault<scalar>("C", 0.0);
-    fieldName_ = dict.lookupOrDefault<word>("field", "Te");
+    isConstant_ = true;  // explicitly set for none value
 }
 
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 void ArrheniusRateCoeff::calculate(plasmaChemistryModel& chemistry, const label j) const
 {
     volScalarField& kj = chemistry.k()[j];
-    const volScalarField& T = chemistry.mesh().lookupObject<volScalarField>("Te");
 
-    kj = dim(kj) * A_*pow(T/dim(T),B_)*exp(C_/(T/dim(T)));
+    kj = dim(kj) * A_*pow(T_/dim(T_),B_)*exp(C_/(T_/dim(T_)));
 }
 
 

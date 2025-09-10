@@ -1,0 +1,47 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2406                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      include;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+maxRhoq -0.012; //  at 1_discharge/0.org
+
+peakVoltage -12.e3; // at 2_ionicMotion/0.org 
+
+freq 10e3;
+
+Tp #calc "1.0/$freq";
+
+numDischarges 5;  //  at 2_ionicMotion/constant/physicalProperties
+
+timeBetweenDischarges #calc "($Tp/4.0)/(numDischarges-1)";  //  at 2_ionicMotion/constant/physicalProperties
+
+H_enc 8.0e-3;
+
+t_diel 2.0e-3;
+
+plasmaLength 9.0e-3; 
+
+plasmaHeight 2.4e-3;
+
+Power 5.25; 
+
+thermalisationFactor 1.0;
+
+distanceSurfaceToSymAxis #calc "$H_enc+$t_diel";
+
+maxVolumetricPowerDensity #calc "3*$thermalisationFactor*$Power/(3.14159*$plasmaLength*$plasmaHeight*($distanceSurfaceToSymAxis+$plasmaHeight/3.0))";
+
+flowSimulationEndTime 0.18;
+
+// ************************************************************************* //

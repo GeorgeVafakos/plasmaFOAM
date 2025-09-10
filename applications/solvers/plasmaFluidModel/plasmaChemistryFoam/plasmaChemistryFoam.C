@@ -36,12 +36,8 @@ Description
 
 #include "regionProperties.H"
 #include "voltageHandler.H"
-#include "transportCoeffsHandler.H"
-#include "transportCoeffsBolsig.H"
+#include "transportCoeffsBase.H"
 #include "plasmaChemistryModel.H"
-// #include "constantRateCoeff.H"
-// #include "ArrheniusRateCoeff.H"
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -68,36 +64,38 @@ int main(int argc, char *argv[])
     Info<< "\nStarting time loop\n" << endl;
     while( runTime.loop() )
     {
+        // ++runTime;
+        if (runTime.timeIndex() % printScreenResults == 0 || runTime.timeIndex() == 1)
+        {
+            Info<< "\nTime = " << runTime.timeName() << "  Time step = " << runTime.timeIndex() << nl << endl;
+            solverPerformance::debug = 1;
+        }
+
         // Calculate the induced electric field
         #include "EIndEqn.H"
         
         // Calculate the local electric field
         #include "calcE.H"
 
-        // // Control time step according to Co number
-        // #include "CourantNo.H"
-        // #include "setDeltaT.H" 
-
-        // -------------------------------------------------
-        label patchID = mesh.boundaryMesh().findPatchID("highVoltage");
-        // Y[composition.species().find("He")].boundaryFieldRef()[patchID] == 1.0;
-        // Info<< Y[composition.species().find("He")].boundaryFieldRef()[patchID] << endl;
-
-        // Make pulse stop after 1.0e-3 sec
-        if (runTime.time().value()>= 1.0e-5)
-        {
-            n[composition.species().find("e")].boundaryFieldRef()[patchID] == 0.0;
-            // n[composition.species().find("e")].boundaryFieldRef()[patchID] == 0.0;
-        }
-        // -------------------------------------------------
-
-        ++runTime;
-        Info<< "Time = " << runTime.timeName() << nl << endl;
+        // Control time step according to Co number
+        #include "CourantNo.H"
+        #include "setDeltaT.H" 
 
         // Equations for species continuity        
         #include "NEqn.H"
 
-        runTime.printExecutionTime(Info);
+        // Calculate charge density
+        rhoq = 0.0*rhoq;
+        forAll(composition.species(), i)
+        {
+            rhoq += chargeNumber[i]*constant::electromagnetic::e*N[i];
+        }
+
+        solverPerformance::debug = 0;
+        if (runTime.timeIndex() % printScreenResults == 0 || runTime.timeIndex() == 1)
+        {
+            runTime.printExecutionTime(Info);
+        }
         runTime.write();
     }
 

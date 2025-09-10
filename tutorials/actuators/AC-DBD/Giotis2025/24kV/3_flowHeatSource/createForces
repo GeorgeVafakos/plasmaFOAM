@@ -1,0 +1,88 @@
+#!/bin/bash
+cd "${0%/*}" || exit                                # Run from this directory
+. $WM_PROJECT_DIR/bin/tools/RunFunctions            # Tutorial run functions
+#------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------------ 
+# Specify the times of each period that the force will act
+#------------------------------------------------------------------------------ 
+#forceTimesText=$(foamListTimes -case ../2_ionicMotion/ -withZero)
+# corrected to exclude last time
+readarray -t allTimes < <(foamListTimes -case ../2_ionicMotion/ -withZero)
+forceTimesText="${allTimes[@]:0:${#allTimes[@]}-1}"
+
+cat > ./constant/forceDict << EOF
+/*--------------------------------*- C++ -*----------------------------------*\ 
+| =========                 |                                                 |
+| \\\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\\    /   O peration     | Version:  v2406                                 |
+|   \\\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      forceDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+forceTimes
+(
+EOF
+
+echo "$forceTimesText" >> ./constant/forceDict
+echo ");" >> ./constant/forceDict
+
+
+#------------------------------------------------------------------------------ 
+# Specify the names of the forces
+#------------------------------------------------------------------------------ 
+# Convert forceTimesText string to arrays of strings
+times=($forceTimesText)
+
+{
+  echo ""
+  echo "forceNames"
+  echo "("
+  
+  # Loop through the array and print each element
+  i=0
+  for timeName in "${times[@]}"; do
+    echo "Fc$i"
+    ((i++))
+  done
+  
+  echo ");"
+} >> ./constant/forceDict
+
+
+#------------------------------------------------------------------------------ 
+# Map Fields the forces of each time
+#------------------------------------------------------------------------------ 
+# Convert the 0 directory into 0.org
+# mv 0 0.org
+
+# MapFields all times except last (i.e. the force at the end of the oscillation period)
+count=0
+for i in ${times[@]::${#times[@]}}
+do
+#  echo "Map Fields for force No" $((count+1)) "of" ${#times[@]}
+  # echo $i
+  # mapFieldsPar ../2_ionicMotion/ -mapMethod direct -consistent -fields '(Fc)' -sourceTime $i 
+  cp ../2_ionicMotion/$i/Fc ./0/
+  mv 0/Fc 0/Fc$count
+  let count++
+done
+
+# # Replace 0 directory with 0.org and delete text files
+# #rm -v -r 0
+# #mv -v 0.org 0
+# #rm forceTimesText
+
+
+
+
+
+# #------------------------------------------------------------------------------ 

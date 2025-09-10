@@ -59,6 +59,8 @@ protected:
         return dimensionedScalar("field", field.dimensions(), scalar(1.0));
     }
 
+    // Flag indicating constant coefficient throughout the simulation
+    bool isConstant_ = false;
 
 public:
     //- Runtime type information
@@ -82,16 +84,18 @@ public:
         //- Return a reference to the selected rate model 
         static autoPtr<reactionRateCoeffsBase> New(const dictionary& dict, plasmaChemistryModel& chemistry);
 
-
-    // Member functions
-    //- read the reaction rate parameters from the dictionary
-    virtual void read(const dictionary& reactionsSubDict) = 0;
-
-    //- calculate the reaction rate coefficients
-    virtual void calculate(plasmaChemistryModel& chemistry, const label reactionIndex) const = 0;
-
     // Destructor
     virtual ~reactionRateCoeffsBase() {}
+
+    // Member functions
+        //- calculate the reaction rate coefficients
+        virtual void calculate(plasmaChemistryModel& chemistry, const label reactionIndex) const = 0;
+
+        //- inline - return true to ignore calculation of coefficients
+        bool isConstant() const 
+        {
+            return isConstant_;
+        }
 };
 
 

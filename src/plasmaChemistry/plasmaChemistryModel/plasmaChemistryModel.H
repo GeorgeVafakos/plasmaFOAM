@@ -71,17 +71,18 @@ protected:
 
     // PtrList<reactionRateCoeffsBase> rateCalculators_;
 
-    const fvMesh& mesh_;                          // 1
-    IOdictionary reactionsDict_;                  // 2
-    wordList species_;                            // 3
-    word inertSpecie_;                            // 4
-    PtrList<Reaction<dummyThermo>> reactions_;    // 5
-    PtrList<reactionRateCoeffsBase> rateCalculators_; // 6
-    PtrList<volScalarField> k_;                   // 7
+    const fvMesh& mesh_;
+    IOdictionary reactionsDict_;
+    wordList species_;
+    word inertSpecie_;
+    PtrList<Reaction<dummyThermo>> reactions_;
+    PtrList<reactionRateCoeffsBase> rateCalculators_;
+    PtrList<volScalarField> k_;
+    hashedWordList speciesHash_;
+    List<scalarField> aL_, aR_, stoichMatrix_;
+    List<List<Tuple2<label, scalar>>> reactantMap_;
+    labelList nonConstantIndices_;
 
-    hashedWordList speciesHash_;                  // 8
-    List<scalarField> aL_, aR_, stoichMatrix_;    // 9
-    List<List<Tuple2<label, scalar>>> reactantMap_; // 10
 
 public:
     // Constructor
@@ -126,11 +127,28 @@ public:
     //- Return total reaction source term for species with index iSpecie
     volScalarField R(const label iSpecie, const PtrList<volScalarField>& n) const;
 
+    //- inline - initially define the rate coefficients
+    void defineReactionRateCoeffs()
+    {
+        nonConstantIndices_.clear();
+
+        forAll(rateCalculators_, j)
+        {
+            rateCalculators_[j].calculate(*this, j);
+
+            if (!rateCalculators_[j].isConstant())
+            {
+                nonConstantIndices_.append(j);
+            }
+        }
+    }
+
     //- inline - get the rate calculator
     void updateReactionRateCoeffs()
     {
-        forAll(rateCalculators_, j)
+        forAll(nonConstantIndices_, i)
         {
+            label j = nonConstantIndices_[i];
             rateCalculators_[j].calculate(*this, j);
         }
     }

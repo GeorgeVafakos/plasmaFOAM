@@ -1,0 +1,27 @@
+#!/bin/bash
+cd "${0%/*}" || exit                                # Run from this directory
+. $WM_PROJECT_DIR/bin/tools/CleanFunctions          # Tutorial clean functions
+#------------------------------------------------------------------------------
+
+# Delete all subdirectories in the system and constant directories
+find ./system/* -type d 2>/dev/null -exec rm -fvr {} \;
+find ./constant/* -type d 2>/dev/null -exec rm -fvr {} \;
+rm -fvr ./constant/*/polyMesh
+
+# Reset fields
+if [ -d ./0.org ]; then 
+    rm -v -r 0 ;
+fi
+
+# Delete all time steps and logs if exist
+rm -f log.*
+rm -f ./0/cellToRegion
+rm -f ./0/*/cellToRegion
+rm -f ./constant/cellToRegion
+cleanCase
+
+# Output message
+echo
+echo Cleaning Completed
+
+#------------------------------------------------------------------------------

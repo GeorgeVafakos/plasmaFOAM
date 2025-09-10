@@ -12,7 +12,7 @@ solverPerformance::debug = 1;
 Info<< "Current Iteration = " << 1 << endl;
 
 // Loop through different regions to solve the Laplace equations for voltExtAmp
-while (*std::max_element(voltEqnIter.begin(), voltEqnIter.end()) && regionLoopCounter<maxRegionLoops)
+while (*std::max_element(voltEqnIter.begin(), voltEqnIter.end()) && regionLoopCounter<maxRegionLoopsExtAmpEqn)
 {
     voltEqnIter.clear();
 
@@ -38,7 +38,7 @@ while (*std::max_element(voltEqnIter.begin(), voltEqnIter.end()) && regionLoopCo
     regionLoopCounter++;
     solverPerformance::debug = 0;
     int printPerformance = 500;
-    if (regionLoopCounter % printPerformance == 0)
+    if (regionLoopCounter % printPerformance == 0 && (runTime.timeIndex() % printScreenResults == 0 || runTime.timeIndex() == 1))
     {
         Info<< "Current Iteration = " << regionLoopCounter << endl;
         solverPerformance::debug = 1;

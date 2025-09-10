@@ -15,6 +15,145 @@ IOdictionary speciesProperties
 );
 
 // Define pointer lists
+scalarList chargeNumber(composition.species().size());
+PtrList<dimensionedScalar> molarMass(composition.species().size());
+PtrList<volScalarField> mobilityCoeffSpecies(composition.species().size());
+PtrList<volScalarField> diffusionCoeffSpecies(composition.species().size());
+PtrList<transportCoeffsBase> mobilityCoeffHandler(composition.species().size());
+PtrList<transportCoeffsBase> diffusionCoeffHandler(composition.species().size());
+
+// Loop over species
+forAll(composition.species(), i)
+{
+    const word& specie = composition.species()[i];
+    const dictionary& specieDict(speciesProperties.subDict(specie));
+
+    // Read properties
+    chargeNumber[i] = specieDict.get<int>("chargeNumber");
+
+    molarMass.set
+    (
+        i,
+        new dimensionedScalar
+        (
+            "molarMass",
+            dimensionSet(1,0,0,0,-1,0,0),
+            1.0e-3 * specieDict.get<scalar>("molarMass")
+        )
+    );
+
+    // Info<< "Species: " << specie;
+
+    // --- Mobility
+    const dictionary& mobDict = specieDict.subDict("mobility");
+
+    mobilityCoeffSpecies.set
+    (
+        i,
+        new volScalarField
+        (
+            IOobject
+            (
+                "mobilityCoeffSpecies_" + specie,
+                runTime.timeName(),
+                mesh,
+                IOobject::NO_READ,
+                IOobject::NO_WRITE
+            ),
+            mesh,
+            dimensionedScalar("zero", dimensionSet(-1, 0, 2, 0, 0, 1, 0), scalar(0))
+        )
+    );
+
+    autoPtr<transportCoeffsBase> model = transportCoeffsBase::NewMobility
+    (
+        mesh, 
+        mobDict, 
+        mobilityCoeffSpecies[i]
+    );
+
+    mobilityCoeffHandler.set
+    (
+        i, 
+        model.release()
+    );  
+
+    // mobilityCoeffHandler[i].calcMobilityCoeffs(); 
+
+    // Create diffusion coefficient
+    const dictionary& diffDict = specieDict.subDict("diffusion");
+
+    diffusionCoeffSpecies.set
+    (
+        i,
+        new volScalarField
+        (
+            IOobject
+            (
+                "diffusionCoeffSpecies_" + specie,
+                runTime.timeName(),
+                mesh,
+                IOobject::NO_READ,
+                IOobject::NO_WRITE
+            ),
+            mesh,
+            dimensionedScalar("zero", dimViscosity, scalar(0))
+        )
+    );
+
+    autoPtr<transportCoeffsBase> diffModel = transportCoeffsBase::NewDiffusion
+    (
+        mesh, 
+        diffDict, 
+        diffusionCoeffSpecies[i]
+    );
+
+    diffusionCoeffHandler.set
+    (
+        i, 
+        diffModel.release()
+    );
+
+    // Update diffusion coefficient
+    // diffusionCoeffHandler[i].calcDiffusionCoeffs();
+}
+
+// // Output info
+// forAll(composition.species(), i)
+// {
+//     Info<< "Species " << composition.species()[i]
+//         << ": Mobility max = " << gMax(mobilityCoeffSpecies[i])
+//         << ", Diffusion max = " << gMax(diffusionCoeffSpecies[i]) << endl;
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+Info<< "Reading species properties\n" << endl;
+IOdictionary speciesProperties
+(
+    IOobject
+    (
+        "speciesProperties",
+        runTime.constant(),
+        mesh,
+        IOobject::MUST_READ_IF_MODIFIED,
+        IOobject::NO_WRITE
+    )
+);
+
+// Define pointer lists
 PtrList<volScalarField> mobilityCoeffSpecies(composition.species().size());
 PtrList<volScalarField> diffusionCoeffSpecies(composition.species().size());
 scalarList chargeNumber(composition.species().size());
@@ -94,7 +233,7 @@ forAll(composition.species(), i)
         if (transportCoeff == "mobility")
         {
             // Populate mobility coefficients pointer lists
-            if (coeffType == "uniformValue")
+            if (coeffType == "transportCoeffsConstValue")
             {
                 mobilityHandler.set
                 (
@@ -107,12 +246,12 @@ forAll(composition.species(), i)
                     )
                 );
             }
-            else if (coeffType == "mobilityHeIonLXCat")
+            else if (coeffType == "transportCoeffsNone")
             {
                 mobilityHandler.set
                 (
                     i,
-                    new transpCoeffsHeIonLXCat
+                    new transpCoeffsNone
                     (
                         mesh,
                         coeffDict,
@@ -120,45 +259,19 @@ forAll(composition.species(), i)
                     )
                 );
             }
-            else if (coeffType == "mobilityElectronsRelation")
-            {
-                mobilityHandler.set
-                (
-                    i,
-                    new transpCoeffsElectronsRelation
-                    (
-                        mesh,
-                        coeffDict,
-                        mobilityCoeffSpecies[i]
-                    )
-                );
-            }
-            else if (coeffType == "electronMobilityBolsig")
-            {
-                mobilityHandler.set
-                (
-                    i,
-                    new transportCoeffsBolsig
-                    (
-                        mesh,
-                        coeffDict,
-                        mobilityCoeffSpecies[i]
-                    )
-                );
-            }
+            else if (coeffType =
             else
             {
                 FatalErrorInFunction
                     << "mobility coefficient type: " << coeffType
                     << " is not a valid choice. "
-                    << "Options are: uniformValue, mobilityHeIonLXCat, mobilityElectronsRelation"
                     << abort(FatalError);
             }
         }
         else if (transportCoeff == "diffusion")
         {
             // Populate diffusion coefficients pointer lists
-            if (coeffType == "uniformValue")
+            if (coeffType == "transportCoeffsConstValue")
             {
                 diffusionHandler.set
                 (
@@ -171,31 +284,16 @@ forAll(composition.species(), i)
                     )
                 );
             }
-            else if (coeffType == "diffusionHeIonLXCat")
+            else if (coeffType == "transportCoeffsNone")
             {
                 diffusionHandler.set
                 (
                     i,
-                    new transpCoeffsHeIonLXCat
+                    new transpCoeffsNone
                     (
                         mesh,
                         coeffDict,
                         diffusionCoeffSpecies[i]
-                    )
-                );
-            }
-            else if (coeffType == "EinsteinRelation")
-            {
-                diffusionHandler.set
-                (
-                    i,
-                    new diffusionCoeffsEinsteinRelation
-                    (
-                        mesh,
-                        coeffDict,
-                        diffusionCoeffSpecies[i],
-                        mobilityCoeffSpecies[i],
-                        chargeNumber[i]
                     )
                 );
             }
@@ -204,7 +302,6 @@ forAll(composition.species(), i)
                 FatalErrorInFunction
                     << "diffusion coefficient type: " << coeffType
                     << " is not a valid choice. "
-                    << "Options are: uniformValue, diffusionHeIonLXCat, EinsteinRelation"
                     << abort(FatalError);
             }
         }
@@ -216,4 +313,4 @@ forAll(composition.species(), i)
     // mobilityCoeffSpecies[i] = transpCoeffsHandler[i].calcTranspCoeffs();
     Info<< "Species " << composition.species()[i] << ": Mobility = " << gMax(mobilityCoeffSpecies[i]) << " Diffusion = " << gMax(diffusionCoeffSpecies[i]) << endl;
 }
-
+*/

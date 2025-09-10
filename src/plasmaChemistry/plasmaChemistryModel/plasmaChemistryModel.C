@@ -113,7 +113,7 @@ plasmaChemistryModel::plasmaChemistryModel(const fvMesh& mesh)
                     mesh_.time().timeName(),
                     mesh_,
                     IOobject::NO_READ,
-                    IOobject::AUTO_WRITE
+                    IOobject::NO_WRITE
                 ),
                 mesh_,
                 dimensionedScalar("zero", dimensionSet(0, -3*(sumReactants(j)-1), -1, 0, 0, 0, 0), scalar(1.0e-10))
@@ -294,11 +294,6 @@ volScalarField plasmaChemistryModel::R(const label i, const PtrList<volScalarFie
 
     return Ri;
 }
-
-
-
-
-
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

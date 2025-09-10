@@ -1,0 +1,46 @@
+# This file contains all the input variables to run the BOLSIG+ code.
+# All commented lines (starting with the character #) are ignored.
+
+# --------------------------------------------------------
+# --- Choose the reactions
+# Available options: "allAvailable", "literature" or "custom"
+# --------------------------------------------------------
+selectReactionMethod custom
+He: 1, 2, 44
+N2: 1, 21, 12, 25
+O2: 2, 25, 10, 11, 15, 31
+
+# --------------------------------------------------------------------------------------------------------
+# --- Reduced electric field E/N (Td) 
+# Valid options after the keyword E/N are one entry (for single run) or four entries (for multiple runs).
+# The first two entries are the min and max values, the third entry denotes the number of E/N values.
+# The forth number denotes the distribution of the poins: "linear", "quadratic" or "exponential".
+# --------------------------------------------------------------------------------------------------------
+E/N 0.1 300 30 linear
+
+# -----------------------
+# --- Gas temperature (K)
+# -----------------------
+gasTemp 300
+
+# -------------------------------
+# --- Gas particle density (1/m3)
+# -------------------------------
+gasDensity 2.44631152e+25
+
+# -------------------------------------------------------------------------------------------------------
+# --- Gas composition fractions
+# Each species must be accompanies by the specified volume fraction. The species are separated by comma. 
+# As in the E/N entry, the volume fraction can have one entry (single run) or four (multiple runs).
+# If there are four entries in a species, they must be declared as described above in the E/N entry.
+# If the species are not the same as specified in selectReactionMethod, the code will produce an error. 
+# -------------------------------------------------------------------------------------------------------
+gasComposition O2 0.2, He 0 1 10 linear, N2 0.8
+
+# -----------------------------------------------------------------------------------------------------------
+# --- Other control parameters
+# The entries 'useCustomCrossSectionsFile' and 'useCustomBolsigInputFile' allow the user to choose his own 
+# cross-sections and BOLSIG+ input file, respectiely, instead of being created automatically from this code.
+# If true, then the name of the file must follow.
+# -----------------------------------------------------------------------------------------------------------
+printScreenSelectedReactions False

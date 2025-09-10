@@ -36,11 +36,17 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(bolsigRateCoeff, 0);
-    addToRunTimeSelectionTable(reactionRateCoeffsBase, bolsigRateCoeff, dictionary);
+
+defineTypeNameAndDebug(bolsigRateCoeff, 0);
+addToRunTimeSelectionTable(reactionRateCoeffsBase, bolsigRateCoeff, dictionary);
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-bolsigRateCoeff::bolsigRateCoeff(const dictionary& dict, const word& name, plasmaChemistryModel& chemistry)
+bolsigRateCoeff::bolsigRateCoeff
+(
+    const dictionary& dict, 
+    const word& name, 
+    plasmaChemistryModel& chemistry
+)
 :
     bolsigProperties_
     (
@@ -52,8 +58,11 @@ bolsigRateCoeff::bolsigRateCoeff(const dictionary& dict, const word& name, plasm
             IOobject::MUST_READ,
             IOobject::NO_WRITE
         )
-    )
+    ),
+    EN_(chemistry.mesh().lookupObjectRef<volScalarField>("EN"))
 {
+    HePtr_ = nullptr;
+
     scalarList ENList_
     (
         bolsigProperties_.lookup("EN")
@@ -104,34 +113,22 @@ bolsigRateCoeff::bolsigRateCoeff(const dictionary& dict, const word& name, plasm
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-void bolsigRateCoeff::read(const dictionary& dict)
-{
-    A_ = dict.lookupOrDefault<scalar>("A", 1.0);
-    B_ = dict.lookupOrDefault<scalar>("B", 0.0);
-    C_ = dict.lookupOrDefault<scalar>("C", 0.0);
-    fieldName_ = dict.lookupOrDefault<word>("field", "Te");
-}
-
 void bolsigRateCoeff::calculate(plasmaChemistryModel& chemistry, const label j) const
 {
-    const volScalarField& EN_ = chemistry.mesh().lookupObjectRef<volScalarField>("E_N");
-    const volScalarField& HeF_ = chemistry.mesh().lookupObjectRef<volScalarField>("HeF");
+    // Lazy initialization: only look up He once
+    if (!HePtr_)
+    {
+        HePtr_ = &chemistry.mesh().lookupObjectRef<volScalarField>("He");
+    }
 
+    const volScalarField& He = *HePtr_;
 
     volScalarField& kj = chemistry.k()[j];
 
-    // kj = dim(kj) * A_*pow(T/dim(T),B_)*exp(C_/(T/dim(T)));
-
-
-    
-
     forAll(kj, celli)
     {
-        kj[celli] = ratesTable_[j](HeF_[celli], EN_[celli]);
+        kj[celli] = ratesTable_[j](He[celli], EN_[celli]);
     }
-
-
-
 }
 
 

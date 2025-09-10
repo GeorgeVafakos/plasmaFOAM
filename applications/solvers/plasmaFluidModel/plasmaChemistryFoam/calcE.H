@@ -30,4 +30,4 @@ forAll(solidRegions, i)
 }
 
 // Calculate reduced electric field in Td
-EN = 1.0e21*mag(E/N);
+EN = 1.0e21*mag(E/NGas);

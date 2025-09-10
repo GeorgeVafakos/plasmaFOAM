@@ -123,7 +123,7 @@ class bolsigExecutor:
             file.write(f'/READCOLLISIONS can be called multiple times to read from different files\n\n')
             file.write(f'/CLEARCOLLISIONS\n\n')
             file.write(f'READCOLLISIONS\n')
-            file.write(f'{os.path.basename(self._crossSectionFileName).split('/')[-1]}\t\t/ File\n')
+            file.write(f'{os.path.basename(self._crossSectionFileName).split("/")[-1]}\t\t/ File\n')
             file.write(' '.join(sp for sp in sorted(list(self._selectedReactions.keys()))))
             file.write(f'{self.__tabs(4)}/ Species\n')
             file.write('{:d}{}/ Extrapolate: 0= No 1= Yes\n\n'.format(1, self.__tabs()))

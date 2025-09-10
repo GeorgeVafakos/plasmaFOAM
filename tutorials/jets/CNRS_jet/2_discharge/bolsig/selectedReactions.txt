@@ -1,0 +1,20 @@
+The selected reactions for BOLSIG+ are:
+
+ID     Reaction                                        Energy       Database        File      
+==     ========                                        ======       ========        ====      
+1      E + He -> E + He, Elastic                       --           IST-Lisbon      ./LXCatData/He/R1.txt
+2      E + He <-> E + He(2S3), Excitation              19.82        IST-Lisbon      ./LXCatData/He/R2.txt
+44     E + He -> E + E + He+, Ionization               24.5873      IST-Lisbon      ./LXCatData/He/R44.txt
+
+1      E + N2 -> E + N2, Effective                     --           IST-Lisbon      ./LXCatData/N2/R1.txt
+21     E + N2 -> E + N2(C3Pu), Excitation              11           IST-Lisbon      ./LXCatData/N2/R21.txt
+12     E + N2 -> E + N2[A3Su+(v=0-4)], Excitation      6.2          IST-Lisbon      ./LXCatData/N2/R12.txt
+25     E + N2 -> E + E + N2+(X), Ionization            15.6         IST-Lisbon      ./LXCatData/N2/R25.txt
+
+2      E + O2 -> E + O2, Effective                     --           IST-Lisbon      ./LXCatData/O2/R2.txt
+25     E + O2 -> E + O2(a1), Excitation                0.977        Phelps          ./LXCatData/O2/R25.txt
+10     E + O2 -> E + O(3P)+O(3P), Excitation           6            IST-Lisbon      ./LXCatData/O2/R10.txt
+11     E + O2 -> E + O(3P)+O(1D), Excitation           8.4          IST-Lisbon      ./LXCatData/O2/R11.txt
+15     E + O2, Attachment                              0            Phelps          ./LXCatData/O2/R15.txt
+31     E + O2 -> E + E + O2+, Ionization               12.06        Phelps          ./LXCatData/O2/R31.txt
+

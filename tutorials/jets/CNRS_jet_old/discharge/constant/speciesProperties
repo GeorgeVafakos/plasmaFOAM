@@ -1,0 +1,258 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2312                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      speciesProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+e
+{
+    chargeNumber    -1;
+    molarMass       5.4857990962e-4;
+    mobility
+    {
+        type        bolsig;
+    }
+    diffusion
+    {
+        type        bolsig;
+    }
+}
+
+He
+{
+    chargeNumber    0;
+    molarMass       4.0;
+    mobility
+    {
+        type        none;
+    }
+    diffusion
+    {
+        type        none;
+    }
+}
+
+He_plus
+{
+    chargeNumber    +1;
+    molarMass       4.0;
+    mobility
+    {
+        // type        HeIonLXCat;
+        // field       "EN";
+        type        uniformValue;
+        value       1.0e-5;
+    }
+    diffusion
+    {
+        // type        EinsteinRelation;
+        // temperature 300;
+        type        uniformValue;
+        value       4.3e-6;
+        // type        HeIonLXCat;
+        // field       "EN";
+    }
+}
+
+He_m
+{
+    chargeNumber    0;
+    molarMass       4.0;
+    mobility
+    {
+        type        none;
+    }
+    diffusion
+    {
+        type        none;
+    }
+}
+
+He2_plus
+{
+    chargeNumber    +1;
+    molarMass       8.0;
+    mobility
+    {
+        type        uniformValue;
+        value       1.0e-5;
+    }
+    diffusion
+    {
+        type        diffusionEinsteinRelation;
+        T           TEle;
+        // type        none;
+    }
+}
+
+He2_m
+{
+    chargeNumber    0;
+    molarMass       8.0;
+    mobility
+    {
+        type        none;
+    }
+    diffusion
+    {
+        type        none;
+    }
+}
+
+N2
+{
+    chargeNumber    0;
+    molarMass       28.0134;
+    mobility
+    {
+        type        none;
+    }
+    diffusion
+    {
+        type        none;
+    }
+}
+
+N2_plus
+{
+    chargeNumber    +1;
+    molarMass       28.0134;
+    mobility
+    {
+        type        uniformValue;
+        value       1.0e-5;
+    }
+    diffusion
+    {
+        type        uniformValue;
+        value       4.3e-6;
+    }
+}
+
+N2_C3Pu
+{
+    chargeNumber    0;
+    molarMass       28.0134;
+    mobility
+    {
+        type        none;
+    }
+    diffusion
+    {
+        type        none;
+    }
+}
+
+N2_A3Su
+{
+    chargeNumber    0;
+    molarMass       28.0134;
+    mobility
+    {
+        type        none;
+    }
+    diffusion
+    {
+        type        none;
+    }
+}
+
+O2
+{
+    chargeNumber    0;
+    molarMass       31.999;
+    mobility
+    {
+        type        none;
+    }
+    diffusion
+    {
+        type        none;
+    }
+}
+
+O
+{
+    chargeNumber    0;
+    molarMass       15.9994;
+    mobility
+    {
+        type        none;
+    }
+    diffusion
+    {
+        type        none;
+    }
+}
+
+O2_minus
+{
+    chargeNumber    -1;
+    molarMass       31.999;
+    mobility
+    {
+        type        uniformValue;
+        value       1.0e-5;
+    }
+    diffusion
+    {
+        type        uniformValue;
+        value       4.3e-6;
+    }
+}
+
+O2_plus
+{
+    chargeNumber    +1;
+    molarMass       31.999;
+    mobility
+    {
+        type        uniformValue;
+        value       1.0e-5;
+    }
+    diffusion
+    {
+        type        uniformValue;
+        value       4.3e-6;
+    }
+}
+
+O_1D
+{
+    chargeNumber    0;
+    molarMass       15.9994;
+    mobility
+    {
+        type        none;
+    }
+    diffusion
+    {
+        type        none;
+    }
+}
+
+O2_a1
+{
+    chargeNumber    0;
+    molarMass       31.999;
+    mobility
+    {
+        type        none;
+    }
+    diffusion
+    {
+        type        none;
+    }
+}
+
+// ************************************************************************* //

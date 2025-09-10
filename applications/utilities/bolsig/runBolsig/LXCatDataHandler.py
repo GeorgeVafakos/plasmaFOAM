@@ -157,8 +157,7 @@ class reactionExtractor:
             
             # Write a line separator
             separatorChar = '='
-            file.write(f'{separatorChar*len(headers[0])}{' '*(lengthID-len(headers[0]))} {separatorChar*len(headers[1])}{' '*(lengthReaction-len(headers[1]))} {separatorChar*len(headers[2])}{' '*(lengthEnergy-len(headers[2]))} {separatorChar*len(headers[3])}{' '*(lengthDatabase-len(headers[3]))} {separatorChar*len(headers[4])}{' '*(lengthFile-len(headers[4]))}\n')
-            
+            file.write(f'{separatorChar*len(headers[0])}{" " * (lengthID-len(headers[0]))} {separatorChar*len(headers[1])}{" " * (lengthReaction-len(headers[1]))} {separatorChar*len(headers[2])}{" " * (lengthEnergy-len(headers[2]))} {separatorChar*len(headers[3])}{" " * (lengthDatabase-len(headers[3]))} {separatorChar*len(headers[4])}{" " * (lengthFile-len(headers[4]))}\n')            
             # Populate rows
             for sp, entry in self._availableReactions.items():
                 for i in range(len(entry['ID'])):
@@ -221,7 +220,7 @@ class reactionSelector:
 
         # Check if keyword exists in file
         if not keywordFound:
-            raise Exception(f'Keyword: {keyword+':'}: was not found in file: {filename}.')
+            raise Exception(f"Keyword: {keyword+':'}: was not found in file: {filename}.")
 
         return selectedReactionsLocalDict
 
@@ -250,22 +249,51 @@ class reactionSelector:
                         selectionMethod = line.split()[1]
 
                         # For 'custom' keyword
-                        if selectionMethod == 'custom':
-                            for i in range(lineNumber+1, len(lines)):
-                                lines[i] = lines[i].strip() # Get rid of trailing newline character (\n)
-                                tempLine = lines[i].split() # Create this list only for the following if statement
-                                if tempLine and tempLine[0].endswith(':'):
-                                    tempLine = str() # Repurpose the previous string to assign 
-                                    tempLine = lines[i].split(':',1)
-                                    sp = tempLine[0].strip()
-                                    tempReactions = tempLine[1].strip()
-                                    self._selectedReactions[sp] = dict()
-                                    self._selectedReactions[sp]['ID'] = [int(s.strip()) for s in tempReactions.split(',')]
-                                    self._selectedReactions[sp]['file'] = [file for i, file in zip(self._availableReactions[sp]['ID'], self._availableReactions[sp]['file']) if i in self._selectedReactions[sp]['ID']]
-                                    self._selectedReactions[sp]['reaction'] = [file for i, file in zip(self._availableReactions[sp]['ID'], self._availableReactions[sp]['reaction']) if i in self._selectedReactions[sp]['ID']]
-                                    self._selectedReactions[sp]['energy'] = [file for i, file in zip(self._availableReactions[sp]['ID'], self._availableReactions[sp]['energy']) if i in self._selectedReactions[sp]['ID']]
-                                    self._selectedReactions[sp]['database'] = [file for i, file in zip(self._availableReactions[sp]['ID'], self._availableReactions[sp]['database']) if i in self._selectedReactions[sp]['ID']]
+                        # if selectionMethod == 'custom':
+                        #     for i in range(lineNumber+1, len(lines)):
+                        #         lines[i] = lines[i].strip() # Get rid of trailing newline character (\n)
+                        #         tempLine = lines[i].split() # Create this list only for the following if statement
+                        #         if tempLine and tempLine[0].endswith(':'):
+                        #             tempLine = str() # Repurpose the previous string to assign 
+                        #             tempLine = lines[i].split(':',1)
+                        #             sp = tempLine[0].strip()
+                        #             tempReactions = tempLine[1].strip()
+                        #             self._selectedReactions[sp] = dict()
+                        #             self._selectedReactions[sp]['ID'] = [int(s.strip()) for s in tempReactions.split(',')]
+                        #             self._selectedReactions[sp]['file'] = [file for i, file in zip(self._availableReactions[sp]['ID'], self._availableReactions[sp]['file']) if i in self._selectedReactions[sp]['ID']]
+                        #             self._selectedReactions[sp]['reaction'] = [file for i, file in zip(self._availableReactions[sp]['ID'], self._availableReactions[sp]['reaction']) if i in self._selectedReactions[sp]['ID']]
+                        #             self._selectedReactions[sp]['energy'] = [file for i, file in zip(self._availableReactions[sp]['ID'], self._availableReactions[sp]['energy']) if i in self._selectedReactions[sp]['ID']]
+                        #             self._selectedReactions[sp]['database'] = [file for i, file in zip(self._availableReactions[sp]['ID'], self._availableReactions[sp]['database']) if i in self._selectedReactions[sp]['ID']]
                                     
+
+
+                        if selectionMethod == 'custom':
+                            for i in range(lineNumber + 1, len(lines)):
+                                lines[i] = lines[i].strip()  # Remove leading/trailing spaces
+                                tempLine = lines[i].split()
+                                if tempLine and tempLine[0].endswith(':'):
+                                    spLine = lines[i].split(':', 1)
+                                    sp = spLine[0].strip()
+                                    idList = [int(s.strip()) for s in spLine[1].strip().split(',')]
+                                    self._selectedReactions[sp] = {key: [] for key in ['ID', 'file', 'reaction', 'energy', 'database']}
+
+                                    for rid in idList:
+                                        # Find the index of the reaction ID in availableReactions
+                                        try:
+                                            idx = self._availableReactions[sp]['ID'].index(rid)
+                                        except ValueError:
+                                            raise Exception(f'Reaction ID {rid} for species "{sp}" not found in available reactions.')
+
+                                        self._selectedReactions[sp]['ID'].append(rid)
+                                        self._selectedReactions[sp]['file'].append(self._availableReactions[sp]['file'][idx])
+                                        self._selectedReactions[sp]['reaction'].append(self._availableReactions[sp]['reaction'][idx])
+                                        self._selectedReactions[sp]['energy'].append(self._availableReactions[sp]['energy'][idx])
+                                        self._selectedReactions[sp]['database'].append(self._availableReactions[sp]['database'][idx])
+
+
+
+
+
                                 # Uncomment the else statement if you want to stop skipping empty lines between the reactions in the input file
                                 # else: 
                                 #     break
@@ -354,7 +382,7 @@ class reactionSelector:
 
         # Print a line separator
         separatorChar = '='
-        print(f'{separatorChar*len(headers[0])}{' '*(lengthID-len(headers[0]))} {separatorChar*len(headers[1])}{' '*(lengthReaction-len(headers[1]))} {separatorChar*len(headers[2])}{' '*(lengthEnergy-len(headers[2]))} {separatorChar*len(headers[3])}{' '*(lengthDatabase-len(headers[3]))} {separatorChar*len(headers[4])}{' '*(lengthFile-len(headers[4]))}')
+        print(f'{separatorChar*len(headers[0])}{" "*(lengthID-len(headers[0]))} {separatorChar*len(headers[1])}{" "*(lengthReaction-len(headers[1]))} {separatorChar*len(headers[2])}{" "*(lengthEnergy-len(headers[2]))} {separatorChar*len(headers[3])}{" "*(lengthDatabase-len(headers[3]))} {separatorChar*len(headers[4])}{" "*(lengthFile-len(headers[4]))}')
 
         # Populate rows
         for sp, entry in self._selectedReactions.items():
@@ -400,7 +428,7 @@ class reactionSelector:
             
             # Write a line separator
             separatorChar = '='
-            file.write(f'{separatorChar*len(headers[0])}{' '*(lengthID-len(headers[0]))} {separatorChar*len(headers[1])}{' '*(lengthReaction-len(headers[1]))} {separatorChar*len(headers[2])}{' '*(lengthEnergy-len(headers[2]))} {separatorChar*len(headers[3])}{' '*(lengthDatabase-len(headers[3]))} {separatorChar*len(headers[4])}{' '*(lengthFile-len(headers[4]))}\n')
+            file.write(f'{separatorChar*len(headers[0])}{" " * (lengthID-len(headers[0]))} {separatorChar*len(headers[1])}{" " * (lengthReaction-len(headers[1]))} {separatorChar*len(headers[2])}{" " * (lengthEnergy-len(headers[2]))} {separatorChar*len(headers[3])}{" " * (lengthDatabase-len(headers[3]))} {separatorChar*len(headers[4])}{" " * (lengthFile-len(headers[4]))}\n')
             
             # Populate rows
             for sp, entry in self._selectedReactions.items():

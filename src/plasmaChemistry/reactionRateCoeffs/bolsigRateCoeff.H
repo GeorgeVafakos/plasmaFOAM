@@ -56,21 +56,28 @@ class bolsigRateCoeff : public reactionRateCoeffsBase
 protected:
     label reactionIndex_;
     IOdictionary bolsigProperties_;
-    scalar A_, B_, C_; 
-    word fieldName_;
 
     PtrList<interpolation2DTable<scalar>> ratesTable_;
     // static interpolation2DTable<scalar>* bolsigTablePtr_;
     // static bool initialized_;
 
+    // Tabulation variables
+    const volScalarField& EN_;
+    mutable const volScalarField* HePtr_;
+
 public:
     TypeName("bolsig");
 
     // Constructor
-    bolsigRateCoeff(const dictionary& dict, const word& name, plasmaChemistryModel& chemistry);
+    bolsigRateCoeff
+    (
+        const dictionary& dict, 
+        const word& name, 
+        plasmaChemistryModel& chemistry
+    );
 
     // Member functions
-    virtual void read(const dictionary& reactionsSubDict) override;
+    // virtual void read(const dictionary& reactionsSubDict) override;
     virtual void calculate(plasmaChemistryModel& chemistry, const label reactionIndex) const override;
     
     // Virtual destructor

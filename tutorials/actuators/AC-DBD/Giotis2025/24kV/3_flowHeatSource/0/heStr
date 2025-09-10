@@ -1,0 +1,133 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2406                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      rhoq;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include        "../../inputData"
+
+dimensions      [0 0 0 0 0 0 0];
+
+internalField   #codeStream // Use codeStream to set the value of the initial conditions
+{
+        codeInclude
+        #{
+            #include "fvCFD.H"
+        #};
+        codeOptions
+        #{
+            -I$(LIB_SRC)/finiteVolume/lnInclude \
+            -I$(LIB_SRC)/meshTools/lnInclude
+        #};
+        codeLibs
+        #{
+            -lmeshTools \
+            -lfiniteVolume
+        #};
+        // Depending of what are you trying to do, you will need to add new files, options and libraries.
+        // For most of the cases, this part is always the same.
+       
+        code // Insert your code here. At this point, you need to know how to access internal mesh information
+        #{
+            const IOdictionary& d = static_cast<const IOdictionary&>(dict);
+            const fvMesh& mesh = refCast<const fvMesh>(d.db());
+            // Access internal mesh information
+           
+
+            scalarField rhoq(mesh.nCells(), 0.);
+
+            scalar rhoq0 = 1.0;
+            scalar xOffset = 50e-6;
+            scalar PlasmaWidth = $plasmaLength;
+            scalar PlasmaThick = $plasmaHeight;
+            scalar yOffset = $distanceSurfaceToSymAxis;  // Shift triangle upward
+            forAll(rhoq, i)
+            {
+                //Access cell centers coordinates
+                const scalar x = mesh.C()[i][0];
+                const scalar y = mesh.C()[i][1];
+                
+                // Triangular plasma region - linear distribution in the x-y plane
+                if ( x>xOffset && x<PlasmaWidth && y>yOffset && y-yOffset<((PlasmaThick/(PlasmaWidth-xOffset))*(PlasmaWidth-x)) )
+                {
+                    rhoq[i] = rhoq0*(1.0 - (x-xOffset)/PlasmaWidth - (y-yOffset)/PlasmaThick);
+                }
+                /*
+                // Triangular plasma region - linear distribution in the x direction
+                if ( x>PlasmaStart && x<PlasmaWidth && y>0 && y<((PlasmaThick/(PlasmaWidth-PlasmaStart))*(PlasmaWidth-x)) )
+                {
+                    rhoq[i] = rhoq0*((PlasmaWidth-(x-PlasmaStart))/PlasmaWidth);
+                }
+                
+                // Elliptical plasma region - elliptical distribution in the x-y plane
+                if ( x>PlasmaStart && x<PlasmaWidth && y>0 && y<sqrt(pow(PlasmaThick/(PlasmaWidth-PlasmaStart),2.0)*(pow(PlasmaWidth,2.0)-pow(x,2.0)) ))
+                {
+                    rhoq[i] = rhoq0*(1.0 - (x-PlasmaStart)/PlasmaWidth - y/PlasmaThick);
+                }
+                
+                // Rectangular plasma region - uniform distribution
+                if ( x>PlasmaStart && x<PlasmaWidth && y>0 && y<PlasmaThick  )
+                {
+                    rhoq[i] = rhoq0;
+                }
+                */
+            }
+
+            // writeEntry(os, "", rhoq);
+            // rhoq.write();
+            rhoq.writeEntry("", os);
+        #};
+};
+
+boundaryField
+{
+    upperBoundary
+    {
+        type            fixedValue;
+        value           uniform 0;
+    }
+
+    leftBoundary
+    {
+        type            fixedValue;
+        value           uniform 0;
+    }
+
+    rightBoundary
+    {
+        type            fixedValue;
+        value           uniform 0;
+    }
+
+    region0_to_dielectric
+    {
+        type            zeroGradient;
+    }
+
+    highVoltage
+    {
+        type            zeroGradient;
+    }
+
+    front
+    {
+        type            wedge;
+    }
+
+    back
+    {
+        type            wedge;
+    }
+}
+
+// ************************************************************************* //

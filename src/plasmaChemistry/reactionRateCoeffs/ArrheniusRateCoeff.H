@@ -53,20 +53,26 @@ namespace Foam
 class ArrheniusRateCoeff : public reactionRateCoeffsBase
 {
 protected:
+    // Arrhenius parameters
     scalar A_, B_, C_; 
+
+    // Name of the field
     word fieldName_;
+
+    // Temperature field
+    volScalarField& T_;
 
 public:
     TypeName("ArrheniusLaw");
 
     // Constructor
-    ArrheniusRateCoeff(const dictionary& dict, const word& name, plasmaChemistryModel& chemistry)
-    {
-        read(dict);
-    }
+    ArrheniusRateCoeff(const dictionary& dict, const word& name, plasmaChemistryModel& chemistry);
+    // {
+    //     read(dict);
+    // }
 
     // Member functions
-    virtual void read(const dictionary& reactionsSubDict) override;
+    // virtual void read(const dictionary& reactionsSubDict) override;
     virtual void calculate(plasmaChemistryModel& chemistry, const label reactionIndex) const override;
     
     // Virtual destructor
