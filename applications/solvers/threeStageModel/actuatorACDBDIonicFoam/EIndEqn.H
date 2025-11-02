@@ -9,6 +9,9 @@ if (runTime.timeIndex() % printScreenResults == 0 || runTime.timeIndex() == 1)
     solverPerformance::debug = 1;
 }
 
+voltEqnIter.clear();
+voltEqnIter.push_back(1);
+
 // Loop through different regions to solve equations for voltInd
 while (*std::max_element(voltEqnIter.begin(), voltEqnIter.end()) && regionLoopCounter<maxRegionLoopsIndEqn)
 {
