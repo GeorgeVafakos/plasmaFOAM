@@ -1,0 +1,15 @@
+#!/bin/bash
+cd "${0%/*}" || exit                                # Run from this directory
+. $WM_PROJECT_DIR/bin/tools/RunFunctions            # Tutorial run functions
+#------------------------------------------------------------------------------
+
+# Get the solver name from the controlDict file
+application=$(getApplication)
+
+# Copy fvSchemes and fvSolution into Zone folders
+find ./system/* -type d 2>/dev/null -exec cp -v ./system/decomposeParDict {} \;
+
+# Run solver
+$application
+
+#------------------------------------------------------------------------------
